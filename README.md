@@ -5,11 +5,10 @@ _This README contains basic information about the project and its artifacts. If 
 
 ## Team
 
-- MEMBER1
+- Valentin Parafioriti
 - MEMBER2
 - MEMBER3
 - MEMBER4
-- MEMBER5
 
 ## Goals
 The primary goals of this project are the following:
