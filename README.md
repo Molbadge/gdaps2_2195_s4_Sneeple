@@ -6,9 +6,13 @@ _This README contains basic information about the project and its artifacts. If 
 ## Team
 
 - Valentin Parafioriti
+- MEMBER2
+- MEMBER1
 - Molly Badger
+- MEMBER3
 - Szun Kidd Choi
 - Seb Barnes
+- MEMBER4
 
 ## Goals
 The primary goals of this project are the following:
