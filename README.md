@@ -5,10 +5,10 @@ _This README contains basic information about the project and its artifacts. If 
 
 ## Team
 
-- MEMBER1
-- Molly Badger
 - Valentin Parafioriti
 - MEMBER2
+- MEMBER1
+- Molly Badger
 - MEMBER3
 - Szun Kidd Choi
 - Seb Barnes
