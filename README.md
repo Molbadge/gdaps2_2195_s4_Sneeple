@@ -18,16 +18,23 @@ The primary goals of this project are the following:
 5. To have fun making a game
 
 ## Mission Statement
-_Replace this with the overall objectives that your team has agreed upon._
-_What is the goal of the project (from a learning and product perspective)? Who is your target audience? How will you define success?_
+_From this project, we want to be able to create a piece we are proud enough of to display on our portfolios. 
+We also wish for this to be a learning experience from multiple aspects, such as time management, collaboration, programming skills, as well as code analysis and refactoring.
+Most importantly, though, we want this to be a fun and enjoyable experience!
+
 
 ## Communications
 
 ### Discord
 _Add info about how to join/use your team's Discord channel. What is it?_
+Discord will primarily be used for any communication outside of meetings and the classroom -
+	we will use it to bounce ideas, ask for help, as well as provide updates, among other things.
+Images of diagrams and whiteboard scribbles will be uploaded onto the channel as well,
+	to ensure everyone is on track with material covered/discussed.
+
 
 ### Meeting Times
-_Set at least 1 out-of-class meeting time and note times when the entire group is usually free for additional meetings as needed._
+Thursdays 4pm, weekly
 
 ## Repository Overview
 _As the project progresses, add notes here about how the repository is organized, how branches are being used, etc._
@@ -36,7 +43,7 @@ _As the project progresses, add notes here about how the repository is organized
 
 | File/Directory | Contents |
 | -------------- | ----------- |
-| [Google Documentation](TBD) | Link to the team's Google Doc with written project documentation | 
+| [Google Documentation](TBD) | https://docs.google.com/document/d/1u_mjDK9xRoz_qWIAqil-3vbbD80l2EG1_gXIXTexbJk/edit?usp=sharing 
 | [game/ReleaseNotes.md](src/ReleaseNotes.md) | MonoGame release notes _Update this with each milestone._| 
 | [external_tool/ReleaseNotes.md](src/ReleaseNotes.md) | External tool release notes _Update this with each milestone._| 
 
