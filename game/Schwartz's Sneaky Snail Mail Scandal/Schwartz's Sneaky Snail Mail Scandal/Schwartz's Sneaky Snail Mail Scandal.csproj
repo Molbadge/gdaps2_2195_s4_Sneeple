@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Erika.cs" />
+    <Compile Include="Erin.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="HiddenImg.cs" />
     <Compile Include="Luis.cs" />
