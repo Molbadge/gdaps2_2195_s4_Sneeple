@@ -61,7 +61,38 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             // FSM for player animation goes here
             switch (playerState)
             {
-
+                case (States.FaceDown):
+                    {
+                        break;
+                    }
+                case (States.FaceLeft):
+                    {
+                        break;
+                    }
+                case (States.FaceRight):
+                    {
+                        break;
+                    }
+                case (States.FaceUp):
+                    {
+                        break;
+                    }
+                case (States.WalkDown):
+                    {
+                        break;
+                    }
+                case (States.WalkLeft):
+                    {
+                        break;
+                    }
+                case (States.WalkRight):
+                    {
+                        break;
+                    }
+                case (States.WalkUp):
+                    {
+                        break;
+                    }
             }
         }
 
@@ -70,7 +101,38 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             // FSM for player animation goes here
             switch (playerState)
             {
-
+                case (States.FaceDown):
+                    {
+                        break;
+                    }
+                case (States.FaceLeft):
+                    {
+                        break;
+                    }
+                case (States.FaceRight):
+                    {
+                        break;
+                    }
+                case (States.FaceUp):
+                    {
+                        break;
+                    }
+                case (States.WalkDown):
+                    {
+                        break;
+                    }
+                case (States.WalkLeft):
+                    {
+                        break;
+                    }
+                case (States.WalkRight):
+                    {
+                        break;
+                    }
+                case (States.WalkUp):
+                    {
+                        break;
+                    }
             }
         }
     }
