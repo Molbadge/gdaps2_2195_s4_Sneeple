@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
@@ -17,8 +20,27 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         WalkLeft,
         WalkRight
     }
+
     class Player
     {
+        States playerState = States.FaceDown;
 
+        public void Update(GameTime gameTime)
+        {
+            // FSM for player movement goes here
+            switch (playerState)
+            {
+
+            }
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            // FSM for player animation goes here
+            switch (playerState)
+            {
+
+            }
+        }
     }
 }
