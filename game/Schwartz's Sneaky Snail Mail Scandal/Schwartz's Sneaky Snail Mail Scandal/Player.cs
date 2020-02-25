@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
@@ -19,6 +22,33 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
     }
     class Player
     {
+        // Fields
+
+        Vector2 playerLoc;  // tracks player's location
+        Texture2D spriteSheet;
+
+        // Constants for the sprites
+
+        const int WalkFrameCount = 0;
+        const int PlayerRectOffsetY = 0;
+        const int PlayerRectHeight = 0;
+        const int PlayerRectWidth = 0;
+
+        // Animation
+
+        int frame;
+        double timeCounter;
+        double fps;
+        double timePerFrame;
+
+        // Properties
+
+        public float X
+        { 
+            get { return this.playerLoc.X; }
+            set { this.playerLoc.X = value; }
+        }
+
 
     }
 }
