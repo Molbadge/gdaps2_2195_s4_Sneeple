@@ -26,6 +26,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
         Vector2 playerLoc;  // tracks player's location
         Texture2D spriteSheet;
+        States playerState;
 
         // Constants for the sprites
 
@@ -48,7 +49,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             get { return this.playerLoc.X; }
             set { this.playerLoc.X = value; }
         }
-
+        public States PlayerState
+        {
+            get { return playerState; }
+            set { playerState = value; }
+        }
 
     }
 }
