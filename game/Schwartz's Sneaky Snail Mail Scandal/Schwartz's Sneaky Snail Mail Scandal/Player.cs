@@ -23,6 +23,46 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
     class Player
     {
+        // Fields
+
+        Vector2 playerLoc;  // tracks player's location
+        Texture2D spriteSheet;
+        States playerState;
+
+        // Constants for the sprites
+
+        const int WalkFrameCount = 0;
+        const int PlayerRectOffsetY = 0;
+        const int PlayerRectHeight = 0;
+        const int PlayerRectWidth = 0;
+
+        // Animation
+
+        int frame;
+        double timeCounter;
+        double fps;
+        double timePerFrame;
+
+        // Properties
+
+        public float X
+        {
+            get { return this.playerLoc.X; }
+            set { this.playerLoc.X = value; }
+        }
+        public States PlayerState
+        {
+            get { return playerState; }
+            set { playerState = value; }
+        }
+    }
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            // FSM for player animation goes here
+            switch (playerState)
+            {
 
             }
         }
@@ -32,7 +72,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             // FSM for player animation goes here
             switch (playerState)
             {
-
+                
             }
         }
     }
