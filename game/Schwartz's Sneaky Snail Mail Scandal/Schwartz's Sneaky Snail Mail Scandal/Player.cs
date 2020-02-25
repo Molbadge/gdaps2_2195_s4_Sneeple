@@ -55,10 +55,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             get { return playerState; }
             set { playerState = value; }
         }
-    }
-        }
 
-        public void Draw(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             // FSM for player animation goes here
             switch (playerState)
@@ -72,7 +70,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             // FSM for player animation goes here
             switch (playerState)
             {
-                
+
             }
         }
     }
