@@ -142,13 +142,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                         break;
                     }
             }
-
-
         }
-
-
-        //Methods for drawing the standing frames
-
+        // Methods for drawing the standing frames
+        // Can someone label these idk which one is which
         private void DrawStanding(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
@@ -166,7 +162,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 SpriteEffects.None,
                 0);
         }
-
 
         private void DrawWalking( SpriteBatch spriteBatch)
         {
