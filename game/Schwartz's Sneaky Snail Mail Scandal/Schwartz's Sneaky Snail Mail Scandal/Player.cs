@@ -31,10 +31,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
         // Constants for the sprites
 
-        const int WalkFrameCount = 0;
+        const int WalkFrameCount = 5;
         const int PlayerRectOffsetY = 0;
-        const int PlayerRectHeight = 0;
-        const int PlayerRectWidth = 0;
+        const int PlayerRectHeight = 200;
+        const int PlayerRectWidth = 125;
 
         // Animation
 
@@ -54,6 +54,16 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         {
             get { return playerState; }
             set { playerState = value; }
+        }
+
+        public Player(Texture2D spriteSheet, Vector2 playerLoc /*PlayerState startingState*/)
+        {
+            this.spriteSheet = spriteSheet;
+            this.playerLoc = playerLoc;
+            //this.playerState = playerState; to be added when PlayerState is working properly
+
+            fps = 10.0;
+            timePerFrame = 1.0 / fps;
         }
 
         public void Update(GameTime gameTime)
@@ -134,6 +144,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                         break;
                     }
             }
+
+
         }
     }
 }

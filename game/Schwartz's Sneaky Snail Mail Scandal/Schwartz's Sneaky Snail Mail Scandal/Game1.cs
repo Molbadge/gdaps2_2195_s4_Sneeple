@@ -41,6 +41,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            Texture2D spriteSheet = Content.Load<Texture2D>("Ritchie");
         }
 
         /// <summary>
