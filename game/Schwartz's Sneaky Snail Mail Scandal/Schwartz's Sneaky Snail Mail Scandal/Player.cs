@@ -11,14 +11,16 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
     enum PlayerStates
     {
-        FaceUp,
-        FaceDown,
-        FaceRight,
-        FaceLeft,
-        WalkUp,
-        WalkDown,
-        WalkLeft,
-        WalkRight
+        
+        FaceDown = 0,
+        FaceRight = 1,
+        FaceLeft = 2,
+        FaceUp = 3,
+        
+        WalkDown = 4,
+        WalkLeft = 5,
+        WalkRight = 6,
+        WalkUp = 7
     }
 
     class Player
@@ -32,7 +34,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         // Constants for the sprites
 
         const int WalkFrameCount = 5;
-        const int PlayerRectOffsetY = 0;
         const int PlayerRectHeight = 200;
         const int PlayerRectWidth = 125;
 
@@ -69,8 +70,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             this.playerLoc = playerLoc;
             this.state = startingState;
 
-            fps = 0.0;
-            timePerFrame = 1.0 / fps;
+            fps = 5.0;
+            timePerFrame = .5 / fps;
         }
 
         public void UpdateAnimation(GameTime gameTime)
@@ -87,7 +88,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 frame += 1;                     //Increments the frame images
 
                 if (frame > WalkFrameCount)     //Checking the bounds of the wlak cycle
-                    frame = 1;                  //Back to 1 for the frames
+                    frame = 0;                  //Back to 1 for the frames
 
                 timeCounter -= timePerFrame;    //removes time used, helps keep time passing
             }
@@ -102,42 +103,42 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             {
                 case (PlayerStates.FaceDown):
                     {
-                        DrawFaceDown(SpriteEffects.None, spriteBatch);
+                        DrawStanding(spriteBatch);
                         break;
                     }
                 case (PlayerStates.FaceLeft):
                     {
-                        DrawFaceLeft(SpriteEffects.None, spriteBatch);
+                        DrawStanding(spriteBatch);
                         break;
                     }
                 case (PlayerStates.FaceRight):
                     {
-                        DrawFaceRight(SpriteEffects.None, spriteBatch);
+                        DrawStanding(spriteBatch);
                         break;
                     }
                 case (PlayerStates.FaceUp):
                     {
-                        DrawFaceUp(SpriteEffects.None, spriteBatch);
+                        DrawStanding(spriteBatch);
                         break;
                     }
                 case (PlayerStates.WalkDown):
                     {
-                        DrawWalkingDown(SpriteEffects.None, spriteBatch);
+                        DrawWalking(spriteBatch);
                         break;
                     }
                 case (PlayerStates.WalkLeft):
                     {
-                        DrawWalkingLeft(SpriteEffects.None, spriteBatch);
+                        DrawWalking(spriteBatch);
                         break;
                     }
                 case (PlayerStates.WalkRight):
                     {
-                        DrawWalkingRight(SpriteEffects.None, spriteBatch);
+                        DrawWalking(spriteBatch);
                         break;
                     }
                 case (PlayerStates.WalkUp):
                     {
-                        DrawWalkingUp(SpriteEffects.None, spriteBatch);
+                        DrawWalking(spriteBatch);
                         break;
                     }
             }
@@ -147,148 +148,44 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 
         //Methods for drawing the standing frames
-        private void DrawFaceDown(SpriteEffects flipsprite, SpriteBatch spriteBatch)
+
+        private void DrawStanding(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
-                spriteSheet,                    // - Texture to draw
-                playerLoc,                      // - Location to draw to
-                new Rectangle(                  // - Source Rectangle
-                    0,                          //   - Specifies where in the
-                    PlayerRectOffsetY,          //      sprite image to pull
-                    PlayerRectWidth,            //      the drawing from
-                    PlayerRectHeight),          //
-                Color.White,                    // - Color
-                0,                              // - Rotation (Should be none)
-                Vector2.Zero,                   // - Origin inside the image (top left of image)
-                1.0f,                           // - Scale (100% no change right now)
-                flipsprite,                     // - Used to flip image if needed
-                0);                             // - Layer depth will implement later
+                spriteSheet,
+                playerLoc,
+                new Rectangle(
+                    0,
+                    (int)state* PlayerRectHeight,
+                    PlayerRectWidth,
+                    PlayerRectHeight),
+                Color.White,
+                0,
+                Vector2.Zero,
+                1.0f,
+                SpriteEffects.None,
+                0);
         }
 
-        private void DrawFaceRight(SpriteEffects flipSprite, SpriteBatch spriteBatch)
+
+        private void DrawWalking( SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
-                spriteSheet,                    // - Texture to draw
-                playerLoc,                      // - Location to draw to
-                new Rectangle(                  // - Source Rectangle
-                    0,                          //   - Specifies where in the
-                    PlayerRectOffsetY,          //      sprite image to pull
-                    PlayerRectWidth,            //      the drawing from
-                    2 * PlayerRectHeight),          //
-                Color.White,                    // - Color
-                0,                              // - Rotation (Should be none)
-                Vector2.Zero,                   // - Origin inside the image (top left of image)
-                1.0f,                           // - Scale (100% no change right now)
-                flipSprite,                     // - Used to flip image if needed
-                0);                             // - Layer depth will implement later
+               spriteSheet,                                     // - Texture to draw
+               playerLoc,                                       // - Location to draw to
+               new Rectangle(                                   // - Source Rectangle
+                   frame * PlayerRectWidth,                     //   - Specifies where in the
+                   ((int)state - 5) * PlayerRectHeight,         //      sprite image to pull
+                   PlayerRectWidth,                             //      the drawing from
+                   PlayerRectHeight),                           //
+               Color.White,                                     // - Color
+               0,                                               // - Rotation (Should be none)
+               Vector2.Zero,                                    // - Origin inside the image (top left of image)
+               1.0f,                                            // - Scale (100% no change right now)
+               SpriteEffects.None,                              // - Used to flip image if needed
+               0);                                              // - Layer depth will implement later
         }
 
-        private void DrawFaceLeft(SpriteEffects flipSprite, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(
-               spriteSheet,                    // - Texture to draw
-               playerLoc,                      // - Location to draw to
-               new Rectangle(                  // - Source Rectangle
-                   0,                          //   - Specifies where in the
-                   PlayerRectOffsetY,          //      sprite image to pull
-                   PlayerRectWidth,            //      the drawing from
-                   3 * PlayerRectHeight),          //
-               Color.White,                    // - Color
-               0,                              // - Rotation (Should be none)
-               Vector2.Zero,                   // - Origin inside the image (top left of image)
-               1.0f,                           // - Scale (100% no change right now)
-               flipSprite,                     // - Used to flip image if needed
-               0);                             // - Layer depth will implement later
-        }
-
-        private void DrawFaceUp(SpriteEffects flipSprite, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(
-               spriteSheet,                    // - Texture to draw
-               playerLoc,                      // - Location to draw to
-               new Rectangle(                  // - Source Rectangle
-                   0,                          //   - Specifies where in the
-                   PlayerRectOffsetY,          //      sprite image to pull
-                   PlayerRectWidth,            //      the drawing from
-                   4 * PlayerRectHeight),          //
-               Color.White,                    // - Color
-               0,                              // - Rotation (Should be none)
-               Vector2.Zero,                   // - Origin inside the image (top left of image)
-               1.0f,                           // - Scale (100% no change right now)
-               flipSprite,                     // - Used to flip image if needed
-               0);                             // - Layer depth will implement later
-        }
-
-        private void DrawWalkingDown(SpriteEffects flipSprite, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(
-               spriteSheet,                    // - Texture to draw
-               playerLoc,                      // - Location to draw to
-               new Rectangle(                  // - Source Rectangle
-                   frame * PlayerRectWidth,    //   - Specifies where in the
-                   PlayerRectOffsetY,          //      sprite image to pull
-                   PlayerRectWidth,            //      the drawing from
-                   PlayerRectHeight),          //
-               Color.White,                    // - Color
-               0,                              // - Rotation (Should be none)
-               Vector2.Zero,                   // - Origin inside the image (top left of image)
-               1.0f,                           // - Scale (100% no change right now)
-               flipSprite,                     // - Used to flip image if needed
-               0);                             // - Layer depth will implement later
-        }
-
-        private void DrawWalkingRight(SpriteEffects flipSprite, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(
-               spriteSheet,                    // - Texture to draw
-               playerLoc,                      // - Location to draw to
-               new Rectangle(                  // - Source Rectangle
-                   frame * PlayerRectWidth,    //   - Specifies where in the
-                   PlayerRectOffsetY,          //      sprite image to pull
-                   PlayerRectWidth,            //      the drawing from
-                   2 * PlayerRectHeight),          //
-               Color.White,                    // - Color
-               0,                              // - Rotation (Should be none)
-               Vector2.Zero,                   // - Origin inside the image (top left of image)
-               1.0f,                           // - Scale (100% no change right now)
-               flipSprite,                     // - Used to flip image if needed
-               0);                             // - Layer depth will implement later
-        }
-
-        private void DrawWalkingLeft(SpriteEffects flipSprite, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(
-               spriteSheet,                    // - Texture to draw
-               playerLoc,                      // - Location to draw to
-               new Rectangle(                  // - Source Rectangle
-                   frame * PlayerRectWidth,    //   - Specifies where in the
-                   PlayerRectOffsetY,          //      sprite image to pull
-                   PlayerRectWidth,            //      the drawing from
-                   3 * PlayerRectHeight),          //
-               Color.White,                    // - Color
-               0,                              // - Rotation (Should be none)
-               Vector2.Zero,                   // - Origin inside the image (top left of image)
-               1.0f,                           // - Scale (100% no change right now)
-               flipSprite,                     // - Used to flip image if needed
-               0);                             // - Layer depth will implement later
-        }
-
-        private void DrawWalkingUp(SpriteEffects flipSprite, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(
-               spriteSheet,                    // - Texture to draw
-               playerLoc,                      // - Location to draw to
-               new Rectangle(                  // - Source Rectangle
-                   frame * PlayerRectWidth,    //   - Specifies where in the
-                   PlayerRectOffsetY,          //      sprite image to pull
-                   PlayerRectWidth,            //      the drawing from
-                   4 * PlayerRectHeight),          //
-               Color.White,                    // - Color
-               0,                              // - Rotation (Should be none)
-               Vector2.Zero,                   // - Origin inside the image (top left of image)
-               1.0f,                           // - Scale (100% no change right now)
-               flipSprite,                     // - Used to flip image if needed
-               0);                             // - Layer depth will implement later
-        }
+        
     }
 }
