@@ -18,8 +18,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         FaceUp = 3,
         
         WalkDown = 4,
-        WalkLeft = 5,
-        WalkRight = 6,
+        WalkRight = 5,
+        WalkLeft = 6,
         WalkUp = 7
     }
 
@@ -145,6 +145,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         }
         // Methods for drawing the standing frames
         // Can someone label these idk which one is which
+        //Draw Standing is used for all the standing states
         private void DrawStanding(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
@@ -163,6 +164,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 0);
         }
 
+        //Draw Walking is used for all the walking states
         private void DrawWalking( SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
@@ -170,7 +172,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                playerLoc,                                       // - Location to draw to
                new Rectangle(                                   // - Source Rectangle
                    frame * PlayerRectWidth,                     //   - Specifies where in the
-                   ((int)state - 5) * PlayerRectHeight,         //      sprite image to pull
+                   ((int)state - 4) * PlayerRectHeight,         //      sprite image to pull
                    PlayerRectWidth,                             //      the drawing from
                    PlayerRectHeight),                           //
                Color.White,                                     // - Color

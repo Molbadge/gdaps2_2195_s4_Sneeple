@@ -83,202 +83,138 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             {
                 //Case for facing Down
                 case PlayerStates.FaceDown: 
-                    if(kbState.IsKeyDown(Keys.W))
+                    //-----Transition to standing states--------
+                    if(kbState.IsKeyDown(Keys.W) == true)
                     {
                         player.State = PlayerStates.FaceUp;
                     }
-                    if(kbState.IsKeyDown(Keys.D))
-                    {
-                        player.State = PlayerStates.FaceRight;
-                    }
-                    if(kbState.IsKeyDown(Keys.A))
+                    if(kbState.IsKeyDown(Keys.A) == true)
                     {
                         player.State = PlayerStates.FaceLeft;
                     }
-                    if(kbState.IsKeyDown(Keys.S))
+                    if(kbState.IsKeyDown(Keys.D) == true)
+                    {
+                        player.State = PlayerStates.FaceRight;
+                    }
+                    //-----Transition to walking state---------
+                    if(kbState.IsKeyDown(Keys.S) == true)
                     {
                         player.State = PlayerStates.WalkDown;
-                    }
-                    //Sends back to still image
-                    if(kbState.IsKeyUp(Keys.S))
-                    {
-                        player.State = PlayerStates.FaceDown;
                     }
                     break;
 
                 //Case for facing right
                 case PlayerStates.FaceRight:
-                    if (kbState.IsKeyDown(Keys.W))
+                    //-----Transition to standing states--------
+                    if (kbState.IsKeyDown(Keys.W) == true)
                     {
                         player.State = PlayerStates.FaceUp;
                     }
-                    if (kbState.IsKeyDown(Keys.S))
-                    {
-                        player.State = PlayerStates.FaceDown;
-                    }
-                    if (kbState.IsKeyDown(Keys.A))
+                    if(kbState.IsKeyDown(Keys.A) == true)
                     {
                         player.State = PlayerStates.FaceLeft;
                     }
-                    if (kbState.IsKeyDown(Keys.D))
+                    if(kbState.IsKeyDown(Keys.S) == true)
+                    {
+                        player.State = PlayerStates.FaceDown;
+                    }
+                    //-----Transition to walking state---------
+                    if(kbState.IsKeyDown(Keys.D) == true)
                     {
                         player.State = PlayerStates.WalkRight;
-                    }
-                    //Sends back to still image
-                    if (kbState.IsKeyUp(Keys.D))
-                    {
-                        player.State = PlayerStates.FaceRight;
                     }
                     break;
 
                 //Case for facing Left
                 case PlayerStates.FaceLeft:
-                    if (kbState.IsKeyDown(Keys.W))
+                    //-----Transition to standing states--------
+                    if(kbState.IsKeyDown(Keys.W) == true)
                     {
                         player.State = PlayerStates.FaceUp;
                     }
-                    if (kbState.IsKeyDown(Keys.D))
-                    {
-                        player.State = PlayerStates.FaceRight;
-                    }
-                    if (kbState.IsKeyDown(Keys.S))
+                    if(kbState.IsKeyDown(Keys.S) == true)
                     {
                         player.State = PlayerStates.FaceDown;
                     }
-                    if (kbState.IsKeyDown(Keys.A))
+                    if(kbState.IsKeyDown(Keys.D) == true)
+                    {
+                        player.State = PlayerStates.FaceRight;
+                    }
+                    //-----Transition to walking state---------
+                    if(kbState.IsKeyDown(Keys.A) == true)
                     {
                         player.State = PlayerStates.WalkLeft;
-                    }
-                    //Sends back to still image
-                    if (kbState.IsKeyUp(Keys.A))
-                    {
-                        player.State = PlayerStates.FaceLeft;
                     }
                     break;
 
                 //Case for Facing Up
                 case PlayerStates.FaceUp:
-                    if (kbState.IsKeyDown(Keys.A))
+                    //-----Transition to standing states--------
+                    if(kbState.IsKeyDown(Keys.A) == true)
                     {
                         player.State = PlayerStates.FaceLeft;
                     }
-                    if (kbState.IsKeyDown(Keys.D))
-                    {
-                        player.State = PlayerStates.FaceRight;
-                    }
-                    if (kbState.IsKeyDown(Keys.S))
+                    if(kbState.IsKeyDown(Keys.S) == true)
                     {
                         player.State = PlayerStates.FaceDown;
                     }
-                    if (kbState.IsKeyDown(Keys.W))
+                    if(kbState.IsKeyDown(Keys.D) == true)
+                    {
+                        player.State = PlayerStates.FaceRight;
+                    }
+                    //-----Transition to walking state---------
+                    if(kbState.IsKeyDown(Keys.W) == true)
                     {
                         player.State = PlayerStates.WalkUp;
-                    }
-                    //Sends back to still image
-                    if (kbState.IsKeyUp(Keys.W))
-                    {
-                        player.State = PlayerStates.FaceUp;
                     }
                     break;
 
 
                 //Case for walking Down
                 case PlayerStates.WalkDown:
-                    if (kbState.IsKeyDown(Keys.W))
+                    if(kbState.IsKeyDown(Keys.S) == true)
                     {
-                        player.State = PlayerStates.FaceUp;
+                        player.State = PlayerStates.WalkDown;        //Keeps Walking down
                     }
-                    if (kbState.IsKeyDown(Keys.D))
+                    if(kbState.IsKeyUp(Keys.S) == true)
                     {
-                        player.State = PlayerStates.FaceRight;
-                    }
-                    if (kbState.IsKeyDown(Keys.A))
-                    {
-                        player.State = PlayerStates.FaceLeft;
-                    }
-                    if (kbState.IsKeyDown(Keys.S))
-                    {
-                        player.State = PlayerStates.WalkDown;
-                    }
-                    //Sends back to still image
-                    if (kbState.IsKeyUp(Keys.S))
-                    {
-                        player.State = PlayerStates.FaceDown;
+                        player.State = PlayerStates.FaceDown;        //Changes to facing down state
                     }
                     break;
 
                 //Case for walking right
                 case PlayerStates.WalkRight:
-                    if (kbState.IsKeyDown(Keys.W))
+                    if(kbState.IsKeyDown(Keys.D) == true)
                     {
-                        player.State = PlayerStates.FaceUp;
+                        player.State = PlayerStates.WalkRight;          //Keeps walking right
                     }
-                    if (kbState.IsKeyDown(Keys.S))
+                    if(kbState.IsKeyUp(Keys.D) == true)
                     {
-                        player.State = PlayerStates.FaceDown;
-                    }
-                    if (kbState.IsKeyDown(Keys.A))
-                    {
-                        player.State = PlayerStates.FaceLeft;
-                    }
-                    if (kbState.IsKeyDown(Keys.D))
-                    {
-                        player.State = PlayerStates.WalkRight;
-                    }
-                    //Sends back to still image
-                    if (kbState.IsKeyUp(Keys.D))
-                    {
-                        player.State = PlayerStates.FaceRight;
+                        player.State = PlayerStates.FaceRight;          //Changes to facing right state
                     }
                     break;
 
                 //Case for walking left
                 case PlayerStates.WalkLeft:
-                    if (kbState.IsKeyDown(Keys.W) )
+                    if(kbState.IsKeyDown(Keys.A) == true)
                     {
-                        player.State = PlayerStates.FaceUp;
+                        player.State = PlayerStates.WalkLeft;           //Keeps walking left
                     }
-                    if (kbState.IsKeyDown(Keys.D))
+                    if(kbState.IsKeyUp(Keys.A) == true)
                     {
-                        player.State = PlayerStates.FaceRight;
-                    }
-                    if (kbState.IsKeyDown(Keys.S))
-                    {
-                        player.State = PlayerStates.FaceDown;
-                    }
-                    if (kbState.IsKeyDown(Keys.A))
-                    {
-                        player.State = PlayerStates.WalkLeft;
-                    }
-                    //Sends back to still image
-                    if (kbState.IsKeyUp(Keys.A))
-                    {
-                        player.State = PlayerStates.FaceLeft;
+                        player.State = PlayerStates.FaceLeft;           //Changes to left facing state
                     }
                     break;
 
                 //Case for walking up
                 case PlayerStates.WalkUp:
-                    if (kbState.IsKeyDown(Keys.A))
+                    if(kbState.IsKeyDown(Keys.W) == true)
                     {
-                        player.State = PlayerStates.FaceLeft;
+                        player.State = PlayerStates.WalkUp;             //Keeps walking up
                     }
-                    if (kbState.IsKeyDown(Keys.D) )
+                    if(kbState.IsKeyUp(Keys.W) == true)
                     {
-                        player.State = PlayerStates.FaceRight;
-                    }
-                    if (kbState.IsKeyDown(Keys.S))
-                    {
-                        player.State = PlayerStates.FaceDown;
-                    }
-                    if (kbState.IsKeyDown(Keys.W))
-                    {
-                        player.State = PlayerStates.WalkUp;
-                    }
-                    //Sends back to still image
-                    if (kbState.IsKeyUp(Keys.W))
-                    {
-                        player.State = PlayerStates.FaceUp;
+                        player.State = PlayerStates.FaceUp;             //Changes to facing up
                     }
                     break;
 
