@@ -14,6 +14,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
         //Player to draw based on state
         Player player;
+        const int playerSpeed = 2;
+
 
         public Game1()
         {
@@ -225,22 +227,22 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             //Positive Y integer for walking down
             if (player.State == PlayerStates.WalkDown)
             {
-                player.Y = player.Y + 1; 
+                player.Y = player.Y + playerSpeed; 
             }
             //Negative Y integer for walking up
             if(player.State == PlayerStates.WalkUp)
             {
-                player.Y = player.Y - 1;
+                player.Y = player.Y - playerSpeed;
             }
             //Positive X integer for walking right
             if(player.State == PlayerStates.WalkRight)
             {
-                player.X = player.X + 1;
+                player.X = player.X + playerSpeed;
             }
             //Negative X integer for walking left
             if(player.State == PlayerStates.WalkLeft)
             {
-                player.X = player.X - 1;
+                player.X = player.X - playerSpeed;
             }
 
 
