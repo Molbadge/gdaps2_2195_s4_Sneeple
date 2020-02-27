@@ -63,7 +63,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             get { return state; }
             set { state = value; }
         }
-
+        // Constructor
         public Player(Texture2D spriteSheet, Vector2 playerLoc, PlayerStates startingState)
         {
             this.spriteSheet = spriteSheet;
@@ -144,7 +144,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             }
         }
         // Methods for drawing the standing frames
-        // Can someone label these idk which one is which
         //Draw Standing is used for all the standing states
         private void DrawStanding(SpriteBatch spriteBatch)
         {
