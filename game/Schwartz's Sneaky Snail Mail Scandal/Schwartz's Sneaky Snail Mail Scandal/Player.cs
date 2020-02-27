@@ -33,7 +33,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
         // Constants for the sprites
 
-        const int WalkFrameCount = 5;
+        const int WalkFrameCount = 3;
         const int PlayerRectHeight = 200;
         const int PlayerRectWidth = 125;
 
@@ -70,8 +70,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             this.playerLoc = playerLoc;
             this.state = startingState;
 
-            fps = 5.0;
-            timePerFrame = .5 / fps;
+            fps = 4.0;
+            timePerFrame = 1.0 / fps;
         }
 
         public void UpdateAnimation(GameTime gameTime)
