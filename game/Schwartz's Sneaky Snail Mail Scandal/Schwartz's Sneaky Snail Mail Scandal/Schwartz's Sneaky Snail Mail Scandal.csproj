@@ -46,6 +46,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="HiddenImg.cs" />
     <Compile Include="Luis.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Professor.cs" />
     <Compile Include="Program.cs" />
