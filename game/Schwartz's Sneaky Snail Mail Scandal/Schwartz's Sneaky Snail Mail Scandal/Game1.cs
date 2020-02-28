@@ -16,6 +16,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         Player player;
         const int playerSpeed = 2;
 
+        // Variables to store screen size
+        int windowWidth;
+        int windowHeight;
+
+        // Variables to store wooden square texture/dimensions
+        Texture2D woodenSquare;
+        Rectangle woodenSquareRectangle;
+
+        Rectangle playerTracker;
 
         public Game1()
         {
@@ -32,6 +41,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            windowWidth = graphics.GraphicsDevice.Viewport.Width;
+            windowHeight = graphics.GraphicsDevice.Viewport.Height;
 
             base.Initialize();
         }
@@ -51,6 +62,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             Texture2D spriteSheet = Content.Load<Texture2D>("Ritchie");
 
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
+
+            woodenSquare = Content.Load<Texture2D>("woodenSquare");
+            woodenSquareRectangle = new Rectangle(windowWidth / 2 - 80, windowHeight / 2 - 30, 70, 70);
         }
 
         /// <summary>
@@ -227,26 +241,48 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             //Positive Y integer for walking down
             if (player.State == PlayerStates.WalkDown)
             {
-                player.Y = player.Y + playerSpeed; 
+                // Checking if player is touching the edges of the screen
+                if (player.Y <= windowHeight - player.PlayerHeight)
+                {
+                    player.Y = player.Y + playerSpeed;
+                }
             }
             //Negative Y integer for walking up
             if(player.State == PlayerStates.WalkUp)
             {
-                player.Y = player.Y - playerSpeed;
+                // Checking if player is touching the edges of the screen or 
+                //     wooden square
+                if (player.Y >= 0
+                    && !woodenSquareRectangle.Intersects(playerTracker))
+                {
+                    player.Y = player.Y - playerSpeed;
+                }
             }
             //Positive X integer for walking right
             if(player.State == PlayerStates.WalkRight)
             {
-                player.X = player.X + playerSpeed;
+                // Checking if player is touching the edges of the screen
+                if (player.X <= windowWidth - player.PlayerWidth)
+                {
+                    player.X = player.X + playerSpeed;
+                }
             }
             //Negative X integer for walking left
             if(player.State == PlayerStates.WalkLeft)
             {
-                player.X = player.X - playerSpeed;
+                // Checking if player is touching the edges of the screen
+                //     or wooden square
+                if (player.X >= 0
+                    && !woodenSquareRectangle.Intersects(playerTracker))
+                {
+                    player.X = player.X - playerSpeed;
+                } 
             }
 
+            // Rectangle to track player's current position
+            playerTracker = new Rectangle((int)player.X, (int)player.Y, player.PlayerWidth, player.PlayerHeight);
 
-                base.Update(gameTime);
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -262,6 +298,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             spriteBatch.Begin();
 
             player.Draw(spriteBatch);
+            spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
 
             spriteBatch.End();
 

@@ -32,20 +32,17 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         PlayerStates state;
 
         // Constants for the sprites
-
         const int WalkFrameCount = 3;
         const int PlayerRectHeight = 200;
         const int PlayerRectWidth = 125;
 
         // Animation
-
         int frame;
         double timeCounter;
         double fps;
         double timePerFrame;
 
         // Properties
-
         public float X
         {
             get { return this.playerLoc.X; }
@@ -63,6 +60,18 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             get { return state; }
             set { state = value; }
         }
+
+        // get properties to return player rectangle height/width constants
+        public int PlayerWidth
+        {
+            get { return PlayerRectWidth; }
+        }
+
+        public int PlayerHeight
+        {
+            get { return PlayerRectHeight; }
+        }
+
         // Constructor
         public Player(Texture2D spriteSheet, Vector2 playerLoc, PlayerStates startingState)
         {
