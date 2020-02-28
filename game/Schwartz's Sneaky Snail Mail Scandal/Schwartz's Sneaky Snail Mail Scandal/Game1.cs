@@ -100,20 +100,20 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 //Case for facing Down
                 case PlayerStates.FaceDown: 
                     //-----Transition to standing states--------
-                    if(kbState.IsKeyDown(Keys.W) == true)
+                    if(kbState.IsKeyDown(Keys.W))
                     {
                         player.State = PlayerStates.FaceUp;
                     }
-                    if(kbState.IsKeyDown(Keys.A) == true)
+                    if(kbState.IsKeyDown(Keys.A))
                     {
                         player.State = PlayerStates.FaceLeft;
                     }
-                    if(kbState.IsKeyDown(Keys.D) == true)
+                    if(kbState.IsKeyDown(Keys.D))
                     {
                         player.State = PlayerStates.FaceRight;
                     }
                     //-----Transition to walking state---------
-                    if(kbState.IsKeyDown(Keys.S) == true)
+                    if(kbState.IsKeyDown(Keys.S))
                     {
                         player.State = PlayerStates.WalkDown;
                     }
@@ -122,20 +122,20 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 //Case for facing right
                 case PlayerStates.FaceRight:
                     //-----Transition to standing states--------
-                    if (kbState.IsKeyDown(Keys.W) == true)
+                    if (kbState.IsKeyDown(Keys.W))
                     {
                         player.State = PlayerStates.FaceUp;
                     }
-                    if(kbState.IsKeyDown(Keys.A) == true)
+                    if(kbState.IsKeyDown(Keys.A))
                     {
                         player.State = PlayerStates.FaceLeft;
                     }
-                    if(kbState.IsKeyDown(Keys.S) == true)
+                    if(kbState.IsKeyDown(Keys.S))
                     {
                         player.State = PlayerStates.FaceDown;
                     }
                     //-----Transition to walking state---------
-                    if(kbState.IsKeyDown(Keys.D) == true)
+                    if(kbState.IsKeyDown(Keys.D))
                     {
                         player.State = PlayerStates.WalkRight;
                     }
@@ -144,20 +144,20 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 //Case for facing Left
                 case PlayerStates.FaceLeft:
                     //-----Transition to standing states--------
-                    if(kbState.IsKeyDown(Keys.W) == true)
+                    if(kbState.IsKeyDown(Keys.W))
                     {
                         player.State = PlayerStates.FaceUp;
                     }
-                    if(kbState.IsKeyDown(Keys.S) == true)
+                    if(kbState.IsKeyDown(Keys.S))
                     {
                         player.State = PlayerStates.FaceDown;
                     }
-                    if(kbState.IsKeyDown(Keys.D) == true)
+                    if(kbState.IsKeyDown(Keys.D))
                     {
                         player.State = PlayerStates.FaceRight;
                     }
                     //-----Transition to walking state---------
-                    if(kbState.IsKeyDown(Keys.A) == true)
+                    if(kbState.IsKeyDown(Keys.A))
                     {
                         player.State = PlayerStates.WalkLeft;
                     }
@@ -166,20 +166,20 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 //Case for Facing Up
                 case PlayerStates.FaceUp:
                     //-----Transition to standing states--------
-                    if(kbState.IsKeyDown(Keys.A) == true)
+                    if(kbState.IsKeyDown(Keys.A))
                     {
                         player.State = PlayerStates.FaceLeft;
                     }
-                    if(kbState.IsKeyDown(Keys.S) == true)
+                    if(kbState.IsKeyDown(Keys.S))
                     {
                         player.State = PlayerStates.FaceDown;
                     }
-                    if(kbState.IsKeyDown(Keys.D) == true)
+                    if(kbState.IsKeyDown(Keys.D))
                     {
                         player.State = PlayerStates.FaceRight;
                     }
                     //-----Transition to walking state---------
-                    if(kbState.IsKeyDown(Keys.W) == true)
+                    if(kbState.IsKeyDown(Keys.W))
                     {
                         player.State = PlayerStates.WalkUp;
                     }
@@ -188,11 +188,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                 //Case for walking Down
                 case PlayerStates.WalkDown:
-                    if(kbState.IsKeyDown(Keys.S) == true)
+                    if(kbState.IsKeyDown(Keys.S))
                     {
                         player.State = PlayerStates.WalkDown;        //Keeps Walking down
                     }
-                    if(kbState.IsKeyUp(Keys.S) == true)
+                    if(kbState.IsKeyUp(Keys.S))
                     {
                         player.State = PlayerStates.FaceDown;        //Changes to facing down state
                     }
@@ -200,11 +200,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                 //Case for walking right
                 case PlayerStates.WalkRight:
-                    if(kbState.IsKeyDown(Keys.D) == true)
+                    if(kbState.IsKeyDown(Keys.D))
                     {
                         player.State = PlayerStates.WalkRight;          //Keeps walking right
                     }
-                    if(kbState.IsKeyUp(Keys.D) == true)
+                    if(kbState.IsKeyUp(Keys.D))
                     {
                         player.State = PlayerStates.FaceRight;          //Changes to facing right state
                     }
@@ -212,11 +212,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                 //Case for walking left
                 case PlayerStates.WalkLeft:
-                    if(kbState.IsKeyDown(Keys.A) == true)
+                    if(kbState.IsKeyDown(Keys.A))
                     {
                         player.State = PlayerStates.WalkLeft;           //Keeps walking left
                     }
-                    if(kbState.IsKeyUp(Keys.A) == true)
+                    if(kbState.IsKeyUp(Keys.A))
                     {
                         player.State = PlayerStates.FaceLeft;           //Changes to left facing state
                     }
@@ -224,11 +224,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                 //Case for walking up
                 case PlayerStates.WalkUp:
-                    if(kbState.IsKeyDown(Keys.W) == true)
+                    if(kbState.IsKeyDown(Keys.W))
                     {
                         player.State = PlayerStates.WalkUp;             //Keeps walking up
                     }
-                    if(kbState.IsKeyUp(Keys.W) == true)
+                    if(kbState.IsKeyUp(Keys.W))
                     {
                         player.State = PlayerStates.FaceUp;             //Changes to facing up
                     }
@@ -271,7 +271,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             if(player.State == PlayerStates.WalkLeft)
             {
                 // Checking if player is touching the edges of the screen
-                //     or wooden square
+                // or wooden square
                 if (player.X >= 0
                     && !woodenSquareRectangle.Intersects(playerTracker))
                 {
