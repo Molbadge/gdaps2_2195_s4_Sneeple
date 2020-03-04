@@ -9,12 +9,11 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
-    enum TileAssets
+    enum TileAssets // Enum for tiles
     {
         wall = 0,
         floor = 1,
     }
-
 
     class Map
     {
@@ -25,7 +24,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         public const int tileWidth = 32;
         public const int tileHeight = 32;
 
-        TileAssets tilePlaced;
+        TileAssets tilePlaced;          //variable to hold enum for placing tiles  
+
+        //Constants for tile sprites
+        const int TileWidth = 32;
+        const int TileHeight = 32;
 
         //Constructor
         public Map(Texture2D spritesheet)
@@ -33,6 +36,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             this.tileSprite = spritesheet;
         }
 
-
+        
     }
 }
