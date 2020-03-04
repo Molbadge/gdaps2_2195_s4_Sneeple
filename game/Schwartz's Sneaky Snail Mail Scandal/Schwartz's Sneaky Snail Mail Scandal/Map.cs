@@ -9,33 +9,99 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
-    enum TileAssets // Enum for tiles
+    enum TileStates // Enum for tiles
     {
-        wall = 0,
-        floor = 1,
+        Wall = 0,
+        Floor = 1,
     }
 
     class Map
     {
         //Fields
+        Vector2 tileLoc;
         Texture2D tileSprite;
         bool canWalk = true; //Determining if the player can walk on the tile
 
         public const int tileWidth = 32;
         public const int tileHeight = 32;
 
-        TileAssets tilePlaced;          //variable to hold enum for placing tiles  
+        TileStates tilePlaced;          //variable to hold enum for placing tiles  
 
         //Constants for tile sprites
-        const int TileWidth = 32;
-        const int TileHeight = 32;
+        const int TileRectWidth = 32;
+        const int TileRectHeight = 32;
 
-        //Constructor
-        public Map(Texture2D spritesheet)
+        //Properties
+
+        //Get property to return X and Y coordinates of tiles
+        public float X
         {
-            this.tileSprite = spritesheet;
+            get { return this.tileLoc.X; }
         }
 
+        public float Y
+        {
+            get { return this.tileLoc.Y; }
+        }
+
+        //Get/Set property to return and set tile state for types of tiles to place
+        public TileStates TilePlaced
+        {
+            get { return tilePlaced; }
+            set { tilePlaced = value; }
+        }
+
+        //Get properties to return tile width and height constants
+        public int TileWidth
+        {
+            get { return TileRectWidth; }
+        }
+
+        public int TileHeight
+        {
+            get { return TileRectHeight; }
+        }
+
+        //Constructor
+        public Map(Texture2D spritesheet, Vector2 tileLocation, TileStates startingState)
+        {
+            this.tileSprite = spritesheet;
+            this.tileLoc = tileLocation;
+            this.tilePlaced = startingState;
+        }
+
+        //Drawing Methods
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            switch (tilePlaced)
+            {
+                case TileStates.Wall:
+                    // DrawWall(spriteBatch);
+                    break;
+
+                case TileStates.Floor:
+                    break;
+            }
+        }
+        /*
+        public void DrawWall(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(
+               tileSprite,                                     // - Texture to draw
+               (10,10),                                       // - Location to draw to
+               new Rectangle(                                   // - Source Rectangle
+                   8*TileRectWidth,
+                   3*TileRectHeight,
+                   TileRectWidth,
+                   TileRectHeight),
+               Color.White,                                     // - Color
+               0,                                               // - Rotation (Should be none)
+               Vector2.Zero,                                    // - Origin inside the image (top left of image)
+               1.0f,                                            // - Scale (100% no change right now)
+               SpriteEffects.None,                              // - Used to flip image if needed
+               0);                                              // - Layer depth will implement later
+        }
+        */
         
     }
 }

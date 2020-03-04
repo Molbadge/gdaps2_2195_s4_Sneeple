@@ -1,4 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -16,6 +21,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         Player player;
         const int playerSpeed = 2;
 
+        //Map to draw based on state
+        Map map;
+
         // Variables to store screen size
         int windowWidth;
         int windowHeight;
@@ -23,6 +31,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         // Variables to store wooden square texture/dimensions
         Texture2D woodenSquare;
         Rectangle woodenSquareRectangle;
+
+		// Variable to track player position
+		Vector2 playerVelocity;
 
         Rectangle playerTracker;
 
@@ -58,13 +69,18 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             // TODO: use this.Content to load your game content here
             Vector2 playerLoc = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+            Vector2 tileLoc = new Vector2(10, 10);
 
-            Texture2D spriteSheet = Content.Load<Texture2D>("Ritchie");
+            Texture2D spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
+            Texture2D tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
 
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
+            map = new Map(tileSheet, tileLoc, TileStates.Wall);
 
             woodenSquare = Content.Load<Texture2D>("woodenSquare");
             woodenSquareRectangle = new Rectangle(windowWidth / 2 - 80, windowHeight / 2 - 30, 70, 70);
+
+			playerVelocity = new Vector2(player.X, player.Y);
         }
 
         /// <summary>
@@ -243,8 +259,16 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 // Checking if player is touching the edges of the screen
                 if (player.Y <= windowHeight - player.PlayerHeight)
                 {
-                    player.Y = player.Y + playerSpeed;
+                    playerVelocity.Y = playerSpeed;
                 }
+
+                if (playerTracker.Intersects(woodenSquareRectangle))
+				{
+					playerVelocity.Y = 0;
+					Console.WriteLine("WALKDOWN INTERSECTION");
+				}
+
+				player.Y += playerVelocity.Y;
             }
             //Negative Y integer for walking up
             if(player.State == PlayerStates.WalkUp)
@@ -255,7 +279,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 {
                     player.Y = player.Y - playerSpeed;
                 }
-            }
+
+				if (playerTracker.Intersects(woodenSquareRectangle))
+				{
+					player.Y -= playerSpeed;
+					Console.WriteLine("WALKUP INTERSECTION");
+				}
+			}
             //Positive X integer for walking right
             if(player.State == PlayerStates.WalkRight)
             {
@@ -264,7 +294,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 {
                     player.X = player.X + playerSpeed;
                 }
-            }
+
+				if (playerTracker.Intersects(woodenSquareRectangle))
+				{
+					player.X += playerSpeed;
+					Console.WriteLine("WALKRIGHT INTERSECTION");
+				}
+			}
             //Negative X integer for walking left
             if(player.State == PlayerStates.WalkLeft)
             {
@@ -273,14 +309,20 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 if (player.X >= 0)
                 {
                     player.X = player.X - playerSpeed;
-                } 
-            }
+                }
 
-            if (playerTracker.Intersects(woodenSquareRectangle))
-            {
-                player.X -= playerSpeed;
-                player.Y -= playerSpeed;
-            }
+				if (playerTracker.Intersects(woodenSquareRectangle))
+				{
+					player.X -= playerSpeed;
+					Console.WriteLine("WALKLEFT INTERSECTION");
+				}
+			}
+
+            //if (playerTracker.Intersects(woodenSquareRectangle))
+            //{
+            //    player.X += 0;
+            //    player.Y += 0;
+            //}
 
             // Rectangle to track player's current position
             playerTracker = new Rectangle((int)player.X, (int)player.Y, player.PlayerWidth, player.PlayerHeight);
@@ -302,7 +344,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             player.Draw(spriteBatch);
             spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
-
+            map.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
