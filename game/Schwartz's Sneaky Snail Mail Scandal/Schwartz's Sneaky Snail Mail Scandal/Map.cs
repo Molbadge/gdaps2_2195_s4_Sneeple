@@ -25,6 +25,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         public const int tileWidth = 32;
         public const int tileHeight = 32;
 
+        TileAssets tilePlaced;
+
         //Constructor
         public Map(Texture2D spritesheet)
         {
