@@ -235,8 +235,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                     break;
 
             }
-
-
+            
             //If statement to check for movement of walking
             //Positive Y integer for walking down
             if (player.State == PlayerStates.WalkDown)
@@ -252,8 +251,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             {
                 // Checking if player is touching the edges of the screen or 
                 //     wooden square
-                if (player.Y >= 0
-                    && !woodenSquareRectangle.Intersects(playerTracker))
+                if (player.Y >= 0)
                 {
                     player.Y = player.Y - playerSpeed;
                 }
@@ -272,11 +270,16 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             {
                 // Checking if player is touching the edges of the screen
                 // or wooden square
-                if (player.X >= 0
-                    && !woodenSquareRectangle.Intersects(playerTracker))
+                if (player.X >= 0)
                 {
                     player.X = player.X - playerSpeed;
                 } 
+            }
+
+            if (playerTracker.Intersects(woodenSquareRectangle))
+            {
+                player.X -= playerSpeed;
+                player.Y -= playerSpeed;
             }
 
             // Rectangle to track player's current position
