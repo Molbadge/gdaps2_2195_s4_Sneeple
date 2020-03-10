@@ -20,16 +20,23 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         WalkDown = 4,
         WalkRight = 5,
         WalkLeft = 6,
-        WalkUp = 7
+        WalkUp = 7,
+
+		// Need to figure out how to get this to work for the sprite to be draw correctly
+		CollisionDown = 8,
+		CollisionRight = 9,
+		CollisionLeft = 10,
+		CollisionUp = 11
+
     }
 
     class Player
     {
         // Fields
 
-        Vector2 playerLoc;  // tracks player's location
-        Texture2D spriteSheet;
-        PlayerStates state;
+        private Vector2 playerLoc;  // tracks player's location
+        private Texture2D spriteSheet;
+        private PlayerStates state;
 
         // Constants for the sprites
         const int WalkFrameCount = 3;
@@ -86,7 +93,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         public void UpdateAnimation(GameTime gameTime)
         {
             //Handle the animation timing and cycling
-            //Adds to the time counter to check if enough time ha passed
+            //Adds to the time counter to check if enough time has passed
 
             //Time passing
             timeCounter += gameTime.ElapsedGameTime.TotalSeconds;
@@ -96,7 +103,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             {
                 frame += 1;                     //Increments the frame images
 
-                if (frame > WalkFrameCount)     //Checking the bounds of the wlak cycle
+                if (frame > WalkFrameCount)     //Checking the bounds of the walk cycle
                     frame = 0;                  //Back to 1 for the frames
 
                 timeCounter -= timePerFrame;    //removes time used, helps keep time passing
@@ -150,6 +157,26 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                         DrawWalking(spriteBatch);
                         break;
                     }
+				case (PlayerStates.CollisionDown):
+					{
+						DrawStanding(spriteBatch);
+						break;
+					}
+				case (PlayerStates.CollisionUp):
+					{
+						DrawStanding(spriteBatch);
+						break;
+					}
+				case (PlayerStates.CollisionLeft):
+					{
+						DrawStanding(spriteBatch);
+						break;
+					}
+				case (PlayerStates.CollisionRight):
+					{
+						DrawStanding(spriteBatch);
+						break;
+					}
             }
         }
         // Methods for drawing the standing frames
@@ -161,7 +188,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 playerLoc,
                 new Rectangle(
                     0,
-                    (int)state* PlayerRectHeight,
+                    ((int)state % 4 * PlayerRectHeight),
                     PlayerRectWidth,
                     PlayerRectHeight),
                 Color.White,
@@ -180,7 +207,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                playerLoc,                                       // - Location to draw to
                new Rectangle(                                   // - Source Rectangle
                    frame * PlayerRectWidth,                     //   - Specifies where in the
-                   ((int)state - 4) * PlayerRectHeight,         //      sprite image to pull
+                   ((int)state % 4) * PlayerRectHeight,         //      sprite image to pull
                    PlayerRectWidth,                             //      the drawing from
                    PlayerRectHeight),                           //
                Color.White,                                     // - Color

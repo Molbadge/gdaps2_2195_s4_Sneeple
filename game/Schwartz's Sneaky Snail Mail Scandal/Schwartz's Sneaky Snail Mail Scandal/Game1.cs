@@ -19,7 +19,12 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
         //Player to draw based on state
         Player player;
+
+		// Constant to hold player speed when moving
         const int playerSpeed = 2;
+
+		// Constant to hold player speed when stationary (0)
+		const int playerStationarySpeed = 0;
 
         //Map to draw based on state
         Map map;
@@ -54,6 +59,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             // TODO: Add your initialization logic here
             windowWidth = graphics.GraphicsDevice.Viewport.Width;
             windowHeight = graphics.GraphicsDevice.Viewport.Height;
+
+			// Making cursor visible in the window.
+			this.IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -250,72 +258,214 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                     }
                     break;
 
+
+				// Collision cases are similar to standing cases, but the 
+				//		player cannot walk in direction of the boundary.
+				// Case for downwards collision
+				case (PlayerStates.CollisionDown):
+					{
+						if (kbState.IsKeyDown(Keys.W))
+						{
+							player.State = PlayerStates.FaceUp;
+						}
+
+						if (kbState.IsKeyDown(Keys.A))
+						{
+							player.State = PlayerStates.FaceLeft;
+						}
+
+						if (kbState.IsKeyDown(Keys.D))
+						{
+							player.State = PlayerStates.FaceRight;
+						}
+
+						break;
+					}
+
+				// Case for upwards collision
+				case (PlayerStates.CollisionUp):
+					{
+						if (kbState.IsKeyDown(Keys.S))
+						{
+							player.State = PlayerStates.FaceDown;
+						}
+
+						if (kbState.IsKeyDown(Keys.A))
+						{
+							player.State = PlayerStates.FaceLeft;
+						}
+
+						if (kbState.IsKeyDown(Keys.D))
+						{
+							player.State = PlayerStates.FaceRight;
+						}
+
+						break;
+					}
+
+				// Case for left collision
+				case (PlayerStates.CollisionLeft):
+					{
+						if (kbState.IsKeyDown(Keys.W))
+						{
+							player.State = PlayerStates.FaceUp;
+						}
+
+						if (kbState.IsKeyDown(Keys.S))
+						{
+							player.State = PlayerStates.FaceDown;
+						}
+
+						if (kbState.IsKeyDown(Keys.D))
+						{
+							player.State = PlayerStates.FaceRight;
+						}
+
+						break;
+					}
+
+				// Case for right collision
+				case (PlayerStates.CollisionRight):
+					{
+						if (kbState.IsKeyDown(Keys.W))
+						{
+							player.State = PlayerStates.FaceUp;
+						}
+
+						if (kbState.IsKeyDown(Keys.A))
+						{
+							player.State = PlayerStates.FaceLeft;
+						}
+
+						if (kbState.IsKeyDown(Keys.S))
+						{
+							player.State = PlayerStates.FaceDown;
+						}
+
+						break;
+					}
             }
             
-            //If statement to check for movement of walking
-            //Positive Y integer for walking down
-            if (player.State == PlayerStates.WalkDown)
-            {
-                // Checking if player is touching the edges of the screen
-                if (player.Y <= windowHeight - player.PlayerHeight)
-                {
-                    playerVelocity.Y = playerSpeed;
-                }
+            //Switching on player.States to check for movement of walking and 
+			//		collisions
+			switch (player.State)
+			{
+				//Walking down = moving in the positive direction of the y-axis.
+				case (PlayerStates.WalkDown):
+					{
+						// Checking if player is touching the edges of the screen
+						//		or wooden square.
+						if (player.Y >= windowHeight - player.PlayerHeight)
+						{
+							player.State = PlayerStates.CollisionDown;
+							Console.WriteLine("WALKDOWN COLLISION");
+						}
 
-                if (playerTracker.Intersects(woodenSquareRectangle))
-				{
-					playerVelocity.Y = 0;
-					Console.WriteLine("WALKDOWN INTERSECTION");
-				}
+						if (playerTracker.Intersects(woodenSquareRectangle))
+						{
+							player.State = PlayerStates.CollisionDown;
+							Console.WriteLine("WALKDOWN COLLISION");
+						}
 
-				player.Y += playerVelocity.Y;
-            }
-            //Negative Y integer for walking up
-            if(player.State == PlayerStates.WalkUp)
-            {
-                // Checking if player is touching the edges of the screen or 
-                //     wooden square
-                if (player.Y >= 0)
-                {
-                    player.Y = player.Y - playerSpeed;
-                }
+						playerVelocity.Y = playerSpeed;
+						player.Y += playerVelocity.Y;
 
-				if (playerTracker.Intersects(woodenSquareRectangle))
-				{
-					player.Y -= playerSpeed;
-					Console.WriteLine("WALKUP INTERSECTION");
-				}
-			}
-            //Positive X integer for walking right
-            if(player.State == PlayerStates.WalkRight)
-            {
-                // Checking if player is touching the edges of the screen
-                if (player.X <= windowWidth - player.PlayerWidth)
-                {
-                    player.X = player.X + playerSpeed;
-                }
+						break;
+					}
+				//Walking up = moving in the negative direction of the y-axis.
+				case (PlayerStates.WalkUp):
+					{
+						// Checking if player is touching the edges of the screen or 
+						//     wooden square.
+						if (player.Y <= 0)
+						{
+							player.State = PlayerStates.CollisionUp;
+							Console.WriteLine("WALKUP COLLISION");
+						}
 
-				if (playerTracker.Intersects(woodenSquareRectangle))
-				{
-					player.X += playerSpeed;
-					Console.WriteLine("WALKRIGHT INTERSECTION");
-				}
-			}
-            //Negative X integer for walking left
-            if(player.State == PlayerStates.WalkLeft)
-            {
-                // Checking if player is touching the edges of the screen
-                // or wooden square
-                if (player.X >= 0)
-                {
-                    player.X = player.X - playerSpeed;
-                }
+						if (playerTracker.Intersects(woodenSquareRectangle))
+						{
+							player.State = PlayerStates.CollisionUp;
+							Console.WriteLine("WALKUP COLLISION");
+						}
 
-				if (playerTracker.Intersects(woodenSquareRectangle))
-				{
-					player.X -= playerSpeed;
-					Console.WriteLine("WALKLEFT INTERSECTION");
-				}
+						playerVelocity.Y = playerSpeed;
+						player.Y -= playerVelocity.Y;
+
+						break;
+					}
+				//Positive X integer for walking right
+				case (PlayerStates.WalkRight):
+					{
+						// Checking if player is touching the edges of the screen
+						if (player.X >= windowWidth - player.PlayerWidth)
+						{
+							player.State = PlayerStates.CollisionRight;
+							Console.WriteLine("WALKRIGHT COLLISION");
+						}
+
+						if (playerTracker.Intersects(woodenSquareRectangle))
+						{
+							player.State = PlayerStates.CollisionRight;
+							Console.WriteLine("WALKRIGHT COLLISION");
+						}
+
+						playerVelocity.X = playerSpeed;
+						player.X += playerVelocity.X;
+
+						break;
+					}
+				//Negative X integer for walking left
+				case (PlayerStates.WalkLeft):
+					{
+						// Checking if player is touching the edges of the screen
+						// or wooden square
+						if (player.X <= 0)
+						{
+							player.State = PlayerStates.CollisionLeft;
+							Console.WriteLine("WALKLEFT COLLISION");
+						}
+
+						if (playerTracker.Intersects(woodenSquareRectangle))
+						{
+							player.State = PlayerStates.CollisionLeft;
+							Console.WriteLine("WALKLEFT COLLISION");
+						}
+
+						playerVelocity.X = playerSpeed;
+						player.X -= playerVelocity.X;
+						break;
+					}
+
+					// Maybe implement a fall-through case here, since scenarios 
+					//		are very similar
+				case (PlayerStates.CollisionDown):
+					{
+						playerVelocity.Y = playerStationarySpeed;
+						player.Y += playerVelocity.Y;
+						break;
+					}
+
+				case (PlayerStates.CollisionUp):
+					{
+						playerVelocity.Y = playerStationarySpeed;
+						player.Y -= playerVelocity.Y;
+						break;
+					}
+
+				case (PlayerStates.CollisionLeft):
+					{
+						playerVelocity.X = playerStationarySpeed;
+						player.X -= playerVelocity.X;
+						break;
+					}
+
+				case (PlayerStates.CollisionRight):
+					{
+						playerVelocity.X = playerStationarySpeed;
+						player.X += playerVelocity.X;
+						break;
+					}
 			}
 
             //if (playerTracker.Intersects(woodenSquareRectangle))
