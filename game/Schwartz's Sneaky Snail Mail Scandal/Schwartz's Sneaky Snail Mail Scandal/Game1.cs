@@ -442,28 +442,36 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 				case (PlayerStates.CollisionDown):
 					{
 						playerVelocity.Y = playerStationarySpeed;
-						player.Y += playerVelocity.Y;
+						player.Y -= 2;
+						player.Y -= playerStationarySpeed;
+						player.State = PlayerStates.FaceDown;
 						break;
 					}
 
 				case (PlayerStates.CollisionUp):
 					{
 						playerVelocity.Y = playerStationarySpeed;
-						player.Y -= playerVelocity.Y;
+						player.Y += 2;
+						player.Y += playerStationarySpeed;
+						player.State = PlayerStates.FaceUp;
 						break;
 					}
 
 				case (PlayerStates.CollisionLeft):
 					{
 						playerVelocity.X = playerStationarySpeed;
-						player.X -= playerVelocity.X;
+						player.X += 2;
+						player.X += playerStationarySpeed;
+						player.State = PlayerStates.FaceLeft;
 						break;
 					}
 
 				case (PlayerStates.CollisionRight):
 					{
 						playerVelocity.X = playerStationarySpeed;
-						player.X += playerVelocity.X;
+						player.X -= 2;
+						player.X -= playerStationarySpeed;
+						player.State = PlayerStates.FaceRight;
 						break;
 					}
 			}
