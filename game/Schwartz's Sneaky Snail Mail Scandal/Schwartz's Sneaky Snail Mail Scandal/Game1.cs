@@ -26,6 +26,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		// Constant to hold player speed when stationary (0)
 		const int playerStationarySpeed = 0;
 
+		// Constant that controls the rate at which player bounces off items 
+		//		when colliding with them
+		const int bounceFactor = 20;
+
         //Map to draw based on state
         Map map;
 
@@ -345,8 +349,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						break;
 					}
             }
-            
-            //Switching on player.States to check for movement of walking and 
+
+			//Switching on player.States to check for movement of walking and 
 			//		collisions
 			switch (player.State)
 			{
@@ -434,15 +438,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 						playerVelocity.X = playerSpeed;
 						player.X -= playerVelocity.X;
+
 						break;
 					}
 
-					// Maybe implement a fall-through case here, since scenarios 
-					//		are very similar
 				case (PlayerStates.CollisionDown):
 					{
 						playerVelocity.Y = playerStationarySpeed;
-						player.Y -= 2;
+						// "Bounce" player off walls as a temporary workaround
+						player.Y -= bounceFactor;
 						player.Y -= playerStationarySpeed;
 						player.State = PlayerStates.FaceDown;
 						break;
@@ -451,7 +455,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 				case (PlayerStates.CollisionUp):
 					{
 						playerVelocity.Y = playerStationarySpeed;
-						player.Y += 2;
+						player.Y += bounceFactor;
 						player.Y += playerStationarySpeed;
 						player.State = PlayerStates.FaceUp;
 						break;
@@ -460,7 +464,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 				case (PlayerStates.CollisionLeft):
 					{
 						playerVelocity.X = playerStationarySpeed;
-						player.X += 2;
+						player.X += bounceFactor;
 						player.X += playerStationarySpeed;
 						player.State = PlayerStates.FaceLeft;
 						break;
@@ -469,12 +473,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 				case (PlayerStates.CollisionRight):
 					{
 						playerVelocity.X = playerStationarySpeed;
-						player.X -= 2;
+						player.X -= bounceFactor;
 						player.X -= playerStationarySpeed;
 						player.State = PlayerStates.FaceRight;
 						break;
 					}
 			}
+			//}
 
             //if (playerTracker.Intersects(woodenSquareRectangle))
             //{
