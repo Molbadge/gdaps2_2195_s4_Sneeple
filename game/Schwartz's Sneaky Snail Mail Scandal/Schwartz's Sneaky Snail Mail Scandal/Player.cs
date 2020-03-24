@@ -22,13 +22,17 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         WalkLeft = 6,
         WalkUp = 7,
 
-		// Need to figure out how to get this to work for the sprite to be draw correctly
-		CollisionDown = 8,
-		CollisionRight = 9,
-		CollisionLeft = 10,
-		CollisionUp = 11
+		BorderCollisionDown = 8,
+		BorderCollisionRight = 9,
+		BorderCollisionLeft = 10,
+		BorderCollisionUp = 11,
 
-    }
+		WallCollisionDown = 12,
+		WallCollisionRight = 13,
+		WallCollisionLeft = 14,
+		WallCollisionUp = 15
+
+	}
 
     class Player
     {
@@ -157,27 +161,47 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                         DrawWalking(spriteBatch);
                         break;
                     }
-				case (PlayerStates.CollisionDown):
+				case (PlayerStates.BorderCollisionDown):
 					{
 						DrawStanding(spriteBatch);
 						break;
 					}
-				case (PlayerStates.CollisionUp):
+				case (PlayerStates.BorderCollisionUp):
 					{
 						DrawStanding(spriteBatch);
 						break;
 					}
-				case (PlayerStates.CollisionLeft):
+				case (PlayerStates.BorderCollisionLeft):
 					{
 						DrawStanding(spriteBatch);
 						break;
 					}
-				case (PlayerStates.CollisionRight):
+				case (PlayerStates.BorderCollisionRight):
 					{
 						DrawStanding(spriteBatch);
 						break;
 					}
-            }
+				case (PlayerStates.WallCollisionDown):
+					{
+						DrawStanding(spriteBatch);
+						break;
+					}
+				case (PlayerStates.WallCollisionUp):
+					{
+						DrawStanding(spriteBatch);
+						break;
+					}
+				case (PlayerStates.WallCollisionLeft):
+					{
+						DrawStanding(spriteBatch);
+						break;
+					}
+				case (PlayerStates.WallCollisionRight):
+					{
+						DrawStanding(spriteBatch);
+						break;
+					}
+			}
         }
         // Methods for drawing the standing frames
         //Draw Standing is used for all the standing states

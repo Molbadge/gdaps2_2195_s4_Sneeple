@@ -21,14 +21,14 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         Player player;
 
 		// Constant to hold player speed when moving
-        const int playerSpeed = 2;
+        const int PlayerSpeed = 2;
 
 		// Constant to hold player speed when stationary (0)
-		const int playerStationarySpeed = 0;
+		const int PlayerStationarySpeed = 0;
 
 		// Constant that controls the rate at which player bounces off items 
 		//		when colliding with them
-		const int bounceFactor = 20;
+		const float BounceFactor = 0.5f;
 
         //Map to draw based on state
         Map map;
@@ -40,9 +40,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         // Variables to store wooden square texture/dimensions
         Texture2D woodenSquare;
         Rectangle woodenSquareRectangle;
-
-		// Variable to track player position
-		Vector2 playerVelocity;
 
         Rectangle playerTracker;
 
@@ -91,8 +88,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             woodenSquare = Content.Load<Texture2D>("woodenSquare");
             woodenSquareRectangle = new Rectangle(windowWidth / 2 - 80, windowHeight / 2 - 30, 70, 70);
-
-			playerVelocity = new Vector2(player.X, player.Y);
         }
 
         /// <summary>
@@ -265,8 +260,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 				// Collision cases are similar to standing cases, but the 
 				//		player cannot walk in direction of the boundary.
-				// Case for downwards collision
-				case (PlayerStates.CollisionDown):
+				// Case for downwards border collision
+				case (PlayerStates.BorderCollisionDown):
 					{
 						if (kbState.IsKeyDown(Keys.W))
 						{
@@ -286,8 +281,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						break;
 					}
 
-				// Case for upwards collision
-				case (PlayerStates.CollisionUp):
+				// Case for upwards border collision
+				case (PlayerStates.BorderCollisionUp):
 					{
 						if (kbState.IsKeyDown(Keys.S))
 						{
@@ -307,8 +302,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						break;
 					}
 
-				// Case for left collision
-				case (PlayerStates.CollisionLeft):
+				// Case for left border collision
+				case (PlayerStates.BorderCollisionLeft):
 					{
 						if (kbState.IsKeyDown(Keys.W))
 						{
@@ -328,8 +323,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						break;
 					}
 
-				// Case for right collision
-				case (PlayerStates.CollisionRight):
+				// Case for right border collision
+				case (PlayerStates.BorderCollisionRight):
 					{
 						if (kbState.IsKeyDown(Keys.W))
 						{
@@ -348,7 +343,91 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 						break;
 					}
-            }
+
+				// Case for downwards wall collision
+				case (PlayerStates.WallCollisionDown):
+					{
+						if (kbState.IsKeyDown(Keys.W))
+						{
+							player.State = PlayerStates.FaceUp;
+						}
+
+						if (kbState.IsKeyDown(Keys.A))
+						{
+							player.State = PlayerStates.FaceLeft;
+						}
+
+						if (kbState.IsKeyDown(Keys.D))
+						{
+							player.State = PlayerStates.FaceRight;
+						}
+
+						break;
+					}
+
+				// Case for upwards wall collision
+				case (PlayerStates.WallCollisionUp):
+					{
+						if (kbState.IsKeyDown(Keys.S))
+						{
+							player.State = PlayerStates.FaceDown;
+						}
+
+						if (kbState.IsKeyDown(Keys.A))
+						{
+							player.State = PlayerStates.FaceLeft;
+						}
+
+						if (kbState.IsKeyDown(Keys.D))
+						{
+							player.State = PlayerStates.FaceRight;
+						}
+
+						break;
+					}
+
+				// Case for left wall collision
+				case (PlayerStates.WallCollisionLeft):
+					{
+						if (kbState.IsKeyDown(Keys.W))
+						{
+							player.State = PlayerStates.FaceUp;
+						}
+
+						if (kbState.IsKeyDown(Keys.S))
+						{
+							player.State = PlayerStates.FaceDown;
+						}
+
+						if (kbState.IsKeyDown(Keys.D))
+						{
+							player.State = PlayerStates.FaceRight;
+						}
+
+						break;
+					}
+
+				// Case for right wall collision
+				case (PlayerStates.WallCollisionRight):
+					{
+						if (kbState.IsKeyDown(Keys.W))
+						{
+							player.State = PlayerStates.FaceUp;
+						}
+
+						if (kbState.IsKeyDown(Keys.A))
+						{
+							player.State = PlayerStates.FaceLeft;
+						}
+
+						if (kbState.IsKeyDown(Keys.S))
+						{
+							player.State = PlayerStates.FaceDown;
+						}
+
+						break;
+					}
+			}
 
 			//Switching on player.States to check for movement of walking and 
 			//		collisions
@@ -361,18 +440,17 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						//		or wooden square.
 						if (player.Y >= windowHeight - player.PlayerHeight)
 						{
-							player.State = PlayerStates.CollisionDown;
-							Console.WriteLine("WALKDOWN COLLISION");
+							player.State = PlayerStates.BorderCollisionDown;
+							Console.WriteLine("WALKDOWN BORDER COLLISION");
 						}
 
 						if (playerTracker.Intersects(woodenSquareRectangle))
 						{
-							player.State = PlayerStates.CollisionDown;
-							Console.WriteLine("WALKDOWN COLLISION");
+							player.State = PlayerStates.WallCollisionDown;
+							Console.WriteLine("WALKDOWN WALL COLLISION");
 						}
 
-						playerVelocity.Y = playerSpeed;
-						player.Y += playerVelocity.Y;
+						player.Y += PlayerSpeed;
 
 						break;
 					}
@@ -383,18 +461,17 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						//     wooden square.
 						if (player.Y <= 0)
 						{
-							player.State = PlayerStates.CollisionUp;
-							Console.WriteLine("WALKUP COLLISION");
+							player.State = PlayerStates.BorderCollisionUp;
+							Console.WriteLine("WALKUP BORDER COLLISION");
 						}
 
 						if (playerTracker.Intersects(woodenSquareRectangle))
 						{
-							player.State = PlayerStates.CollisionUp;
-							Console.WriteLine("WALKUP COLLISION");
+							player.State = PlayerStates.WallCollisionUp;
+							Console.WriteLine("WALKUP WALL COLLISION");
 						}
 
-						playerVelocity.Y = playerSpeed;
-						player.Y -= playerVelocity.Y;
+						player.Y -= PlayerSpeed;
 
 						break;
 					}
@@ -404,18 +481,17 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						// Checking if player is touching the edges of the screen
 						if (player.X >= windowWidth - player.PlayerWidth)
 						{
-							player.State = PlayerStates.CollisionRight;
-							Console.WriteLine("WALKRIGHT COLLISION");
+							player.State = PlayerStates.BorderCollisionRight;
+							Console.WriteLine("WALKRIGHT BORDER COLLISION");
 						}
 
 						if (playerTracker.Intersects(woodenSquareRectangle))
 						{
-							player.State = PlayerStates.CollisionRight;
-							Console.WriteLine("WALKRIGHT COLLISION");
+							player.State = PlayerStates.WallCollisionRight;
+							Console.WriteLine("WALKRIGHT WALL COLLISION");
 						}
 
-						playerVelocity.X = playerSpeed;
-						player.X += playerVelocity.X;
+						player.X += PlayerSpeed;
 
 						break;
 					}
@@ -426,66 +502,88 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						// or wooden square
 						if (player.X <= 0)
 						{
-							player.State = PlayerStates.CollisionLeft;
-							Console.WriteLine("WALKLEFT COLLISION");
+							player.State = PlayerStates.BorderCollisionLeft;
+							Console.WriteLine("WALKLEFT BORDER COLLISION");
 						}
 
 						if (playerTracker.Intersects(woodenSquareRectangle))
 						{
-							player.State = PlayerStates.CollisionLeft;
-							Console.WriteLine("WALKLEFT COLLISION");
+							player.State = PlayerStates.WallCollisionLeft;
+							Console.WriteLine("WALKLEFT WALL COLLISION");
 						}
 
-						playerVelocity.X = playerSpeed;
-						player.X -= playerVelocity.X;
+						player.X -= PlayerSpeed;
 
 						break;
 					}
 
-				case (PlayerStates.CollisionDown):
+				case (PlayerStates.BorderCollisionDown):
 					{
-						playerVelocity.Y = playerStationarySpeed;
-						// "Bounce" player off walls as a temporary workaround
-						player.Y -= bounceFactor;
-						player.Y -= playerStationarySpeed;
-						player.State = PlayerStates.FaceDown;
+						player.Y += PlayerStationarySpeed;
 						break;
 					}
 
-				case (PlayerStates.CollisionUp):
+				case (PlayerStates.BorderCollisionUp):
 					{
-						playerVelocity.Y = playerStationarySpeed;
-						player.Y += bounceFactor;
-						player.Y += playerStationarySpeed;
-						player.State = PlayerStates.FaceUp;
+						player.Y -= PlayerStationarySpeed;
 						break;
 					}
 
-				case (PlayerStates.CollisionLeft):
+				case (PlayerStates.BorderCollisionLeft):
 					{
-						playerVelocity.X = playerStationarySpeed;
-						player.X += bounceFactor;
-						player.X += playerStationarySpeed;
-						player.State = PlayerStates.FaceLeft;
+						player.X -= PlayerStationarySpeed;
 						break;
 					}
 
-				case (PlayerStates.CollisionRight):
+				case (PlayerStates.BorderCollisionRight):
 					{
-						playerVelocity.X = playerStationarySpeed;
-						player.X -= bounceFactor;
-						player.X -= playerStationarySpeed;
-						player.State = PlayerStates.FaceRight;
+						player.X += PlayerStationarySpeed;
+						break;
+					}
+
+				case (PlayerStates.WallCollisionDown):
+					{
+						if (player.Y + player.PlayerHeight > woodenSquareRectangle.Y)
+						{
+							// Readjusting position of player rectangle by  
+							//		"bouncing" them slightly outward, so 
+							//		overlapping no longer occurs
+							player.Y -= BounceFactor;
+						}
+
+						break;
+					}
+
+				case (PlayerStates.WallCollisionUp):
+					{
+						if (player.Y < woodenSquareRectangle.Y + woodenSquareRectangle.Height)
+						{
+							player.Y += BounceFactor;
+						}
+
+						break;
+					}
+
+				case (PlayerStates.WallCollisionLeft):
+					{
+						if (player.X < woodenSquareRectangle.X + woodenSquareRectangle.Width)
+						{
+							player.X += BounceFactor;
+						}
+
+						break;
+					}
+
+				case (PlayerStates.WallCollisionRight):
+					{
+						if (player.X + player.PlayerWidth > woodenSquareRectangle.X)
+						{
+							player.X -= BounceFactor;
+						}
+
 						break;
 					}
 			}
-			//}
-
-            //if (playerTracker.Intersects(woodenSquareRectangle))
-            //{
-            //    player.X += 0;
-            //    player.Y += 0;
-            //}
 
             // Rectangle to track player's current position
             playerTracker = new Rectangle((int)player.X, (int)player.Y, player.PlayerWidth, player.PlayerHeight);
