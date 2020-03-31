@@ -63,6 +63,10 @@ namespace Level_Editor
 					// Different var names must be used for object and EventArgs,
 					//		because this is nested in a method that already uses
 					//		object sender and EventArgs e. Any alt name will do.
+					// Also, apparently access modifiers are not allowed on 
+					//		"local functions", whatever that means. I think it's
+					//		because this method is being declared within another 
+					//		that C# isn't allowing me to declare it as private.
 					void newPictureBox_Click(object newSender, EventArgs newE)
 					{
 						// Change colour of PictureBoxes when they are clicked on
