@@ -83,25 +83,46 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                     break;
             }
         }
-        /*
+        
         public void DrawWall(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
                tileSprite,                                     // - Texture to draw
-               (10,10),                                       // - Location to draw to
+               tileLoc,                                       // - Location to draw to
                new Rectangle(                                   // - Source Rectangle
-                   8*TileRectWidth,
+                   7*TileRectWidth,
                    3*TileRectHeight,
                    TileRectWidth,
                    TileRectHeight),
                Color.White,                                     // - Color
                0,                                               // - Rotation (Should be none)
                Vector2.Zero,                                    // - Origin inside the image (top left of image)
-               1.0f,                                            // - Scale (100% no change right now)
+               2.0f,                                            // - Scale (200%)
                SpriteEffects.None,                              // - Used to flip image if needed
                0);                                              // - Layer depth will implement later
+
+            canWalk = false;
         }
-        */
-        
+
+        public void DrawFloor(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(
+               tileSprite,                                     // - Texture to draw
+               tileLoc,                                       // - Location to draw to
+               new Rectangle(                                   // - Source Rectangle
+                   6 * TileRectWidth,
+                   2 * TileRectHeight,
+                   TileRectWidth,
+                   TileRectHeight),
+               Color.White,                                     // - Color
+               0,                                               // - Rotation (Should be none)
+               Vector2.Zero,                                    // - Origin inside the image (top left of image)
+               2.0f,                                            // - Scale (200%)
+               SpriteEffects.None,                              // - Used to flip image if needed
+               0);                                              // - Layer depth will implement later
+
+            canWalk = true;
+        }
+
     }
 }
