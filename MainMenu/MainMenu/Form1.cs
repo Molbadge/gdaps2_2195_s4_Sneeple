@@ -17,9 +17,15 @@ namespace MainMenu
             InitializeComponent();
         }
 
-        private void Play_Click(object sender, EventArgs e)
+        private void OnMouseEnterPlay(object sender, EventArgs e)
         {
-
+            Play.BackColor = Color.White;
+            
         }
+        private void OnMouseLeavePlay(object sender, EventArgs e)
+        {
+            Play.BackColor = Color.Black;
+        }
+
     }
 }
