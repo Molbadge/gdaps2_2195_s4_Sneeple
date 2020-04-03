@@ -31,7 +31,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		const float BounceFactor = 0.5f;
 
         //Map to draw based on state
-        Map map;
+        Map wallTile;
+		Map floorTile;
 
         // Variables to store screen size
         int windowWidth;
@@ -78,13 +79,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             // TODO: use this.Content to load your game content here
             Vector2 playerLoc = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            Vector2 tileLoc = new Vector2(10, 10);
+            Vector2 wallLoc = new Vector2(10, 72);
+			Vector2 floorLoc = new Vector2(10, 10);
 
             Texture2D spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
             Texture2D tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
 
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
-            map = new Map(tileSheet, tileLoc, TileStates.Wall);
+            wallTile = new Map(tileSheet, wallLoc, TileStates.Wall);
+			floorTile = new Map(tileSheet, floorLoc, TileStates.Floor);
 
             woodenSquare = Content.Load<Texture2D>("woodenSquare");
             woodenSquareRectangle = new Rectangle(windowWidth / 2 - 80, windowHeight / 2 - 30, 70, 70);
@@ -605,7 +608,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             player.Draw(spriteBatch);
             spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
-            map.Draw(spriteBatch);
+            wallTile.DrawWall(spriteBatch);
+			floorTile.DrawFloor(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
