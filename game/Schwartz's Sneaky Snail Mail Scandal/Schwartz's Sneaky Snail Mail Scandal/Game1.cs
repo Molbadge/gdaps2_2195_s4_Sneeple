@@ -86,8 +86,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             Texture2D tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
 
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
-            wallTile = new Map(tileSheet, wallLoc, TileStates.Wall);
-			floorTile = new Map(tileSheet, floorLoc, TileStates.Floor);
+            wallTile = new Map(tileSheet, wallLoc, TileStates.Wall); //Light grey
+			floorTile = new Map(tileSheet, floorLoc, TileStates.Floor); //Dark grey
 
             woodenSquare = Content.Load<Texture2D>("woodenSquare");
             woodenSquareRectangle = new Rectangle(windowWidth / 2 - 80, windowHeight / 2 - 30, 70, 70);

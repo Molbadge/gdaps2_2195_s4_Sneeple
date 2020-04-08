@@ -11,8 +11,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
     enum TileStates // Enum for tiles
     {
-        Wall = 0,
-        Floor = 1,
+        Wall = 0, //Dark grey
+        Floor = 1, //Light Gray
     }
 
     class Map
