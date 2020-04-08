@@ -36,12 +36,13 @@
             // Title
             // 
             this.Title.AutoSize = true;
-            this.Title.Font = new System.Drawing.Font("Argon Tight", 25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Title.Font = new System.Drawing.Font("Argon Tight", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Title.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Title.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.Title.Location = new System.Drawing.Point(216, 218);
+            this.Title.Location = new System.Drawing.Point(15, 123);
+            this.Title.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.Title.Name = "Title";
-            this.Title.Size = new System.Drawing.Size(1079, 61);
+            this.Title.Size = new System.Drawing.Size(1038, 59);
             this.Title.TabIndex = 0;
             this.Title.Text = "Schwartz\'s Sneaky Snail Mail Scandal";
             this.Title.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -53,9 +54,10 @@
             this.Play.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Play.Font = new System.Drawing.Font("Argon Tight", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Play.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.Play.Location = new System.Drawing.Point(293, 461);
+            this.Play.Location = new System.Drawing.Point(134, 500);
+            this.Play.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Play.Name = "Play";
-            this.Play.Size = new System.Drawing.Size(400, 94);
+            this.Play.Size = new System.Drawing.Size(800, 181);
             this.Play.TabIndex = 1;
             this.Play.Text = "Play";
             this.Play.UseVisualStyleBackColor = false;
@@ -65,7 +67,8 @@
             // 
             this.Sneeple.AutoSize = true;
             this.Sneeple.Font = new System.Drawing.Font("Argon Tight", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Sneeple.Location = new System.Drawing.Point(425, 316);
+            this.Sneeple.Location = new System.Drawing.Point(398, 279);
+            this.Sneeple.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.Sneeple.Name = "Sneeple";
             this.Sneeple.Size = new System.Drawing.Size(268, 49);
             this.Sneeple.TabIndex = 2;
@@ -74,13 +77,14 @@
             // 
             // MainMenu
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ClientSize = new System.Drawing.Size(998, 953);
+            this.ClientSize = new System.Drawing.Size(1081, 930);
             this.Controls.Add(this.Sneeple);
             this.Controls.Add(this.Play);
             this.Controls.Add(this.Title);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "MainMenu";
             this.Text = "MainMenu";
             this.ResumeLayout(false);
