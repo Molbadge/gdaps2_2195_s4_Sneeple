@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.IO; // Needed for file IO
 
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
@@ -17,6 +18,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
     class Map
     {
+        // File IO variables
+        FileStream readStream;
+        StreamWriter writer;
+        StreamReader reader;
+
+        // List to store all PictureBox objects used to represent map tiles.
+        List<TileStates> tileList;
+
+
         //Fields
         Vector2 tileLoc;
         Texture2D tileSprite;
@@ -124,5 +134,75 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             canWalk = true;
         }
 
+        private TileStates AssignTile(string letter)
+        {
+            switch (letter)
+            {
+                case ("F"):
+                    {
+                        return TileStates.Floor;
+                    }
+                case ("W"):
+                    {
+                        return TileStates.Wall;
+                    }
+                default:
+                    throw new System.ArgumentException(letter + " was not a wall or floor. Please check file input.");
+            }
+        }
+
+
+        /// <summary>
+        /// Reads map grid data from a save file and displays the result on 
+        ///		the screen.
+        /// </summary>
+        /// <param name="filename">
+        /// The location of the save file to read from.
+        /// </param>
+        private void LoadFromFile(string filename)
+        {
+            try
+            {
+                readStream = File.OpenRead(filename);
+                reader = new StreamReader(readStream);
+                string lineOfText = null;
+
+                // List to keep a running inventory of all results of the 
+                //		split.
+                List<string> tileTypeList = new List<string>();
+
+                while ((lineOfText = reader.ReadLine()) != null)
+                {
+                    // Array to hold the results of the currently split line.
+                    string[] splitArray = lineOfText.Split(' ');
+
+                    for (int i = 0; i < splitArray.Length; i++)
+                    {
+                        // Adding to the running inventory in the list.
+                        tileTypeList.Add(splitArray[i]);
+                    }
+                }
+
+                // Loop through the list of PictureBoxes, and applying the 
+                //		appropriate tile enum.
+                // A foreach loop was unsuitable, since indices were important.
+                for (int i = 0; i < tileList.Count; i++)
+                {
+                    tileList[i] = AssignTile(tileTypeList[i]);
+                }               
+            }
+            catch
+            {
+                // Make messageLabel display an error message.                
+                Console.WriteLine( "Error - save file data incompatible or corrupted.");
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+            }
+        }
     }
 }
