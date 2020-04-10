@@ -34,7 +34,7 @@ Images of diagrams and whiteboard scribbles will be uploaded onto the channel as
 
 
 ### Meeting Times
-Thursdays 4pm, weekly
+Thursdays 9pm, weekly via Discord
 
 ## Repository Overview
 _As the project progresses, add notes here about how the repository is organized, how branches are being used, etc._
@@ -44,8 +44,8 @@ _As the project progresses, add notes here about how the repository is organized
 | File/Directory | Contents |
 | -------------- | ----------- |
 | [Google Documentation](TBD) | https://docs.google.com/document/d/1u_mjDK9xRoz_qWIAqil-3vbbD80l2EG1_gXIXTexbJk/edit?usp=sharing 
-| [game/ReleaseNotes.md](src/ReleaseNotes.md) | MonoGame release notes _Update this with each milestone._| 
-| [external_tool/ReleaseNotes.md](src/ReleaseNotes.md) | External tool release notes _Update this with each milestone._| 
+| [game/ReleaseNotes.md](src/ReleaseNotes.md) | MonoGame release notes _Controls are W/A/S/D. (Main Menu is on its own right now and does nothing but look pretty)_| 
+| [external_tool/ReleaseNotes.md](src/ReleaseNotes.md) | External tool release notes _The External Tool allows the player to choose where thy want to save the file and where you want to laod the file from.._| 
 
 ## Other Resources
 - [MonoGame Documentation](http://www.monogame.net/documentation/?page=main)
