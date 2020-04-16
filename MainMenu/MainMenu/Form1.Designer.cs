@@ -58,13 +58,13 @@
             this.Play.Font = new System.Drawing.Font("Argon Tight", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Play.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.Play.Location = new System.Drawing.Point(288, 549);
-            this.Play.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Play.Margin = new System.Windows.Forms.Padding(6);
             this.Play.Name = "Play";
             this.Play.Size = new System.Drawing.Size(800, 181);
             this.Play.TabIndex = 1;
             this.Play.Text = "Play";
             this.Play.UseVisualStyleBackColor = false;
-            this.Play.Click += new System.EventHandler(this.OnMouseLeavePlay);
+            this.Play.Click += new System.EventHandler(this.Play_Click);
             // 
             // Sneeple
             // 
@@ -98,7 +98,7 @@
             this.Controls.Add(this.Play);
             this.Controls.Add(this.Title);
             this.Controls.Add(this.pictureBox1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainMenu";
             this.Text = "MainMenu";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

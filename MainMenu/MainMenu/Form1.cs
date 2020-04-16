@@ -17,15 +17,10 @@ namespace MainMenu
             InitializeComponent();
         }
 
-        private void OnMouseEnterPlay(object sender, EventArgs e)
+        private void Play_Click(object sender, EventArgs e)
         {
-            Play.BackColor = Color.White;
-            
+            // This needs to launch the schwartz's solution
         }
-        private void OnMouseLeavePlay(object sender, EventArgs e)
-        {
-            Play.BackColor = Color.Black;
-        }
-
+        
     }
 }
