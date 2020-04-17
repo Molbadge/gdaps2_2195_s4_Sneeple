@@ -14,6 +14,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
     {
         Wall = 0, //Dark grey
         Floor = 1, //Light Gray
+        Professor = 2, //Ruby Tile
     }
 
     class Map
@@ -100,8 +101,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                tileSprite,                                     // - Texture to draw
                tileLoc,                                       // - Location to draw to
                new Rectangle(                                   // - Source Rectangle
-                   7*TileRectWidth,
-                   3*TileRectHeight,
+                   3*TileRectWidth,
+                   2*TileRectHeight,
                    TileRectWidth,
                    TileRectHeight),
                Color.White,                                     // - Color
@@ -132,6 +133,27 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                0);                                              // - Layer depth will implement later
 
             canWalk = true;
+        }
+
+        public void DrawProfessor(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(
+               tileSprite,                                     // - Texture to draw
+               tileLoc,                                       // - Location to draw to
+               new Rectangle(                                   // - Source Rectangle
+                   2 * TileRectWidth,
+                   1 * TileRectHeight,
+                   TileRectWidth,
+                   TileRectHeight),
+               Color.White,                                     // - Color
+               0,                                               // - Rotation (Should be none)
+               Vector2.Zero,                                    // - Origin inside the image (top left of image)
+               2.0f,                                            // - Scale (200%)
+               SpriteEffects.None,                              // - Used to flip image if needed
+               0);                                              // - Layer depth will implement later
+
+            canWalk = false;
+
         }
 
         private TileStates AssignTile(string letter)

@@ -33,6 +33,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         //Map to draw based on state
         Map wallTile;
 		Map floorTile;
+		Map professorTile;
 
         // Variables to store screen size
         int windowWidth;
@@ -81,6 +82,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             Vector2 playerLoc = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
             Vector2 wallLoc = new Vector2(10, 72);
 			Vector2 floorLoc = new Vector2(10, 10);
+			Vector2 professorLoc = new Vector2(10, 144);
 
             Texture2D spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
             Texture2D tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
@@ -88,6 +90,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
             wallTile = new Map(tileSheet, wallLoc, TileStates.Wall); //Light grey
 			floorTile = new Map(tileSheet, floorLoc, TileStates.Floor); //Dark grey
+			professorTile = new Map(tileSheet, professorLoc, TileStates.Professor); //Ruby Gem
 
             woodenSquare = Content.Load<Texture2D>("woodenSquare");
             woodenSquareRectangle = new Rectangle(windowWidth / 2 - 80, windowHeight / 2 - 30, 70, 70);
@@ -610,6 +613,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
             wallTile.DrawWall(spriteBatch);
 			floorTile.DrawFloor(spriteBatch);
+			professorTile.DrawProfessor(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
