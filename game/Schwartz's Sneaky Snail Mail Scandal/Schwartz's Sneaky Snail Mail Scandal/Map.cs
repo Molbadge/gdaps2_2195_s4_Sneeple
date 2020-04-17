@@ -81,10 +81,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             switch (tilePlaced)
             {
                 case TileStates.Wall:
-                    // DrawWall(spriteBatch);
+                    DrawWall(spriteBatch);
                     break;
 
                 case TileStates.Floor:
+                    DrawFloor(spriteBatch);
+                    break;
+
+                case TileStates.Professor:
+                    DrawProfessor(spriteBatch);
                     break;
             }
         }

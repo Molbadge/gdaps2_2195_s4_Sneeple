@@ -35,7 +35,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         Map wallTile;
 		Map floorTile;
 		Map professorTile;
-		Map worldMap;
+        List<Map> worldMap = new List<Map>();
+
 
         // Variables to store screen size
         int windowWidth;
@@ -54,6 +55,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
         // List to store all PictureBox objects used to represent map tiles.
         List<TileStates> tileList;
+        int mapWidth = 0;
+        int mapHeight = 0;
 
         public Game1()
         {
@@ -113,6 +116,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         {
             try
             {
+                string writeFile = "bob is a donk";
+                StreamWriter writer = new StreamWriter(writeFile);
+
                 readStream = File.OpenRead(filename);
                 reader = new StreamReader(readStream);
                 string lineOfText = null;
@@ -125,6 +131,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 {
                     // Array to hold the results of the currently split line.
                     string[] splitArray = lineOfText.Split(' ');
+                    //saves line length for making map width
+                    if(mapWidth == 0)
+                    {
+                        mapWidth = splitArray.Length;
+                    }
 
                     for (int i = 0; i < splitArray.Length; i++)
                     {
@@ -140,6 +151,12 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 {
                     tileList[i] = AssignTile(tileTypeList[i]);
                 }
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                //Assigns map height
+                mapHeight = tileList.Count / mapWidth;
 
                 return tileList;
             }
@@ -147,14 +164,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             {
                 // Make messageLabel display an error message.                
                 Console.WriteLine("Error - save file data incompatible or corrupted.");
-                return null;
-            }
-            finally
-            {
                 if (reader != null)
                 {
                     reader.Close();
                 }
+                return null;
             }
         }
 
@@ -165,22 +179,43 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         /// </summary>
         protected override void LoadContent()
         {
+            tileList = LoadFromFile("../../../../WallTest");
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-            Vector2 playerLoc = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            Vector2 wallLoc = new Vector2(10, 72);
-			Vector2 floorLoc = new Vector2(10, 10);
-			Vector2 professorLoc = new Vector2(10, 144);
 
             Texture2D spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
             Texture2D tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
 
+
+            //
+            for (int row = 0; row < mapHeight; row++)
+            {
+                for(int column = 0; column < mapWidth; column++)
+                {
+                    int tileIndex = mapWidth * row + column;
+
+                    TileStates tempState =  tileList[tileIndex];
+
+                    Vector2 tempVector = new Vector2(row*32, column*32);
+
+                    worldMap.Add(new Map(tileSheet, tempVector, tempState));
+                }
+            }
+
+            // TODO: use this.Content to load your game content here
+            Vector2 playerLoc = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+            //Vector2 wallLoc = new Vector2(10,72);
+			//Vector2 floorLoc = new Vector2(10, 10);
+			//Vector2 professorLoc = new Vector2(10, 144);
+
+            
+
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
-            wallTile = new Map(tileSheet, wallLoc, TileStates.Wall); //Light grey
-			floorTile = new Map(tileSheet, floorLoc, TileStates.Floor); //Dark grey
-			professorTile = new Map(tileSheet, professorLoc, TileStates.Professor); //Ruby Gem
+            //wallTile = new Map(tileSheet, wallLoc, TileStates.Wall); //Light grey
+			//floorTile = new Map(tileSheet, floorLoc, TileStates.Floor); //Dark grey
+			//professorTile = new Map(tileSheet, professorLoc, TileStates.Professor); //Ruby Gem
 
             woodenSquare = Content.Load<Texture2D>("woodenSquare");
             woodenSquareRectangle = new Rectangle(windowWidth / 2 - 80, windowHeight / 2 - 30, 70, 70);
@@ -698,14 +733,21 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             GraphicsDevice.Clear(Color.White);
 
             // TODO: Add your drawing code here
+            
+
 
             spriteBatch.Begin();
 
             player.Draw(spriteBatch);
             spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
-            wallTile.DrawWall(spriteBatch);
-			floorTile.DrawFloor(spriteBatch);
-			professorTile.DrawProfessor(spriteBatch);
+            //wallTile.DrawWall(spriteBatch);
+            //floorTile.DrawFloor(spriteBatch);
+            //professorTile.DrawProfessor(spriteBatch);
+            foreach (Map tile in worldMap)
+            {
+
+                tile.Draw(spriteBatch);
+            }
             spriteBatch.End();
 
             base.Draw(gameTime);
