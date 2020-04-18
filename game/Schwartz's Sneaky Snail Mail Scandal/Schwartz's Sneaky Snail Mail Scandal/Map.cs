@@ -18,10 +18,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
     }
 
     class Map
-    {
-        
-
-
+    {        
         //Fields
         Vector2 tileLoc;
         Texture2D tileSprite;
@@ -90,7 +87,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                 case TileStates.Professor:
                     DrawProfessor(spriteBatch);
-                    break;
+                    break;                   
             }
         }
         
@@ -134,6 +131,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             canWalk = true;
         }
 
+        // This tile is used to trigger a text box with information from the professor
         public void DrawProfessor(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
@@ -152,7 +150,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                0);                                              // - Layer depth will implement later
 
             canWalk = false;
-
         }
     }
 }

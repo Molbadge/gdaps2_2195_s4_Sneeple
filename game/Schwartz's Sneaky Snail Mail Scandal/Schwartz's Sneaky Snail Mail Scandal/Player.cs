@@ -10,8 +10,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
     enum PlayerStates
-    {
-        
+    {        
         FaceDown = 0,
         FaceRight = 1,
         FaceLeft = 2,
@@ -31,7 +30,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		WallCollisionRight = 13,
 		WallCollisionLeft = 14,
 		WallCollisionUp = 15
-
 	}
 
     class Player
