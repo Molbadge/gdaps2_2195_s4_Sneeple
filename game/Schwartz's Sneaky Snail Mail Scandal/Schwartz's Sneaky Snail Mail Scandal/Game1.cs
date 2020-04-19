@@ -54,7 +54,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         StreamReader reader;
 
         // List to store all PictureBox objects used to represent map tiles.
-        List<TileStates> tileList;
+        List<TileStates> tileList = new List<TileStates>();
         int mapWidth = 0;
         int mapHeight = 0;
 
@@ -116,8 +116,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         {
             try
             {
-                string writeFile = "bob is a donk";
-                StreamWriter writer = new StreamWriter(writeFile);
 
                 readStream = File.OpenRead(filename);
                 reader = new StreamReader(readStream);
@@ -147,9 +145,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 // Loop through the list of PictureBoxes, and applying the 
                 //		appropriate tile enum.
                 // A foreach loop was unsuitable, since indices were important.
-                for (int i = 0; i < tileList.Count; i++)
+                for (int i = 0; i < tileTypeList.Count; i++)
                 {
-                    tileList[i] = AssignTile(tileTypeList[i]);
+                    tileList.Add( AssignTile(tileTypeList[i]));
                 }
                 if (reader != null)
                 {
@@ -179,7 +177,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         /// </summary>
         protected override void LoadContent()
         {
-            tileList = LoadFromFile("../../../../WallTest");
+            tileList = LoadFromFile("../../../../Content/WallTest");
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
