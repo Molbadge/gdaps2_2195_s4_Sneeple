@@ -32,29 +32,23 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         const float BounceFactor = 0.5f;
 
         //Map to draw based on state
-        Map wallTile;
-        Map floorTile;
-        Map professorTile;
         List<Map> worldMap = new List<Map>();
 
 
         // Variables to store screen size
-        int windowWidth;
-        int windowHeight;
+        int windowWidth = 0;
+        int windowHeight = 0;
 
-        // Variables to store wooden square texture/dimensions
-        Texture2D woodenSquare;
-        Rectangle woodenSquareRectangle;
-
+        //Rectangle for player collision tracking
         Rectangle playerTracker;
 
         // File IO variables
         FileStream readStream;
-        StreamWriter writer;
         StreamReader reader;
 
         // List to store all PictureBox objects used to represent map tiles.
         List<TileStates> tileList = new List<TileStates>();
+        List<Rectangle> wallBoundaries = new List<Rectangle>();
         int mapWidth = 0;
         int mapHeight = 0;
 
@@ -73,9 +67,12 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferWidth = 1000;
+            graphics.PreferredBackBufferHeight = 1000;
+            graphics.ApplyChanges();
+
             windowWidth = graphics.GraphicsDevice.Viewport.Width;
             windowHeight = graphics.GraphicsDevice.Viewport.Height;
-
             // Making cursor visible in the window.
             this.IsMouseVisible = true;
 
@@ -147,7 +144,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 // A foreach loop was unsuitable, since indices were important.
                 for (int i = 0; i < tileTypeList.Count; i++)
                 {
-                    tileList.Add( AssignTile(tileTypeList[i]));
+                    tileList.Add(AssignTile(tileTypeList[i]));
                 }
                 if (reader != null)
                 {
@@ -185,36 +182,31 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             Texture2D spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
             Texture2D tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
-
-            for (int row = 0; row < mapHeight; row++)
+            //Adds tiles to a list using file data
+            for (int y = 0; y < mapHeight; y++)
             {
-                for (int column = 0; column < mapWidth; column++)
+                for (int x = 0; x < mapWidth; x++)
                 {
-                    int tileIndex = mapWidth * row + column;
+                    int tileIndex = mapWidth * y + x;
 
                     TileStates tempState = tileList[tileIndex];
 
-                    Vector2 tempVector = new Vector2(row * 32, column * 32);
+                    Vector2 tempVector = new Vector2(x * 32, y * 32);
 
                     worldMap.Add(new Map(tileSheet, tempVector, tempState));
+
+                    //Adds walls to a list of rectangles for border collision
+                    if (tempState == TileStates.Wall)
+                    {
+                        wallBoundaries.Add(new Rectangle(x * 32, y * 32, 32, 32));
+                    }
                 }
             }
 
             // TODO: use this.Content to load your game content here
-            Vector2 playerLoc = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            //Vector2 wallLoc = new Vector2(10,72);
-            //Vector2 floorLoc = new Vector2(10, 10);
-            //Vector2 professorLoc = new Vector2(10, 144);
-
+            Vector2 playerLoc = new Vector2(50, 50);
 
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
-            //wallTile = new Map(tileSheet, wallLoc, TileStates.Wall); //Light grey
-            //floorTile = new Map(tileSheet, floorLoc, TileStates.Floor); //Dark grey
-            //professorTile = new Map(tileSheet, professorLoc, TileStates.Professor); //Ruby Gem
-
-            woodenSquare = Content.Load<Texture2D>("woodenSquare");
-            woodenSquareRectangle = new Rectangle(windowWidth / 2 - 80, windowHeight / 2 - 30, 70, 70);
-
 
         }
 
@@ -384,7 +376,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                         player.State = PlayerStates.FaceUp;             //Changes to facing up
                     }
                     break;
-
 
                 // Collision cases are similar to standing cases, but the 
                 //		player cannot walk in direction of the boundary.
@@ -557,6 +548,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                     }
             }
 
+            //Logic for determining if hitting a wall in the list of walls
+            bool WallCollided = false;
+
             //Switching on player.States to check for movement of walking and 
             //		collisions
             switch (player.State)
@@ -564,131 +558,124 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 //Walking down = moving in the positive direction of the y-axis.
                 case (PlayerStates.WalkDown):
                     {
-                        // Checking if player is touching the edges of the screen
-                        //		or wooden square.
+
+
+                        //Checks for player collision with window boundary
                         if (player.Y >= windowHeight - player.PlayerHeight)
                         {
                             player.State = PlayerStates.BorderCollisionDown;
-                            Console.WriteLine("WALKDOWN BORDER COLLISION");
                         }
-                        if (playerTracker.Intersects(woodenSquareRectangle))
+                        //Checks for player collision with wall boundaries
+                        else
                         {
-                            player.State = PlayerStates.WallCollisionDown;
-                            Console.WriteLine("WALKDOWN WALL COLLISION");
+                            foreach (Rectangle wall in wallBoundaries)
+                            {
+                                //If player is intersecting with wall, set to wall collision state so player can't move
+                                if (playerTracker.Intersects(wall))
+                                {
+                                    player.State = PlayerStates.WallCollisionDown;
+                                    player.Y = wall.Y - player.PlayerHeight - BounceFactor;     //Bounces player out of the wall collision
+                                    WallCollided = true;
+                                    break;
+
+                                }
+                            }
+                            //if not colliding then player can walk
+                            if (WallCollided == false)
+                            {
+                                player.Y += PlayerSpeed;
+                            }
                         }
-                        player.Y += PlayerSpeed;
                         break;
                     }
                 //Walking up = moving in the negative direction of the y-axis.
                 case (PlayerStates.WalkUp):
                     {
-                        // Checking if player is touching the edges of the screen or 
-                        //     wooden square.
+                        //Checks for player collision with window boundary
                         if (player.Y <= 0)
                         {
                             player.State = PlayerStates.BorderCollisionUp;
-                            Console.WriteLine("WALKUP BORDER COLLISION");
                         }
-
-                        if (playerTracker.Intersects(woodenSquareRectangle))
+                        //Checks for player collision with window boundary
+                        else
                         {
-                            player.State = PlayerStates.WallCollisionUp;
-                            Console.WriteLine("WALKUP WALL COLLISION");
-                        }
+                            foreach (Rectangle wall in wallBoundaries)
+                            {
+                                //If player is intersecting with wall, set to wall collision state so player can't move
+                                if (playerTracker.Intersects(wall))
+                                {
+                                    player.State = PlayerStates.WallCollisionUp;
+                                    player.Y = wall.Y + wall.Height + BounceFactor;          //Bounces player out of the wall collision
+                                    WallCollided = true;
+                                    break;
 
-                        player.Y -= PlayerSpeed;
+                                }
+                            }
+                            //if not colliding then player can walk
+                            if (WallCollided == false)
+                            {
+                                player.Y -= PlayerSpeed;
+                            }
+                        }
                         break;
                     }
                 //Positive X integer for walking right
                 case (PlayerStates.WalkRight):
                     {
-                        // Checking if player is touching the edges of the screen
+                        //Checks for player collision with window boundary
                         if (player.X >= windowWidth - player.PlayerWidth)
                         {
                             player.State = PlayerStates.BorderCollisionRight;
-                            Console.WriteLine("WALKRIGHT BORDER COLLISION");
                         }
-
-                        if (playerTracker.Intersects(woodenSquareRectangle))
+                        //Checks for player collision with window boundary
+                        else
                         {
-                            player.State = PlayerStates.WallCollisionRight;
-                            Console.WriteLine("WALKRIGHT WALL COLLISION");
+                            foreach (Rectangle wall in wallBoundaries)
+                            {
+                                //If player is intersecting with wall, set to wall collision state so player can't move
+                                if (playerTracker.Intersects(wall))
+                                {
+                                    player.State = PlayerStates.WallCollisionRight;
+                                    player.X = wall.X - player.PlayerWidth - BounceFactor;          //Bounces the player out of the collision
+                                    WallCollided = true;
+
+                                }
+                            }
+                            //if not colliding then player can walk
+                            if (WallCollided == false)
+                            {
+                                player.X += PlayerSpeed;
+                            }
                         }
-                        player.X += PlayerSpeed;
                         break;
                     }
                 //Negative X integer for walking left
                 case (PlayerStates.WalkLeft):
                     {
-                        // Checking if player is touching the edges of the screen
-                        // or wooden square
+                        //Checks for player collision with window boundary
                         if (player.X <= 0)
                         {
                             player.State = PlayerStates.BorderCollisionLeft;
-                            Console.WriteLine("WALKLEFT BORDER COLLISION");
                         }
-                        if (playerTracker.Intersects(woodenSquareRectangle))
+                        //Checks for player collision with wall boundaries
+                        else
                         {
-                            player.State = PlayerStates.WallCollisionLeft;
-                            Console.WriteLine("WALKLEFT WALL COLLISION");
-                        }
-                        player.X -= PlayerSpeed;
-                        break;
-                    }
-                case (PlayerStates.BorderCollisionDown):
-                    {
-                        player.Y += PlayerStationarySpeed;
-                        break;
-                    }
-                case (PlayerStates.BorderCollisionUp):
-                    {
-                        player.Y -= PlayerStationarySpeed;
-                        break;
-                    }
-                case (PlayerStates.BorderCollisionLeft):
-                    {
-                        player.X -= PlayerStationarySpeed;
-                        break;
-                    }
-                case (PlayerStates.BorderCollisionRight):
-                    {
-                        player.X += PlayerStationarySpeed;
-                        break;
-                    }
-                case (PlayerStates.WallCollisionDown):
-                    {
-                        if (player.Y + player.PlayerHeight > woodenSquareRectangle.Y)
-                        {
-                            // Readjusting position of player rectangle by  
-                            //		"bouncing" them slightly outward, so 
-                            //		overlapping no longer occurs
-                            player.Y -= BounceFactor;
-                        }
-                        break;
-                    }
-                case (PlayerStates.WallCollisionUp):
-                    {
-                        if (player.Y < woodenSquareRectangle.Y + woodenSquareRectangle.Height)
-                        {
-                            player.Y += BounceFactor;
-                        }
-                        break;
-                    }
+                            foreach (Rectangle wall in wallBoundaries)
+                            {
+                                //If player is intersecting with wall, set to wall collision state so player can't move
+                                if (playerTracker.Intersects(wall))
+                                {
+                                    player.State = PlayerStates.WallCollisionLeft;
+                                    player.X = wall.X + wall.Width + BounceFactor;          //Bounces player out of collision
+                                    WallCollided = true;
 
-                case (PlayerStates.WallCollisionLeft):
-                    {
-                        if (player.X < woodenSquareRectangle.X + woodenSquareRectangle.Width)
-                        {
-                            player.X += BounceFactor;
-                        }
-                        break;
-                    }
-
-                case (PlayerStates.WallCollisionRight):
-                    {
-                        if (player.X + player.PlayerWidth > woodenSquareRectangle.X)
-                        {
-                            player.X -= BounceFactor;
+                                }
+                            }
+                            //if not colliding then player can walk
+                            if (WallCollided == false)
+                            {
+                                player.X -= PlayerSpeed;
+                            }
                         }
                         break;
                     }
@@ -707,16 +694,18 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
 
-            player.Draw(spriteBatch);
-            spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
+
+            //spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
             //wallTile.DrawWall(spriteBatch);
             //floorTile.DrawFloor(spriteBatch);
             //professorTile.DrawProfessor(spriteBatch);
             foreach (Map tile in worldMap)
             {
-
                 tile.Draw(spriteBatch);
             }
+
+            player.Draw(spriteBatch);
+
             spriteBatch.End();
             base.Draw(gameTime);
         }

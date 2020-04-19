@@ -22,7 +22,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         //Fields
         Vector2 tileLoc;
         Texture2D tileSprite;
-        bool canWalk = true; //Determining if the player can walk on the tile
 
         public const int tileWidth = 32;
         public const int tileHeight = 32;
@@ -107,8 +106,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                2.0f,                                            // - Scale (200%)
                SpriteEffects.None,                              // - Used to flip image if needed
                0);                                              // - Layer depth will implement later
-
-            canWalk = false;
         }
 
         public void DrawFloor(SpriteBatch spriteBatch)
@@ -127,8 +124,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                2.0f,                                            // - Scale (200%)
                SpriteEffects.None,                              // - Used to flip image if needed
                0);                                              // - Layer depth will implement later
-
-            canWalk = true;
         }
 
         // This tile is used to trigger a text box with information from the professor
@@ -148,8 +143,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                2.0f,                                            // - Scale (200%)
                SpriteEffects.None,                              // - Used to flip image if needed
                0);                                              // - Layer depth will implement later
-
-            canWalk = false;
         }
     }
 }
