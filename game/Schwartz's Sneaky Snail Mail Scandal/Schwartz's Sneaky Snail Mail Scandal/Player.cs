@@ -222,7 +222,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         }
 
         //Draw Walking is used for all the walking states
-        private void DrawWalking( SpriteBatch spriteBatch)
+        private void DrawWalking(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
                spriteSheet,                                     // - Texture to draw
