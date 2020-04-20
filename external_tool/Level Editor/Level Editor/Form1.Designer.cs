@@ -43,15 +43,16 @@ namespace Level_Editor
 			this.tileSelectionComboBox.FormattingEnabled = true;
 			this.tileSelectionComboBox.Items.AddRange(new object[] {
             "wall",
-            "floor"});
-			this.tileSelectionComboBox.Location = new System.Drawing.Point(54, 388);
+            "floor",
+            "professor"});
+			this.tileSelectionComboBox.Location = new System.Drawing.Point(54, 544);
 			this.tileSelectionComboBox.Name = "tileSelectionComboBox";
 			this.tileSelectionComboBox.Size = new System.Drawing.Size(121, 21);
 			this.tileSelectionComboBox.TabIndex = 3;
 			// 
 			// saveLayoutButton
 			// 
-			this.saveLayoutButton.Location = new System.Drawing.Point(54, 415);
+			this.saveLayoutButton.Location = new System.Drawing.Point(54, 571);
 			this.saveLayoutButton.Name = "saveLayoutButton";
 			this.saveLayoutButton.Size = new System.Drawing.Size(75, 23);
 			this.saveLayoutButton.TabIndex = 4;
@@ -62,7 +63,7 @@ namespace Level_Editor
 			// messageLabel
 			// 
 			this.messageLabel.AutoSize = true;
-			this.messageLabel.Location = new System.Drawing.Point(51, 367);
+			this.messageLabel.Location = new System.Drawing.Point(51, 523);
 			this.messageLabel.Name = "messageLabel";
 			this.messageLabel.Size = new System.Drawing.Size(323, 13);
 			this.messageLabel.TabIndex = 5;
@@ -70,7 +71,7 @@ namespace Level_Editor
 			// 
 			// loadLayoutButton
 			// 
-			this.loadLayoutButton.Location = new System.Drawing.Point(135, 415);
+			this.loadLayoutButton.Location = new System.Drawing.Point(135, 571);
 			this.loadLayoutButton.Name = "loadLayoutButton";
 			this.loadLayoutButton.Size = new System.Drawing.Size(75, 23);
 			this.loadLayoutButton.TabIndex = 6;
@@ -91,7 +92,7 @@ namespace Level_Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.ClientSize = new System.Drawing.Size(582, 609);
 			this.Controls.Add(this.currentMapLabel);
 			this.Controls.Add(this.loadLayoutButton);
 			this.Controls.Add(this.messageLabel);

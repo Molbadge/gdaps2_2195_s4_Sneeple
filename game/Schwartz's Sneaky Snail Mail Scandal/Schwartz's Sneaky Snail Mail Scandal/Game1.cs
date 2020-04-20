@@ -96,6 +96,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                     {
                         return TileStates.Wall;
                     }
+				case ("P"):
+					{
+						return TileStates.Professor;
+					}
                 default:
                     throw new System.ArgumentException(letter + " was not a wall or floor. Please check file input.");
             }
@@ -174,7 +178,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         /// </summary>
         protected override void LoadContent()
         {
-            tileList = LoadFromFile("../../../../Content/WallTest");
+			// Loading the level from a preset location in the file directory
+			tileList = LoadFromFile("../../../../Content/igmHallway");
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
