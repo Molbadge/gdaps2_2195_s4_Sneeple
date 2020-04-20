@@ -15,6 +15,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
     /// </summary>
     public class Game1 : Game
     {
+        // ----------------Fields---------------
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -52,12 +53,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         int mapWidth = 0;
         int mapHeight = 0;
 
+
+        //-----------Constructor--------------
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
+        // ---------------Methods-------------------
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -78,7 +82,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             base.Initialize();
         }
-
 
         ///<summary>
         ///Helper method to assign tile enum to saved files
@@ -105,7 +108,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             }
         }
 
-
         /// <summary>
         /// Reads map grid data from a save file and displays the result on 
         ///		the screen.
@@ -117,7 +119,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         {
             try
             {
-
                 readStream = File.OpenRead(filename);
                 reader = new StreamReader(readStream);
                 string lineOfText = null;
@@ -563,8 +564,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 //Walking down = moving in the positive direction of the y-axis.
                 case (PlayerStates.WalkDown):
                     {
-
-
                         //Checks for player collision with window boundary
                         if (player.Y >= windowHeight - player.PlayerHeight)
                         {
