@@ -172,7 +172,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             }
         }
 
-
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.

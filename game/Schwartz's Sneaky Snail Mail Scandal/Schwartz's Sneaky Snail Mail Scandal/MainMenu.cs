@@ -21,11 +21,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         // Fields
         // texture for the main menu image
         Texture2D menuScreen;
-
+        MenuStates state;        
+        Rectangle rectangle;
         // Constructor
         public MainMenu(Texture2D menuScreen)
         {
             this.menuScreen = menuScreen;
+            rectangle = new Rectangle(0, 0, menuScreen.Width, menuScreen.Height);
         }
 
         // Methods
@@ -33,16 +35,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         /// Drawing Method for the menu screen
         /// </summary>
         /// <param name="mainMenu"></param>
-        public void Draw(Texture2D mainMenu)
+        public void DrawMenu(SpriteBatch spriteBatch)
         {
-            
+            spriteBatch.Draw(
+                menuScreen,
+                rectangle,
+                Color.White);                              
         }
-
-        private void DrawMenu(Texture2D mainMenu)
-        {
-
-        }
-
 
     }
 }
