@@ -22,11 +22,14 @@ namespace Level_Editor
 		List<PictureBox> tileList;
 
 		// Variables to replace magic numbers
-		Color wallColor = Color.Gray;
-		Color floorColor = Color.Blue;
+		Color wallColor = Color.DarkSlateGray;
+		Color floorColor = Color.DarkGray;
+		Color professorColor = Color.Fuchsia;
 		Color emptySquareColor = Color.White;
-		int mapLength = 5;
-		int mapHeight = 5;
+
+		// Adjust these based on the map's size.
+		int mapLength = 22;
+		int mapHeight = 22;
 
 		public levelEditorForm()
 		{
@@ -45,9 +48,9 @@ namespace Level_Editor
 					PictureBox newPictureBox = new PictureBox();
 
 					// Set PictureBox's parameters
-					newPictureBox.Width = 50;
-					newPictureBox.Height = 50;
-					newPictureBox.BackColor = emptySquareColor;
+					newPictureBox.Width = 20; // When dealing with bigger maps, might need to 
+					newPictureBox.Height = 20; // lower these values so all PictureBoxes fit onscreen.
+					newPictureBox.BackColor = floorColor;
 					// Offset PictureBoxes from each other by 10 pixels
 					// Note how type Point works; an instance must be created 
 					//		before assignation
@@ -90,6 +93,14 @@ namespace Level_Editor
 										"Select a tile type from the dropdown. Click on the grid to place tiles.";
 									break;
 								}
+							case ("professor"):
+								{
+									newPictureBox.BackColor = professorColor;
+									messageLabel.ForeColor = Color.Black;
+									messageLabel.Text =
+										"Select a tile type from the dropdown. Click on the grid to place tiles.";
+									break;
+								}
 							default:
 								{
 									messageLabel.ForeColor = Color.Black;
@@ -103,7 +114,7 @@ namespace Level_Editor
 					// Manually subscribing the form to these click events
 					// This must be done because the PictureBoxes only exist 
 					//		AFTER the form is created - WYSIWYG was not used.
-					newPictureBox.Click += new EventHandler(newPictureBox_Click);
+					newPictureBox.Click += newPictureBox_Click;
 				}
 			}
 		}
@@ -156,6 +167,10 @@ namespace Level_Editor
 					{
 						// Separate chars using spaces for now
 						writer.Write("F");
+					}
+					else if (tile.BackColor == professorColor)
+					{
+						writer.Write("P");
 					}
 
 					lineBreakCtrl++;
@@ -218,8 +233,12 @@ namespace Level_Editor
 					{
 						return wallColor;
 					}
-					// Any other character results in the default square colour 
-					//		and an error message.
+				case ("P"):
+					{
+						return professorColor;
+					}
+				// Any other character results in the default square colour 
+				//		and an error message.
 				default:
 					{
 						messageLabel.ForeColor = Color.Red;
