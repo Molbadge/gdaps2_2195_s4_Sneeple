@@ -29,6 +29,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         }
 
         // Methods
+        /// <summary>
+        /// Drawing Method for the menu screen
+        /// </summary>
+        /// <param name="mainMenu"></param>
         public void Draw(Texture2D mainMenu)
         {
             
