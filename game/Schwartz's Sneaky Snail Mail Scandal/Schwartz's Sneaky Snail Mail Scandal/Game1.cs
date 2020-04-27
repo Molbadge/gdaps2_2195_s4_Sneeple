@@ -59,7 +59,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         int mapHeight = 0;
 
 		// Keep track of the room the player is currently in.
-		Rooms currentRoom = Rooms.Hallway;
+		//Rooms currentRoom = Rooms.Hallway;
 		string currentRoomDirectory = null;
 
 		// Regions that, when entered, trigger the loading of the next room.
@@ -71,8 +71,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		Texture2D tileSheet;
 
 		// Variables to control the regions of the map that get drawn.
-		int drawFrom;
-		int drawTo;
+		//int drawFrom;
+		//int drawTo;
 		#endregion
 
 
