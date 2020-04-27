@@ -92,7 +92,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         
         public void DrawWall(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(
+			spriteBatch.Draw(
                tileSprite,                                     // - Texture to draw
                tileLoc,                                       // - Location to draw to
                new Rectangle(                                   // - Source Rectangle
@@ -110,7 +110,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
         public void DrawFloor(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(
+			spriteBatch.Draw(
                tileSprite,                                     // - Texture to draw
                tileLoc,                                       // - Location to draw to
                new Rectangle(                                   // - Source Rectangle

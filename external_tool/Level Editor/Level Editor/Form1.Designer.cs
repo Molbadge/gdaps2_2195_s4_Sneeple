@@ -92,7 +92,7 @@ namespace Level_Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(582, 609);
+			this.ClientSize = new System.Drawing.Size(1066, 609);
 			this.Controls.Add(this.currentMapLabel);
 			this.Controls.Add(this.loadLayoutButton);
 			this.Controls.Add(this.messageLabel);

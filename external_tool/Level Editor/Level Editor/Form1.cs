@@ -28,7 +28,7 @@ namespace Level_Editor
 		Color emptySquareColor = Color.White;
 
 		// Adjust these based on the map's size.
-		int mapLength = 22;
+		int mapLength = 44;
 		int mapHeight = 22;
 
 		public levelEditorForm()
