@@ -10,10 +10,24 @@ using System.IO; // Needed for file IO
 
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
-    enum Rooms
+ //   enum Rooms
+	//{
+	//	Hallway,
+	//	Office
+	//}
+
+	enum GameStates
 	{
-		Hallway,
-		Office
+		StartScreen,
+		Playing,
+		FinalSelectionScreen, // The screen where players pick the culprit out I can't think of names rn lol forgive me i have sinned
+		EndScreen
+	}
+
+	enum PlayerActivity
+	{
+		Idle,
+		Active
 	}
 	
 	/// <summary>
@@ -66,12 +80,17 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		RoomMovement hallwayExit = null;
 		RoomMovement officeExit = null;
 
-		// Variables to keep track of player and map sprite sheets.
+		// Variables to keep track of game assets.
 		Texture2D spriteSheet;
 		Texture2D tileSheet;
+		Texture2D startScreen;
 
 		// List to hold Rectangles surrounding all professor tiles.
 		List<Rectangle> professorTileRectangles = new List<Rectangle>();
+
+		// Variables to track the current state of the game and player.
+		GameStates gameState = GameStates.StartScreen;
+		PlayerActivity playerActivity = PlayerActivity.Idle;
 
 		// Variables to control the regions of the map that get drawn.
 		//int drawFrom;
@@ -265,6 +284,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
             tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
+			startScreen = Content.Load<Texture2D>("SSSMSMenu"); // Start screen image
 
 			PopulateMap(currentRoomDirectory, tileSheet);
 
@@ -301,349 +321,395 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             //Get User input
             KeyboardState kbState = Keyboard.GetState();
 
-			#region Walk States FSM
-			//Switch statement for Walking states
-			switch (player.State)
-            {
-                //Case for facing Down
-                case PlayerStates.FaceDown:
-                    //-----Transition to standing states--------
-                    if (kbState.IsKeyDown(Keys.W))
-                    {
-                        player.State = PlayerStates.FaceUp;
-                    }
-                    if (kbState.IsKeyDown(Keys.A))
-                    {
-                        player.State = PlayerStates.FaceLeft;
-                    }
-                    if (kbState.IsKeyDown(Keys.D))
-                    {
-                        player.State = PlayerStates.FaceRight;
-                    }
-                    //-----Transition to walking state---------
-                    if (kbState.IsKeyDown(Keys.S))
-                    {
-                        player.State = PlayerStates.WalkDown;
-                    }
-                    break;
-
-                //Case for facing right
-                case PlayerStates.FaceRight:
-                    //-----Transition to standing states--------
-                    if (kbState.IsKeyDown(Keys.W))
-                    {
-                        player.State = PlayerStates.FaceUp;
-                    }
-                    if (kbState.IsKeyDown(Keys.A))
-                    {
-                        player.State = PlayerStates.FaceLeft;
-                    }
-                    if (kbState.IsKeyDown(Keys.S))
-                    {
-                        player.State = PlayerStates.FaceDown;
-                    }
-                    //-----Transition to walking state---------
-                    if (kbState.IsKeyDown(Keys.D))
-                    {
-                        player.State = PlayerStates.WalkRight;
-                    }
-                    break;
-
-                //Case for facing Left
-                case PlayerStates.FaceLeft:
-                    //-----Transition to standing states--------
-                    if (kbState.IsKeyDown(Keys.W))
-                    {
-                        player.State = PlayerStates.FaceUp;
-                    }
-                    if (kbState.IsKeyDown(Keys.S))
-                    {
-                        player.State = PlayerStates.FaceDown;
-                    }
-                    if (kbState.IsKeyDown(Keys.D))
-                    {
-                        player.State = PlayerStates.FaceRight;
-                    }
-                    //-----Transition to walking state---------
-                    if (kbState.IsKeyDown(Keys.A))
-                    {
-                        player.State = PlayerStates.WalkLeft;
-                    }
-                    break;
-
-                //Case for Facing Up
-                case PlayerStates.FaceUp:
-                    //-----Transition to standing states--------
-                    if (kbState.IsKeyDown(Keys.A))
-                    {
-                        player.State = PlayerStates.FaceLeft;
-                    }
-                    if (kbState.IsKeyDown(Keys.S))
-                    {
-                        player.State = PlayerStates.FaceDown;
-                    }
-                    if (kbState.IsKeyDown(Keys.D))
-                    {
-                        player.State = PlayerStates.FaceRight;
-                    }
-                    //-----Transition to walking state---------
-                    if (kbState.IsKeyDown(Keys.W))
-                    {
-                        player.State = PlayerStates.WalkUp;
-                    }
-                    break;
-
-
-                //Case for walking Down
-                case PlayerStates.WalkDown:
-                    if (kbState.IsKeyDown(Keys.S))
-                    {
-                        player.State = PlayerStates.WalkDown;        //Keeps Walking down
-                    }
-                    if (kbState.IsKeyUp(Keys.S))
-                    {
-                        player.State = PlayerStates.FaceDown;        //Changes to facing down state
-                    }
-                    break;
-
-                //Case for walking right
-                case PlayerStates.WalkRight:
-                    if (kbState.IsKeyDown(Keys.D))
-                    {
-                        player.State = PlayerStates.WalkRight;          //Keeps walking right
-                    }
-                    if (kbState.IsKeyUp(Keys.D))
-                    {
-                        player.State = PlayerStates.FaceRight;          //Changes to facing right state
-                    }
-                    break;
-
-                //Case for walking left
-                case PlayerStates.WalkLeft:
-                    if (kbState.IsKeyDown(Keys.A))
-                    {
-                        player.State = PlayerStates.WalkLeft;           //Keeps walking left
-                    }
-                    if (kbState.IsKeyUp(Keys.A))
-                    {
-                        player.State = PlayerStates.FaceLeft;           //Changes to left facing state
-                    }
-                    break;
-
-                //Case for walking up
-                case PlayerStates.WalkUp:
-                    if (kbState.IsKeyDown(Keys.W))
-                    {
-                        player.State = PlayerStates.WalkUp;             //Keeps walking up
-                    }
-                    if (kbState.IsKeyUp(Keys.W))
-                    {
-                        player.State = PlayerStates.FaceUp;             //Changes to facing up
-                    }
-                    break;
-
-                // Collision cases are similar to standing cases, but the 
-                //		player cannot walk in direction of the boundary.
-                // Case for downwards border collision
-                case (PlayerStates.BorderCollisionDown):
-                    {
-                        if (kbState.IsKeyDown(Keys.W))
-                        {
-                            player.State = PlayerStates.FaceUp;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.A))
-                        {
-                            player.State = PlayerStates.FaceLeft;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.D))
-                        {
-                            player.State = PlayerStates.FaceRight;
-                        }
-
-                        break;
-                    }
-
-                // Case for upwards border collision
-                case (PlayerStates.BorderCollisionUp):
-                    {
-                        if (kbState.IsKeyDown(Keys.S))
-                        {
-                            player.State = PlayerStates.FaceDown;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.A))
-                        {
-                            player.State = PlayerStates.FaceLeft;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.D))
-                        {
-                            player.State = PlayerStates.FaceRight;
-                        }
-
-                        break;
-                    }
-
-                // Case for left border collision
-                case (PlayerStates.BorderCollisionLeft):
-                    {
-                        if (kbState.IsKeyDown(Keys.W))
-                        {
-                            player.State = PlayerStates.FaceUp;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.S))
-                        {
-                            player.State = PlayerStates.FaceDown;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.D))
-                        {
-                            player.State = PlayerStates.FaceRight;
-                        }
-
-                        break;
-                    }
-
-                // Case for right border collision
-                case (PlayerStates.BorderCollisionRight):
-                    {
-                        if (kbState.IsKeyDown(Keys.W))
-                        {
-                            player.State = PlayerStates.FaceUp;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.A))
-                        {
-                            player.State = PlayerStates.FaceLeft;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.S))
-                        {
-                            player.State = PlayerStates.FaceDown;
-                        }
-
-                        break;
-                    }
-
-                // Case for downwards wall collision
-                case (PlayerStates.WallCollisionDown):
-                    {
-                        if (kbState.IsKeyDown(Keys.W))
-                        {
-                            player.State = PlayerStates.FaceUp;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.A))
-                        {
-                            player.State = PlayerStates.FaceLeft;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.D))
-                        {
-                            player.State = PlayerStates.FaceRight;
-                        }
-
-                        break;
-                    }
-
-                // Case for upwards wall collision
-                case (PlayerStates.WallCollisionUp):
-                    {
-                        if (kbState.IsKeyDown(Keys.S))
-                        {
-                            player.State = PlayerStates.FaceDown;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.A))
-                        {
-                            player.State = PlayerStates.FaceLeft;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.D))
-                        {
-                            player.State = PlayerStates.FaceRight;
-                        }
-
-                        break;
-                    }
-
-                // Case for left wall collision
-                case (PlayerStates.WallCollisionLeft):
-                    {
-                        if (kbState.IsKeyDown(Keys.W))
-                        {
-                            player.State = PlayerStates.FaceUp;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.S))
-                        {
-                            player.State = PlayerStates.FaceDown;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.D))
-                        {
-                            player.State = PlayerStates.FaceRight;
-                        }
-
-                        break;
-                    }
-
-                // Case for right wall collision
-                case (PlayerStates.WallCollisionRight):
-                    {
-                        if (kbState.IsKeyDown(Keys.W))
-                        {
-                            player.State = PlayerStates.FaceUp;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.A))
-                        {
-                            player.State = PlayerStates.FaceLeft;
-                        }
-
-                        if (kbState.IsKeyDown(Keys.S))
-                        {
-                            player.State = PlayerStates.FaceDown;
-                        }
-
-                        break;
-                    }
-
-				// Implement fall-through cases since all directions will be treated the same way.
-				case (PlayerStates.ProfessorCollisionDown):
-
-				case (PlayerStates.ProfessorCollisionUp):
-
-				case (PlayerStates.ProfessorCollisionLeft):
-
-				case (PlayerStates.ProfessorCollisionRight):
+			#region Current Game State FSM
+			switch (gameState)
+			{
+				case (GameStates.StartScreen):
 					{
-						if (kbState.IsKeyDown(Keys.W))
+						// Check and see if Enter has been pressed.
+						if (kbState.IsKeyDown(Keys.Enter))
 						{
-							player.State = PlayerStates.FaceUp;
-						}
-
-						if (kbState.IsKeyDown(Keys.A))
-						{
-							player.State = PlayerStates.FaceLeft;
-						}
-
-						if (kbState.IsKeyDown(Keys.S))
-						{
-							player.State = PlayerStates.FaceDown;
-						}
-
-						if (kbState.IsKeyDown(Keys.D))
-						{
-							player.State = PlayerStates.FaceRight;
+							gameState = GameStates.Playing;
 						}
 
 						break;
 					}
-            }
+				case (GameStates.Playing):
+					{
+						// "Activate" the player FSM
+						playerActivity = PlayerActivity.Active;
+						break;
+					}
+				case (GameStates.FinalSelectionScreen):
+					{
+						// Check for appropriate key/mouse inputs.
+						break;
+					}
+				case (GameStates.EndScreen):
+					{
+						// Check for appropriate key/mouse inputs.
+						break;
+					}
+			}
+			#endregion
+
+			#region Walk States FSM
+			//Switch statement for Walking states
+			switch (playerActivity)
+			{
+				case (PlayerActivity.Idle):
+					{
+						// Do nothing - player character is idle.
+						break;
+					}
+				case (PlayerActivity.Active):
+					{
+						switch (player.State)
+						{
+							//Case for facing Down
+							case PlayerStates.FaceDown:
+								//-----Transition to standing states--------
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.FaceUp;
+								}
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.FaceLeft;
+								}
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.FaceRight;
+								}
+								//-----Transition to walking state---------
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.WalkDown;
+								}
+								break;
+
+							//Case for facing right
+							case PlayerStates.FaceRight:
+								//-----Transition to standing states--------
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.FaceUp;
+								}
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.FaceLeft;
+								}
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.FaceDown;
+								}
+								//-----Transition to walking state---------
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.WalkRight;
+								}
+								break;
+
+							//Case for facing Left
+							case PlayerStates.FaceLeft:
+								//-----Transition to standing states--------
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.FaceUp;
+								}
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.FaceDown;
+								}
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.FaceRight;
+								}
+								//-----Transition to walking state---------
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.WalkLeft;
+								}
+								break;
+
+							//Case for Facing Up
+							case PlayerStates.FaceUp:
+								//-----Transition to standing states--------
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.FaceLeft;
+								}
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.FaceDown;
+								}
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.FaceRight;
+								}
+								//-----Transition to walking state---------
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.WalkUp;
+								}
+								break;
+
+
+							//Case for walking Down
+							case PlayerStates.WalkDown:
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.WalkDown;        //Keeps Walking down
+								}
+								if (kbState.IsKeyUp(Keys.S))
+								{
+									player.State = PlayerStates.FaceDown;        //Changes to facing down state
+								}
+								break;
+
+							//Case for walking right
+							case PlayerStates.WalkRight:
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.WalkRight;          //Keeps walking right
+								}
+								if (kbState.IsKeyUp(Keys.D))
+								{
+									player.State = PlayerStates.FaceRight;          //Changes to facing right state
+								}
+								break;
+
+							//Case for walking left
+							case PlayerStates.WalkLeft:
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.WalkLeft;           //Keeps walking left
+								}
+								if (kbState.IsKeyUp(Keys.A))
+								{
+									player.State = PlayerStates.FaceLeft;           //Changes to left facing state
+								}
+								break;
+
+							//Case for walking up
+							case PlayerStates.WalkUp:
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.WalkUp;             //Keeps walking up
+								}
+								if (kbState.IsKeyUp(Keys.W))
+								{
+									player.State = PlayerStates.FaceUp;             //Changes to facing up
+								}
+								break;
+
+							// Collision cases are similar to standing cases, but the 
+							//		player cannot walk in direction of the boundary.
+							// Case for downwards border collision
+							case (PlayerStates.BorderCollisionDown):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for upwards border collision
+							case (PlayerStates.BorderCollisionUp):
+								{
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for left border collision
+							case (PlayerStates.BorderCollisionLeft):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for right border collision
+							case (PlayerStates.BorderCollisionRight):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									break;
+								}
+
+							// Case for downwards wall collision
+							case (PlayerStates.WallCollisionDown):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for upwards wall collision
+							case (PlayerStates.WallCollisionUp):
+								{
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for left wall collision
+							case (PlayerStates.WallCollisionLeft):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for right wall collision
+							case (PlayerStates.WallCollisionRight):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									break;
+								}
+
+							// Implement fall-through cases since all directions will be treated the same way.
+							case (PlayerStates.ProfessorCollisionDown):
+
+							case (PlayerStates.ProfessorCollisionUp):
+
+							case (PlayerStates.ProfessorCollisionLeft):
+
+							case (PlayerStates.ProfessorCollisionRight):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+						}
+						break;
+					}
+			}
+
+			
 			#endregion
 
 			#region Collision FSM
@@ -858,7 +924,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
 
-			// Place an FSM that updates worldMap here
 			#region (Not working) Draw portion for Room FSM
 			//switch (currentRoom)
 			//{
@@ -879,6 +944,42 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			//}
 			#endregion
 
+			#region Draw portion for Game States FSM
+			switch (gameState)
+			{
+				case (GameStates.StartScreen):
+					{
+						spriteBatch.Draw(
+							startScreen, 
+							new Rectangle(0, 0, windowWidth, windowHeight), 
+							Color.White);
+						break;
+					}
+				case (GameStates.Playing):
+					{
+						foreach (Map tile in worldMap)
+						{
+							tile.Draw(spriteBatch);
+						}
+
+						player.Draw(spriteBatch);
+
+						break;
+					}
+				case (GameStates.FinalSelectionScreen):
+					{
+						// DRAW FINAL SELECTION SCREEN
+						break;
+					}
+				case (GameStates.EndScreen):
+					{
+						// DRAW END SCREEN
+						break;
+					}
+			}
+			#endregion
+
+
 			//spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
 			//wallTile.DrawWall(spriteBatch);
 			//floorTile.DrawFloor(spriteBatch);
@@ -893,12 +994,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			//	}
 			//}
 
-			foreach (Map tile in worldMap)
-			{
-				tile.Draw(spriteBatch);
-			}
-
-            player.Draw(spriteBatch);
+			
 
             spriteBatch.End();
             base.Draw(gameTime);
