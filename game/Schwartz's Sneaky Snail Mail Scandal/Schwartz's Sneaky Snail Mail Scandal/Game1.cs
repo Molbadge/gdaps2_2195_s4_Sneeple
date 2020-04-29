@@ -321,12 +321,12 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             //Get User input
             KeyboardState kbState = Keyboard.GetState();
 
-			#region Current Game State FSM
+			#region Current Game State FSM - also see corresponding FSM in Draw()
 			switch (gameState)
 			{
 				case (GameStates.StartScreen):
 					{
-						// Check and see if Enter has been pressed.
+						// If Enter is pressed, start the game.
 						if (kbState.IsKeyDown(Keys.Enter))
 						{
 							gameState = GameStates.Playing;
@@ -360,10 +360,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 				case (PlayerActivity.Idle):
 					{
 						// Do nothing - player character is idle.
+						// This prevents the player from moving their character 
+						//		while the start screen is showing.
 						break;
 					}
 				case (PlayerActivity.Active):
 					{
+						// Player is now active and has access to movement.
 						switch (player.State)
 						{
 							//Case for facing Down
@@ -745,11 +748,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
+								// If player intersects with a professor tile, show that 
+								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
 									player.State = PlayerStates.ProfessorCollisionDown;
 									Console.WriteLine("PROFESSOR COLLISION DOWN");
-									// DELETE THE C.WL THEN PUT YOUR DRAW CODE HERE
+									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
 							}
 
@@ -787,11 +792,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
+								// If player intersects with a professor tile, show that 
+								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
 									player.State = PlayerStates.ProfessorCollisionUp;
 									Console.WriteLine("PROFESSOR COLLISION UP");
-									// DELETE THE C.WL THEN PUT YOUR DRAW CODE HERE
+									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
 							}
 
@@ -828,11 +835,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
+								// If player intersects with a professor tile, show that 
+								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
 									player.State = PlayerStates.ProfessorCollisionRight;
 									Console.WriteLine("PROFESSOR COLLISION RIGHT");
-									// DELETE THE C.WL THEN PUT YOUR DRAW CODE HERE
+									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
 							}
 
@@ -869,11 +878,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
+								// If player intersects with a professor tile, show that 
+								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
 									player.State = PlayerStates.ProfessorCollisionLeft;
 									Console.WriteLine("PROFESSOR COLLISION LEFT");
-									// DELETE THE C.WL THEN PUT YOUR DRAW CODE HERE
+									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
 							}
 
