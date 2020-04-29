@@ -70,6 +70,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		Texture2D spriteSheet;
 		Texture2D tileSheet;
 
+		// List to hold Rectangles surrounding all professor tiles.
+		List<Rectangle> professorTileRectangles = new List<Rectangle>();
+
 		// Variables to control the regions of the map that get drawn.
 		//int drawFrom;
 		//int drawTo;
@@ -231,6 +234,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 					{
 						wallBoundaries.Add(new Rectangle(x * 32, y * 32, 32, 32));
 					}
+				}
+			}
+
+			// Populating professorTileRectangles
+			foreach (Map tile in worldMap)
+			{
+				if (tile.TilePlaced == TileStates.Professor)
+				{
+					professorTileRectangles.Add(new Rectangle(
+						(int)tile.X, 
+						(int)tile.Y, 
+						Map.tileWidth, 
+						Map.tileHeight));
 				}
 			}
 		}
@@ -595,6 +611,38 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                         break;
                     }
+
+				// Implement fall-through cases since all directions will be treated the same way.
+				case (PlayerStates.ProfessorCollisionDown):
+
+				case (PlayerStates.ProfessorCollisionUp):
+
+				case (PlayerStates.ProfessorCollisionLeft):
+
+				case (PlayerStates.ProfessorCollisionRight):
+					{
+						if (kbState.IsKeyDown(Keys.W))
+						{
+							player.State = PlayerStates.FaceUp;
+						}
+
+						if (kbState.IsKeyDown(Keys.A))
+						{
+							player.State = PlayerStates.FaceLeft;
+						}
+
+						if (kbState.IsKeyDown(Keys.S))
+						{
+							player.State = PlayerStates.FaceDown;
+						}
+
+						if (kbState.IsKeyDown(Keys.D))
+						{
+							player.State = PlayerStates.FaceRight;
+						}
+
+						break;
+					}
             }
 			#endregion
 
@@ -614,7 +662,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                         {
                             player.State = PlayerStates.BorderCollisionDown;
                         }
-                        //Checks for player collision with wall boundaries
+                        //Checks for player collision with wall boundaries and professor tiles
                         else
                         {
                             foreach (Rectangle wall in wallBoundaries)
@@ -626,9 +674,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                     player.Y = wall.Y - player.PlayerHeight - BounceFactor;     //Bounces player out of the wall collision
                                     WallCollided = true;
                                     break;
-
                                 }
                             }
+
+							foreach (Rectangle professorTile in professorTileRectangles)
+							{
+								if (playerTracker.Intersects(professorTile))
+								{
+									player.State = PlayerStates.ProfessorCollisionDown;
+									Console.WriteLine("PROFESSOR COLLISION DOWN");
+									// DELETE THE C.WL THEN PUT YOUR DRAW CODE HERE
+								}
+							}
+
                             //if not colliding then player can walk
                             if (WallCollided == false)
                             {
@@ -640,7 +698,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 //Walking up = moving in the negative direction of the y-axis.
                 case (PlayerStates.WalkUp):
                     {
-                        //Checks for player collision with window boundary
+                        //Checks for player collision with wall boundaries and professor tiles
                         if (player.Y <= 0)
                         {
                             player.State = PlayerStates.BorderCollisionUp;
@@ -660,8 +718,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                                 }
                             }
-                            //if not colliding then player can walk
-                            if (WallCollided == false)
+
+							foreach (Rectangle professorTile in professorTileRectangles)
+							{
+								if (playerTracker.Intersects(professorTile))
+								{
+									player.State = PlayerStates.ProfessorCollisionUp;
+									Console.WriteLine("PROFESSOR COLLISION UP");
+									// DELETE THE C.WL THEN PUT YOUR DRAW CODE HERE
+								}
+							}
+
+							//if not colliding then player can walk
+							if (WallCollided == false)
                             {
                                 player.Y -= PlayerSpeed;
                             }
@@ -676,7 +745,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                         {
                             player.State = PlayerStates.BorderCollisionRight;
                         }
-                        //Checks for player collision with window boundary
+                        //Checks for player collision with wall boundaries and professor tiles
                         else
                         {
                             foreach (Rectangle wall in wallBoundaries)
@@ -690,8 +759,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                                 }
                             }
-                            //if not colliding then player can walk
-                            if (WallCollided == false)
+
+							foreach (Rectangle professorTile in professorTileRectangles)
+							{
+								if (playerTracker.Intersects(professorTile))
+								{
+									player.State = PlayerStates.ProfessorCollisionRight;
+									Console.WriteLine("PROFESSOR COLLISION RIGHT");
+									// DELETE THE C.WL THEN PUT YOUR DRAW CODE HERE
+								}
+							}
+
+							//if not colliding then player can walk
+							if (WallCollided == false)
                             {
                                 player.X += PlayerSpeed;
                             }
@@ -706,7 +786,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                         {
                             player.State = PlayerStates.BorderCollisionLeft;
                         }
-                        //Checks for player collision with wall boundaries
+                        //Checks for player collision with wall boundaries and professor tiles
                         else
                         {
                             foreach (Rectangle wall in wallBoundaries)
@@ -720,8 +800,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                                 }
                             }
-                            //if not colliding then player can walk
-                            if (WallCollided == false)
+
+							foreach (Rectangle professorTile in professorTileRectangles)
+							{
+								if (playerTracker.Intersects(professorTile))
+								{
+									player.State = PlayerStates.ProfessorCollisionLeft;
+									Console.WriteLine("PROFESSOR COLLISION LEFT");
+									// DELETE THE C.WL THEN PUT YOUR DRAW CODE HERE
+								}
+							}
+
+							//if not colliding then player can walk
+							if (WallCollided == false)
                             {
                                 player.X -= PlayerSpeed;
                             }
