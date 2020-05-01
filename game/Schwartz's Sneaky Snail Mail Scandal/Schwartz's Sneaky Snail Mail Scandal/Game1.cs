@@ -762,6 +762,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 									player.State = PlayerStates.ProfessorCollisionDown;
 									Console.WriteLine("PROFESSOR COLLISION DOWN");
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
+
+									// This should draw if downward collision is happening
 									spriteBatch.Begin();
 									spriteBatch.DrawString(Arial,
 										"Test draw for this string",
