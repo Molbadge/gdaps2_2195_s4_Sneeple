@@ -94,7 +94,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		Texture2D spriteSheet;
 		Texture2D tileSheet;
 		Texture2D startScreen;
-
+		Texture2D schwartzDialouge;
 		// List to hold Rectangles surrounding all professor tiles.
 		List<Rectangle> professorTileRectangles = new List<Rectangle>();
 
@@ -302,6 +302,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
             tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
 			startScreen = Content.Load<Texture2D>("SSSMSMenu"); // Start screen image
+			schwartzDialouge = Content.Load<Texture2D>("SchwartzDialouge");
 
 			// Loads font
 			Arial = Content.Load<SpriteFont>("spriteFont");
@@ -1027,11 +1028,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 					{
 						switch(activeProfessor)
 						{
+							// trying to draw string
 							case Professors.Erika:
 								spriteBatch.DrawString(Arial,
 									"kajbfoagufoafbasfjblafljabfaljfb",
 									new Vector2(0, 0),
 									Color.Black);
+								break;
+								// trying to draw a sprite
+							case Professors.Schwartz:
+								spriteBatch.Draw(
+									schwartzDialouge,
+									new Rectangle(0, 0, windowWidth / 3, windowHeight / 3),
+									Color.White);
 								break;
 						}
 						break;
