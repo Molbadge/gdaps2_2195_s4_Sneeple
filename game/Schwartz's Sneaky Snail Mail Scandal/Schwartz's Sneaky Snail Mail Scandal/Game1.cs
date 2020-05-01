@@ -1037,7 +1037,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			{
 				case (true):
 					{
-
+						switch (activeProfessor)
+						{
+							case (Professors.Erika):
+								{
+									break;
+								}
+						}
 						break;
 					}
 			}
