@@ -10,11 +10,18 @@ using System.IO; // Needed for file IO
 
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
- //   enum Rooms
+	//   enum Rooms
 	//{
 	//	Hallway,
 	//	Office
 	//}
+	enum Professors
+	{
+		Erika,
+		Schwartz,		
+		Erin,
+		Luis
+	}
 
 	enum GameStates
 	{
@@ -59,8 +66,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         int windowWidth = 0;
         int windowHeight = 0;
 
-        //Rectangle for player collision tracking
-        Rectangle playerTracker;
+		// Bool for checking collision
+		bool didCollide = false;
+
+		//Rectangle for player collision tracking
+		Rectangle playerTracker;
 
         // File IO variables
         FileStream readStream;
@@ -762,14 +772,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 									player.State = PlayerStates.ProfessorCollisionDown;
 									Console.WriteLine("PROFESSOR COLLISION DOWN");
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
-
-									// This should draw if downward collision is happening
-									spriteBatch.Begin();
-									spriteBatch.DrawString(Arial,
-										"Test draw for this string",
-										new Vector2(200, 200),
-										Color.Orange);
-									spriteBatch.End();
 								}
 							}
 
@@ -809,11 +811,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 							{
 								// If player intersects with a professor tile, show that 
 								//		respective professor's dialogue.
+								
 								if (playerTracker.Intersects(professorTile))
 								{
+									didCollide = true;
 									player.State = PlayerStates.ProfessorCollisionUp;
 									Console.WriteLine("PROFESSOR COLLISION UP");
-									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
+
 								}
 							}
 
@@ -1004,6 +1008,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 					}
 			}
 			#endregion
+
+			
 
 
 			//spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
