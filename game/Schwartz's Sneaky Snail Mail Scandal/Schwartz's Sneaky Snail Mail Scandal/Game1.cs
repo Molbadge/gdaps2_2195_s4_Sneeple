@@ -92,6 +92,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		GameStates gameState = GameStates.StartScreen;
 		PlayerActivity playerActivity = PlayerActivity.Idle;
 
+		// Variable for spritefont
+		SpriteFont Arial;
+
 		// Variables to control the regions of the map that get drawn.
 		//int drawFrom;
 		//int drawTo;
@@ -285,6 +288,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
             tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
 			startScreen = Content.Load<Texture2D>("SSSMSMenu"); // Start screen image
+
+			// Loads font
+			Arial = Content.Load<SpriteFont>("spriteFont");
+	
 
 			PopulateMap(currentRoomDirectory, tileSheet);
 
@@ -755,6 +762,12 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 									player.State = PlayerStates.ProfessorCollisionDown;
 									Console.WriteLine("PROFESSOR COLLISION DOWN");
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
+									spriteBatch.Begin();
+									spriteBatch.DrawString(Arial,
+										"Test draw for this string",
+										new Vector2(200, 200),
+										Color.Orange);
+									spriteBatch.End();
 								}
 							}
 

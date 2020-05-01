@@ -11,5 +11,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
     class Schwartz
     {
+
     }
 }
