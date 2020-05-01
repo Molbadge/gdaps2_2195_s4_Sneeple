@@ -146,7 +146,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             base.Initialize();
         }
-
         ///<summary>
         ///Helper method to assign tile enum to saved files
         /// 
@@ -803,24 +802,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                     player.Y = wall.Y + wall.Height + BounceFactor;          //Bounces player out of the wall collision
                                     WallCollided = true;
                                     break;
-
                                 }
                             }
-
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
 								// If player intersects with a professor tile, show that 
-								//		respective professor's dialogue.
-								
+								//		respective professor's dialogue.								
 								if (playerTracker.Intersects(professorTile))
 								{
 									didCollide = true;
 									player.State = PlayerStates.ProfessorCollisionUp;
 									Console.WriteLine("PROFESSOR COLLISION UP");
-
 								}
 							}
-
 							//if not colliding then player can walk
 							if (WallCollided == false)
                             {
@@ -851,7 +845,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                                 }
                             }
-
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
 								// If player intersects with a professor tile, show that 
@@ -863,7 +856,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
 							}
-
 							//if not colliding then player can walk
 							if (WallCollided == false)
                             {
@@ -891,10 +883,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                     player.State = PlayerStates.WallCollisionLeft;
                                     player.X = wall.X + wall.Width + BounceFactor;          //Bounces player out of collision
                                     WallCollided = true;
-
                                 }
                             }
-
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
 								// If player intersects with a professor tile, show that 
@@ -906,7 +896,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
 							}
-
 							//if not colliding then player can walk
 							if (WallCollided == false)
                             {
@@ -1011,7 +1000,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 			
 
-
 			//spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
 			//wallTile.DrawWall(spriteBatch);
 			//floorTile.DrawFloor(spriteBatch);
@@ -1025,8 +1013,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			//		worldMap[j + i * 44].Draw(spriteBatch);
 			//	}
 			//}
-
-			
 
             spriteBatch.End();
             base.Draw(gameTime);
