@@ -1025,7 +1025,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			{
 				case (true):
 					{
-
+						switch(activeProfessor)
+						{
+							case Professors.Erika:
+								spriteBatch.DrawString(Arial,
+									"kajbfoagufoafbasfjblafljabfaljfb",
+									new Vector2(0, 0),
+									Color.Black);
+								break;
+						}
 						break;
 					}
 			}
