@@ -1026,12 +1026,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			{
 				case (true):
 					{
+						// this part is not working
 						switch(activeProfessor)
 						{
 							// trying to draw string
 							case Professors.Erika:
 								spriteBatch.DrawString(Arial,
-									"kajbfoagufoafbasfjblafljabfaljfb",
+									"Testing for if this string will write",
 									new Vector2(0, 0),
 									Color.Black);
 								break;
