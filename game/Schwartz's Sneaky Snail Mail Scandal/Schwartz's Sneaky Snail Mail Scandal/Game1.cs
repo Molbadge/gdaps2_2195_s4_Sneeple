@@ -105,6 +105,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		// Variable for spritefont
 		SpriteFont Arial;
 
+		// int and enum variables to track professor tile player is colliding with.
+		int currentProfessor;
+		Professors activeProfessor;
+
+
 		// Variables to control the regions of the map that get drawn.
 		//int drawFrom;
 		//int drawTo;
@@ -146,6 +151,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
             base.Initialize();
         }
+
         ///<summary>
         ///Helper method to assign tile enum to saved files
         /// 
@@ -768,10 +774,16 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
+									didCollide = true;
 									player.State = PlayerStates.ProfessorCollisionDown;
 									Console.WriteLine("PROFESSOR COLLISION DOWN");
+									currentProfessor = professorTileRectangles.IndexOf(professorTile);
+									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
+										
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
+
+								didCollide = false;
 							}
 
                             //if not colliding then player can walk
@@ -802,19 +814,27 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                     player.Y = wall.Y + wall.Height + BounceFactor;          //Bounces player out of the wall collision
                                     WallCollided = true;
                                     break;
+
                                 }
                             }
+
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
 								// If player intersects with a professor tile, show that 
-								//		respective professor's dialogue.								
+								//		respective professor's dialogue.
+								
 								if (playerTracker.Intersects(professorTile))
 								{
 									didCollide = true;
 									player.State = PlayerStates.ProfessorCollisionUp;
 									Console.WriteLine("PROFESSOR COLLISION UP");
+									currentProfessor = professorTileRectangles.IndexOf(professorTile);
+									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
 								}
+
+								didCollide = false;
 							}
+
 							//if not colliding then player can walk
 							if (WallCollided == false)
                             {
@@ -845,17 +865,24 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                                 }
                             }
+
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
 								// If player intersects with a professor tile, show that 
 								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
+									didCollide = true;
 									player.State = PlayerStates.ProfessorCollisionRight;
 									Console.WriteLine("PROFESSOR COLLISION RIGHT");
+									currentProfessor = professorTileRectangles.IndexOf(professorTile);
+									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
+
+								didCollide = false;
 							}
+
 							//if not colliding then player can walk
 							if (WallCollided == false)
                             {
@@ -883,19 +910,27 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                     player.State = PlayerStates.WallCollisionLeft;
                                     player.X = wall.X + wall.Width + BounceFactor;          //Bounces player out of collision
                                     WallCollided = true;
+
                                 }
                             }
+
 							foreach (Rectangle professorTile in professorTileRectangles)
 							{
 								// If player intersects with a professor tile, show that 
 								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
+									didCollide = true;
 									player.State = PlayerStates.ProfessorCollisionLeft;
 									Console.WriteLine("PROFESSOR COLLISION LEFT");
+									currentProfessor = professorTileRectangles.IndexOf(professorTile);
+									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
+
+								didCollide = false;
 							}
+
 							//if not colliding then player can walk
 							if (WallCollided == false)
                             {
@@ -998,7 +1033,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			}
 			#endregion
 
-			
+			switch (didCollide)
+			{
+				case (true):
+					{
+
+						break;
+					}
+			}
+
 
 			//spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
 			//wallTile.DrawWall(spriteBatch);
@@ -1013,6 +1056,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			//		worldMap[j + i * 44].Draw(spriteBatch);
 			//	}
 			//}
+
+			
 
             spriteBatch.End();
             base.Draw(gameTime);
