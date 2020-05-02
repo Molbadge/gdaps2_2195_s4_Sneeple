@@ -95,6 +95,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		Texture2D tileSheet;
 		Texture2D startScreen;
 		Texture2D schwartzDialouge;
+		Texture2D erikaDialouge;
+		Texture2D erinDialouge;
+		Texture2D luisDialouge;
+
 		// List to hold Rectangles surrounding all professor tiles.
 		List<Rectangle> professorTileRectangles = new List<Rectangle>();
 
@@ -303,6 +307,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
 			startScreen = Content.Load<Texture2D>("SSSMSMenu"); // Start screen image
 			schwartzDialouge = Content.Load<Texture2D>("SchwartzDialouge");
+			erikaDialouge = Content.Load<Texture2D>("ErikaDialouge");
+			erinDialouge = Content.Load<Texture2D>("ErinDialouge");
+			luisDialouge = Content.Load<Texture2D>("LuisDialouge");
 
 			// Loads font
 			Arial = Content.Load<SpriteFont>("spriteFont");
@@ -1052,7 +1059,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 					}
 			}
 			#endregion
-
+			// this is drawing inconsistantly
 			switch (professorCollided)
 			{
 				case (true):
@@ -1060,33 +1067,35 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						// this part is not working
 						switch(activeProfessor)
 						{
-							// trying to draw string
+							// Erkia dialouge
 							case Professors.Erika:
-								spriteBatch.DrawString(Arial,
-									"Testing for if this string will write",
-									new Vector2(0, 0),
-									Color.Black);
+								spriteBatch.Draw(erikaDialouge,
+									new Rectangle(0, 0, windowWidth, windowHeight / 3),
+									Color.White);
 								break;
-								// trying to draw a sprite
+
+							// schwartz dialouge
 							case Professors.Schwartz:
 								spriteBatch.Draw(
 									schwartzDialouge,
-									new Rectangle(0, 0, windowWidth / 3, windowHeight / 3),
+									new Rectangle(0, 0, windowWidth, windowHeight / 3),
 									Color.White);
 								break;
+
 							//Case for Erin's dialogue
 							case Professors.Erin:
-								spriteBatch.DrawString(Arial,
-									" Erin, Testing for if this string will write",
-									new Vector2(0, 0),
-									Color.Black);
+								spriteBatch.Draw(
+									erinDialouge,
+									new Rectangle(0, 0, windowWidth, windowHeight / 3),
+									Color.White);
 								break;
+
 							//Case for Luis's Dialogue
 							case Professors.Luis:
-								spriteBatch.DrawString(Arial,
-									"Luis, Testing for if this string will write",
-									new Vector2(0, 0),
-									Color.Black);
+								spriteBatch.Draw(
+									luisDialouge,
+									new Rectangle(0, 0, windowWidth, windowHeight / 3),
+									Color.White);
 								break;
 						}
 						break;
