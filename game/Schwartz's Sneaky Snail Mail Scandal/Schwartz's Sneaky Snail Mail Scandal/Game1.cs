@@ -10,40 +10,40 @@ using System.IO; // Needed for file IO
 
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
-    //   enum Rooms
-    //{
-    //	Hallway,
-    //	Office
-    //}
-    enum Professors
-    {
-        Erika,
-        Schwartz,
-        Erin,
-        Luis
-    }
+	//   enum Rooms
+	//{
+	//	Hallway,
+	//	Office
+	//}
+	enum Professors
+	{
+		Erika,
+		Schwartz,		
+		Erin,
+		Luis
+	}
 
-    enum GameStates
-    {
-        StartScreen,
-        Playing,
-        FinalSelectionScreen, // The screen where players pick the culprit out I can't think of names rn lol forgive me i have sinned
-        EndScreen
-    }
+	enum GameStates
+	{
+		StartScreen,
+		Playing,
+		FinalSelectionScreen, // The screen where players pick the culprit out I can't think of names rn lol forgive me i have sinned
+		EndScreen
+	}
 
-    enum PlayerActivity
-    {
-        Idle,
-        Active
-    }
-
-    /// <summary>
+	enum PlayerActivity
+	{
+		Idle,
+		Active
+	}
+	
+	/// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class Game1 : Game
     {
-        #region Fields
-        GraphicsDeviceManager graphics;
+		#region Fields
+		GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         //Player to draw based on state
@@ -66,11 +66,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         int windowWidth = 0;
         int windowHeight = 0;
 
-        // Bool for checking collision
-        bool didCollide = false;
+		// Bool for checking professor collision
+		bool professorCollided = false;
 
-        //Rectangle for player collision tracking
-        Rectangle playerTracker;
+		//Rectangle for player collision tracking
+		Rectangle playerTracker;
 
         // File IO variables
         FileStream readStream;
@@ -82,57 +82,56 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         int mapWidth = 0;
         int mapHeight = 0;
 
-        // Keep track of the room the player is currently in.
-        //Rooms currentRoom = Rooms.Hallway;
-        string currentRoomDirectory = null;
+		// Keep track of the room the player is currently in.
+		//Rooms currentRoom = Rooms.Hallway;
+		string currentRoomDirectory = null;
 
-        // Regions that, when entered, trigger the loading of the next room.
-        RoomMovement hallwayExit = null;
-        RoomMovement officeExit = null;
+		// Regions that, when entered, trigger the loading of the next room.
+		RoomMovement hallwayExit = null;
+		RoomMovement officeExit = null;
 
-        // Variables to keep track of game assets.
-        Texture2D spriteSheet;
-        Texture2D tileSheet;
-        Texture2D startScreen;
-        Texture2D schwartzDialouge;
-        Texture2D erikaDialouge;
-        // List to hold Rectangles surrounding all professor tiles.
-        List<Rectangle> professorTileRectangles = new List<Rectangle>();
+		// Variables to keep track of game assets.
+		Texture2D spriteSheet;
+		Texture2D tileSheet;
+		Texture2D startScreen;
+		Texture2D schwartzDialouge;
+		// List to hold Rectangles surrounding all professor tiles.
+		List<Rectangle> professorTileRectangles = new List<Rectangle>();
 
-        // Variables to track the current state of the game and player.
-        GameStates gameState = GameStates.StartScreen;
-        PlayerActivity playerActivity = PlayerActivity.Idle;
+		// Variables to track the current state of the game and player.
+		GameStates gameState = GameStates.StartScreen;
+		PlayerActivity playerActivity = PlayerActivity.Idle;
 
-        // Variable for spritefont
-        SpriteFont Arial;
+		// Variable for spritefont
+		SpriteFont Arial;
 
-        // int and enum variables to track professor tile player is colliding with.
-        int currentProfessor;
-        Professors activeProfessor;
-
-
-        // Variables to control the regions of the map that get drawn.
-        //int drawFrom;
-        //int drawTo;
-        #endregion
+		// int and enum variables to track professor tile player is colliding with.
+		int currentProfessor;
+		Professors activeProfessor;
 
 
-        #region Constructor
-        public Game1()
+		// Variables to control the regions of the map that get drawn.
+		//int drawFrom;
+		//int drawTo;
+		#endregion
+
+
+		#region Constructor
+		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-        #endregion
+		#endregion
 
-        #region Methods
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
-        protected override void Initialize()
+		#region Methods
+		/// <summary>
+		/// Allows the game to perform any initialization it needs to before starting to run.
+		/// This is where it can query for any required services and load any non-graphic
+		/// related content.  Calling base.Initialize will enumerate through any components
+		/// and initialize them as well.
+		/// </summary>
+		protected override void Initialize()
         {
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = Map.tileWidth * 44;
@@ -142,13 +141,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             windowWidth = graphics.GraphicsDevice.Viewport.Width;
             windowHeight = graphics.GraphicsDevice.Viewport.Height;
 
-            hallwayExit = new RoomMovement(
-                0, Map.tileHeight, Map.tileWidth, Map.tileHeight * 20);
-            officeExit = new RoomMovement(
-                windowWidth - Map.tileWidth, Map.tileHeight * 14, Map.tileWidth, Map.tileHeight * 7);
+			hallwayExit = new RoomMovement(
+				0, Map.tileHeight, Map.tileWidth, Map.tileHeight * 20);
+			officeExit = new RoomMovement(
+				windowWidth - Map.tileWidth, Map.tileHeight * 14, Map.tileWidth, Map.tileHeight * 7);
 
-            // Making cursor visible in the window.
-            this.IsMouseVisible = true;
+			// Making cursor visible in the window.
+			this.IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -168,10 +167,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                     {
                         return TileStates.Wall;
                     }
-                case ("P"):
-                    {
-                        return TileStates.Professor;
-                    }
+				case ("P"):
+					{
+						return TileStates.Professor;
+					}
                 default:
                     throw new System.ArgumentException(letter + " was not a wall or floor. Please check file input.");
             }
@@ -241,52 +240,52 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             }
         }
 
-        /// <summary>
-        /// Adds tiles to worldMap using file data generated by the map editor.
-        /// </summary>
-        /// <param name="directory">
-        /// The save location of the file generated by the map editor.
-        /// </param>
-        /// <param name="mapSheet">
-        /// The sprite sheet used to draw the map.
-        /// </param>
-        public void PopulateMap(string directory, Texture2D mapSheet)
-        {
-            tileList = LoadFromFile(directory);
+		/// <summary>
+		/// Adds tiles to worldMap using file data generated by the map editor.
+		/// </summary>
+		/// <param name="directory">
+		/// The save location of the file generated by the map editor.
+		/// </param>
+		/// <param name="mapSheet">
+		/// The sprite sheet used to draw the map.
+		/// </param>
+		public void PopulateMap(string directory, Texture2D mapSheet)
+		{
+			tileList = LoadFromFile(directory);
 
-            for (int y = 0; y < mapHeight; y++)
-            {
-                for (int x = 0; x < mapWidth; x++)
-                {
-                    int tileIndex = mapWidth * y + x;
+			for (int y = 0; y < mapHeight; y++)
+			{
+				for (int x = 0; x < mapWidth; x++)
+				{
+					int tileIndex = mapWidth * y + x;
 
-                    TileStates tempState = tileList[tileIndex];
+					TileStates tempState = tileList[tileIndex];
 
-                    Vector2 tempVector = new Vector2(x * 32, y * 32);
+					Vector2 tempVector = new Vector2(x * 32, y * 32);
 
-                    worldMap.Add(new Map(mapSheet, tempVector, tempState));
+					worldMap.Add(new Map(mapSheet, tempVector, tempState));
 
-                    //Adds walls to a list of rectangles for border collision
-                    if (tempState == TileStates.Wall)
-                    {
-                        wallBoundaries.Add(new Rectangle(x * 32, y * 32, 32, 32));
-                    }
-                }
-            }
+					//Adds walls to a list of rectangles for border collision
+					if (tempState == TileStates.Wall)
+					{
+						wallBoundaries.Add(new Rectangle(x * 32, y * 32, 32, 32));
+					}
+				}
+			}
 
-            // Populating professorTileRectangles
-            foreach (Map tile in worldMap)
-            {
-                if (tile.TilePlaced == TileStates.Professor)
-                {
-                    professorTileRectangles.Add(new Rectangle(
-                        (int)tile.X,
-                        (int)tile.Y,
-                        Map.tileWidth,
-                        Map.tileHeight));
-                }
-            }
-        }
+			// Populating professorTileRectangles
+			foreach (Map tile in worldMap)
+			{
+				if (tile.TilePlaced == TileStates.Professor)
+				{
+					professorTileRectangles.Add(new Rectangle(
+						(int)tile.X, 
+						(int)tile.Y, 
+						Map.tileWidth, 
+						Map.tileHeight));
+				}
+			}
+		}
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -294,26 +293,25 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         /// </summary>
         protected override void LoadContent()
         {
-            // Initialising map using the file generated using the Map Editor
-            currentRoomDirectory = "../../../../Content/gameMap";
+			// Initialising map using the file generated using the Map Editor
+			currentRoomDirectory = "../../../../Content/gameMap";
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
             tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
-            startScreen = Content.Load<Texture2D>("SSSMSMenu"); // Start screen image
-            schwartzDialouge = Content.Load<Texture2D>("SchwartzDialouge");
-            erikaDialouge = Content.Load<Texture2D>("ErikaDialouge");
+			startScreen = Content.Load<Texture2D>("SSSMSMenu"); // Start screen image
+			schwartzDialouge = Content.Load<Texture2D>("SchwartzDialouge");
 
-            // Loads font
-            Arial = Content.Load<SpriteFont>("spriteFont");
+			// Loads font
+			Arial = Content.Load<SpriteFont>("spriteFont");
+	
 
+			PopulateMap(currentRoomDirectory, tileSheet);
 
-            PopulateMap(currentRoomDirectory, tileSheet);
-
-            // TODO: use this.Content to load your game content here
-            Vector2 playerLoc = new Vector2(50, 50);
+			// TODO: use this.Content to load your game content here
+			Vector2 playerLoc = new Vector2(50, 50);
 
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
         }
@@ -327,12 +325,12 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
+		/// <summary>
+		/// Allows the game to run logic such as updating the world,
+		/// checking for collisions, gathering input, and playing audio.
+		/// </summary>
+		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+		protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -345,403 +343,426 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             //Get User input
             KeyboardState kbState = Keyboard.GetState();
 
-            #region Current Game State FSM - also see corresponding FSM in Draw()
-            switch (gameState)
-            {
-                case (GameStates.StartScreen):
-                    {
-                        // If Enter is pressed, start the game.
-                        if (kbState.IsKeyDown(Keys.Enter))
-                        {
-                            gameState = GameStates.Playing;
-                        }
+			#region Current Game State FSM - also see corresponding FSM in Draw()
+			switch (gameState)
+			{
+				case (GameStates.StartScreen):
+					{
+						// If Enter is pressed, start the game.
+						if (kbState.IsKeyDown(Keys.Enter))
+						{
+							gameState = GameStates.Playing;
+						}
 
-                        break;
-                    }
-                case (GameStates.Playing):
-                    {
-                        // "Activate" the player FSM
-                        playerActivity = PlayerActivity.Active;
-                        break;
-                    }
-                case (GameStates.FinalSelectionScreen):
-                    {
-                        // Check for appropriate key/mouse inputs.
-                        break;
-                    }
-                case (GameStates.EndScreen):
-                    {
-                        // Check for appropriate key/mouse inputs.
-                        break;
-                    }
-            }
-            #endregion
+						break;
+					}
+				case (GameStates.Playing):
+					{
+						// "Activate" the player FSM
+						playerActivity = PlayerActivity.Active;
+						break;
+					}
+				case (GameStates.FinalSelectionScreen):
+					{
+						// Check for appropriate key/mouse inputs.
+						break;
+					}
+				case (GameStates.EndScreen):
+					{
+						// Check for appropriate key/mouse inputs.
+						break;
+					}
+			}
+			#endregion
 
-            #region Walk States FSM
-            //Switch statement for Walking states
-            switch (playerActivity)
-            {
-                case (PlayerActivity.Idle):
-                    {
-                        // Do nothing - player character is idle.
-                        // This prevents the player from moving their character 
-                        //		while the start screen is showing.
-                        break;
-                    }
-                case (PlayerActivity.Active):
-                    {
-                        // Player is now active and has access to movement.
-                        switch (player.State)
-                        {
-                            //Case for facing Down
-                            case PlayerStates.FaceDown:
-                                //-----Transition to standing states--------
-                                if (kbState.IsKeyDown(Keys.W))
-                                {
-                                    player.State = PlayerStates.FaceUp;
-                                }
-                                if (kbState.IsKeyDown(Keys.A))
-                                {
-                                    player.State = PlayerStates.FaceLeft;
-                                }
-                                if (kbState.IsKeyDown(Keys.D))
-                                {
-                                    player.State = PlayerStates.FaceRight;
-                                }
-                                //-----Transition to walking state---------
-                                if (kbState.IsKeyDown(Keys.S))
-                                {
-                                    player.State = PlayerStates.WalkDown;
-                                }
-                                break;
+			//Fail safe for if the player ends up outside the window screen
+			if(playerTracker.X < 0)
+			{
+				player.X = 50;
+				player.Y = 50;
+			}
+			if(playerTracker.Y < 0)
+			{
+				player.X = 50;
+				player.Y = 50;
+			}
+			if(playerTracker.X > windowWidth)
+			{
+				player.X = 50;
+				player.Y = 50;
+			}
+			if(playerTracker.Y > windowHeight)
+			{
+				player.X = 50;
+				player.Y = 50;
+			}
 
-                            //Case for facing right
-                            case PlayerStates.FaceRight:
-                                //-----Transition to standing states--------
-                                if (kbState.IsKeyDown(Keys.W))
-                                {
-                                    player.State = PlayerStates.FaceUp;
-                                }
-                                if (kbState.IsKeyDown(Keys.A))
-                                {
-                                    player.State = PlayerStates.FaceLeft;
-                                }
-                                if (kbState.IsKeyDown(Keys.S))
-                                {
-                                    player.State = PlayerStates.FaceDown;
-                                }
-                                //-----Transition to walking state---------
-                                if (kbState.IsKeyDown(Keys.D))
-                                {
-                                    player.State = PlayerStates.WalkRight;
-                                }
-                                break;
+			#region Walk States FSM
+			//Switch statement for Walking states
+			switch (playerActivity)
+			{
+				case (PlayerActivity.Idle):
+					{
+						// Do nothing - player character is idle.
+						// This prevents the player from moving their character 
+						//		while the start screen is showing.
+						break;
+					}
+				case (PlayerActivity.Active):
+					{
+						// Player is now active and has access to movement.
+						switch (player.State)
+						{
+							//Case for facing Down
+							case PlayerStates.FaceDown:
+								//-----Transition to standing states--------
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.FaceUp;
+								}
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.FaceLeft;
+								}
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.FaceRight;
+								}
+								//-----Transition to walking state---------
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.WalkDown;
+								}
+								break;
 
-                            //Case for facing Left
-                            case PlayerStates.FaceLeft:
-                                //-----Transition to standing states--------
-                                if (kbState.IsKeyDown(Keys.W))
-                                {
-                                    player.State = PlayerStates.FaceUp;
-                                }
-                                if (kbState.IsKeyDown(Keys.S))
-                                {
-                                    player.State = PlayerStates.FaceDown;
-                                }
-                                if (kbState.IsKeyDown(Keys.D))
-                                {
-                                    player.State = PlayerStates.FaceRight;
-                                }
-                                //-----Transition to walking state---------
-                                if (kbState.IsKeyDown(Keys.A))
-                                {
-                                    player.State = PlayerStates.WalkLeft;
-                                }
-                                break;
+							//Case for facing right
+							case PlayerStates.FaceRight:
+								//-----Transition to standing states--------
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.FaceUp;
+								}
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.FaceLeft;
+								}
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.FaceDown;
+								}
+								//-----Transition to walking state---------
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.WalkRight;
+								}
+								break;
 
-                            //Case for Facing Up
-                            case PlayerStates.FaceUp:
-                                //-----Transition to standing states--------
-                                if (kbState.IsKeyDown(Keys.A))
-                                {
-                                    player.State = PlayerStates.FaceLeft;
-                                }
-                                if (kbState.IsKeyDown(Keys.S))
-                                {
-                                    player.State = PlayerStates.FaceDown;
-                                }
-                                if (kbState.IsKeyDown(Keys.D))
-                                {
-                                    player.State = PlayerStates.FaceRight;
-                                }
-                                //-----Transition to walking state---------
-                                if (kbState.IsKeyDown(Keys.W))
-                                {
-                                    player.State = PlayerStates.WalkUp;
-                                }
-                                break;
+							//Case for facing Left
+							case PlayerStates.FaceLeft:
+								//-----Transition to standing states--------
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.FaceUp;
+								}
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.FaceDown;
+								}
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.FaceRight;
+								}
+								//-----Transition to walking state---------
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.WalkLeft;
+								}
+								break;
 
-
-                            //Case for walking Down
-                            case PlayerStates.WalkDown:
-                                if (kbState.IsKeyDown(Keys.S))
-                                {
-                                    player.State = PlayerStates.WalkDown;        //Keeps Walking down
-                                }
-                                if (kbState.IsKeyUp(Keys.S))
-                                {
-                                    player.State = PlayerStates.FaceDown;        //Changes to facing down state
-                                }
-                                break;
-
-                            //Case for walking right
-                            case PlayerStates.WalkRight:
-                                if (kbState.IsKeyDown(Keys.D))
-                                {
-                                    player.State = PlayerStates.WalkRight;          //Keeps walking right
-                                }
-                                if (kbState.IsKeyUp(Keys.D))
-                                {
-                                    player.State = PlayerStates.FaceRight;          //Changes to facing right state
-                                }
-                                break;
-
-                            //Case for walking left
-                            case PlayerStates.WalkLeft:
-                                if (kbState.IsKeyDown(Keys.A))
-                                {
-                                    player.State = PlayerStates.WalkLeft;           //Keeps walking left
-                                }
-                                if (kbState.IsKeyUp(Keys.A))
-                                {
-                                    player.State = PlayerStates.FaceLeft;           //Changes to left facing state
-                                }
-                                break;
-
-                            //Case for walking up
-                            case PlayerStates.WalkUp:
-                                if (kbState.IsKeyDown(Keys.W))
-                                {
-                                    player.State = PlayerStates.WalkUp;             //Keeps walking up
-                                }
-                                if (kbState.IsKeyUp(Keys.W))
-                                {
-                                    player.State = PlayerStates.FaceUp;             //Changes to facing up
-                                }
-                                break;
-
-                            // Collision cases are similar to standing cases, but the 
-                            //		player cannot walk in direction of the boundary.
-                            // Case for downwards border collision
-                            case (PlayerStates.BorderCollisionDown):
-                                {
-                                    if (kbState.IsKeyDown(Keys.W))
-                                    {
-                                        player.State = PlayerStates.FaceUp;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.A))
-                                    {
-                                        player.State = PlayerStates.FaceLeft;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.D))
-                                    {
-                                        player.State = PlayerStates.FaceRight;
-                                    }
-
-                                    break;
-                                }
-
-                            // Case for upwards border collision
-                            case (PlayerStates.BorderCollisionUp):
-                                {
-                                    if (kbState.IsKeyDown(Keys.S))
-                                    {
-                                        player.State = PlayerStates.FaceDown;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.A))
-                                    {
-                                        player.State = PlayerStates.FaceLeft;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.D))
-                                    {
-                                        player.State = PlayerStates.FaceRight;
-                                    }
-
-                                    break;
-                                }
-
-                            // Case for left border collision
-                            case (PlayerStates.BorderCollisionLeft):
-                                {
-                                    if (kbState.IsKeyDown(Keys.W))
-                                    {
-                                        player.State = PlayerStates.FaceUp;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.S))
-                                    {
-                                        player.State = PlayerStates.FaceDown;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.D))
-                                    {
-                                        player.State = PlayerStates.FaceRight;
-                                    }
-
-                                    break;
-                                }
-
-                            // Case for right border collision
-                            case (PlayerStates.BorderCollisionRight):
-                                {
-                                    if (kbState.IsKeyDown(Keys.W))
-                                    {
-                                        player.State = PlayerStates.FaceUp;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.A))
-                                    {
-                                        player.State = PlayerStates.FaceLeft;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.S))
-                                    {
-                                        player.State = PlayerStates.FaceDown;
-                                    }
-
-                                    break;
-                                }
-
-                            // Case for downwards wall collision
-                            case (PlayerStates.WallCollisionDown):
-                                {
-                                    if (kbState.IsKeyDown(Keys.W))
-                                    {
-                                        player.State = PlayerStates.FaceUp;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.A))
-                                    {
-                                        player.State = PlayerStates.FaceLeft;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.D))
-                                    {
-                                        player.State = PlayerStates.FaceRight;
-                                    }
-
-                                    break;
-                                }
-
-                            // Case for upwards wall collision
-                            case (PlayerStates.WallCollisionUp):
-                                {
-                                    if (kbState.IsKeyDown(Keys.S))
-                                    {
-                                        player.State = PlayerStates.FaceDown;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.A))
-                                    {
-                                        player.State = PlayerStates.FaceLeft;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.D))
-                                    {
-                                        player.State = PlayerStates.FaceRight;
-                                    }
-
-                                    break;
-                                }
-
-                            // Case for left wall collision
-                            case (PlayerStates.WallCollisionLeft):
-                                {
-                                    if (kbState.IsKeyDown(Keys.W))
-                                    {
-                                        player.State = PlayerStates.FaceUp;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.S))
-                                    {
-                                        player.State = PlayerStates.FaceDown;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.D))
-                                    {
-                                        player.State = PlayerStates.FaceRight;
-                                    }
-
-                                    break;
-                                }
-
-                            // Case for right wall collision
-                            case (PlayerStates.WallCollisionRight):
-                                {
-                                    if (kbState.IsKeyDown(Keys.W))
-                                    {
-                                        player.State = PlayerStates.FaceUp;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.A))
-                                    {
-                                        player.State = PlayerStates.FaceLeft;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.S))
-                                    {
-                                        player.State = PlayerStates.FaceDown;
-                                    }
-
-                                    break;
-                                }
-
-                            // Implement fall-through cases since all directions will be treated the same way.
-                            case (PlayerStates.ProfessorCollisionDown):
-
-                            case (PlayerStates.ProfessorCollisionUp):
-
-                            case (PlayerStates.ProfessorCollisionLeft):
-
-                            case (PlayerStates.ProfessorCollisionRight):
-                                {
-                                    if (kbState.IsKeyDown(Keys.W))
-                                    {
-                                        player.State = PlayerStates.FaceUp;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.A))
-                                    {
-                                        player.State = PlayerStates.FaceLeft;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.S))
-                                    {
-                                        player.State = PlayerStates.FaceDown;
-                                    }
-
-                                    if (kbState.IsKeyDown(Keys.D))
-                                    {
-                                        player.State = PlayerStates.FaceRight;
-                                    }
-
-                                    break;
-                                }
-                        }
-                        break;
-                    }
-            }
+							//Case for Facing Up
+							case PlayerStates.FaceUp:
+								//-----Transition to standing states--------
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.FaceLeft;
+								}
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.FaceDown;
+								}
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.FaceRight;
+								}
+								//-----Transition to walking state---------
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.WalkUp;
+								}
+								break;
 
 
-            #endregion
+							//Case for walking Down
+							case PlayerStates.WalkDown:
+								if (kbState.IsKeyDown(Keys.S))
+								{
+									player.State = PlayerStates.WalkDown;        //Keeps Walking down
+								}
+								if (kbState.IsKeyUp(Keys.S))
+								{
+									player.State = PlayerStates.FaceDown;        //Changes to facing down state
+								}
+								break;
 
-            #region Collision FSM
-            //Logic for determining if hitting a wall in the list of walls
-            bool WallCollided = false;
+							//Case for walking right
+							case PlayerStates.WalkRight:
+								if (kbState.IsKeyDown(Keys.D))
+								{
+									player.State = PlayerStates.WalkRight;          //Keeps walking right
+								}
+								if (kbState.IsKeyUp(Keys.D))
+								{
+									player.State = PlayerStates.FaceRight;          //Changes to facing right state
+								}
+								break;
+
+							//Case for walking left
+							case PlayerStates.WalkLeft:
+								if (kbState.IsKeyDown(Keys.A))
+								{
+									player.State = PlayerStates.WalkLeft;           //Keeps walking left
+								}
+								if (kbState.IsKeyUp(Keys.A))
+								{
+									player.State = PlayerStates.FaceLeft;           //Changes to left facing state
+								}
+								break;
+
+							//Case for walking up
+							case PlayerStates.WalkUp:
+								if (kbState.IsKeyDown(Keys.W))
+								{
+									player.State = PlayerStates.WalkUp;             //Keeps walking up
+								}
+								if (kbState.IsKeyUp(Keys.W))
+								{
+									player.State = PlayerStates.FaceUp;             //Changes to facing up
+								}
+								break;
+
+							// Collision cases are similar to standing cases, but the 
+							//		player cannot walk in direction of the boundary.
+							// Case for downwards border collision
+							case (PlayerStates.BorderCollisionDown):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for upwards border collision
+							case (PlayerStates.BorderCollisionUp):
+								{
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for left border collision
+							case (PlayerStates.BorderCollisionLeft):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for right border collision
+							case (PlayerStates.BorderCollisionRight):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									break;
+								}
+
+							// Case for downwards wall collision
+							case (PlayerStates.WallCollisionDown):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for upwards wall collision
+							case (PlayerStates.WallCollisionUp):
+								{
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for left wall collision
+							case (PlayerStates.WallCollisionLeft):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+
+							// Case for right wall collision
+							case (PlayerStates.WallCollisionRight):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									break;
+								}
+
+							// Implement fall-through cases since all directions will be treated the same way.
+							case (PlayerStates.ProfessorCollisionDown):
+
+							case (PlayerStates.ProfessorCollisionUp):
+
+							case (PlayerStates.ProfessorCollisionLeft):
+
+							case (PlayerStates.ProfessorCollisionRight):
+								{
+									if (kbState.IsKeyDown(Keys.W))
+									{
+										player.State = PlayerStates.FaceUp;
+									}
+
+									if (kbState.IsKeyDown(Keys.A))
+									{
+										player.State = PlayerStates.FaceLeft;
+									}
+
+									if (kbState.IsKeyDown(Keys.S))
+									{
+										player.State = PlayerStates.FaceDown;
+									}
+
+									if (kbState.IsKeyDown(Keys.D))
+									{
+										player.State = PlayerStates.FaceRight;
+									}
+
+									break;
+								}
+						}
+						break;
+					}
+			}
+
+			
+			#endregion
+
+			#region Collision FSM
+			//Logic for determining if hitting a wall in the list of walls
+			bool WallCollided = false;
+			
 
             //Switching on player.States to check for movement of walking and 
             //		collisions
@@ -770,26 +791,27 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                 }
                             }
 
-                            foreach (Rectangle professorTile in professorTileRectangles)
-                            {
-                                // If player intersects with a professor tile, show that 
-                                //		respective professor's dialogue.
-                                if (playerTracker.Intersects(professorTile))
-                                {
-                                    didCollide = true;
-                                    player.State = PlayerStates.ProfessorCollisionDown;
-                                    Console.WriteLine("PROFESSOR COLLISION DOWN");
-                                    currentProfessor = professorTileRectangles.IndexOf(professorTile);
-                                    activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
+							foreach (Rectangle professorTile in professorTileRectangles)
+							{
+								// If player intersects with a professor tile, show that 
+								//		respective professor's dialogue.
+								if (playerTracker.Intersects(professorTile))
+								{
+									professorCollided = true;
+									player.State = PlayerStates.ProfessorCollisionDown;
+									player.Y = professorTile.Y - player.PlayerHeight - BounceFactor;
+									Console.WriteLine("PROFESSOR COLLISION DOWN");
+									currentProfessor = professorTileRectangles.IndexOf(professorTile);
+									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
+										
+									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
+								}
 
-                                    // DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
-                                }
-
-                                didCollide = false;
-                            }
+								professorCollided = false;
+							}
 
                             //if not colliding then player can walk
-                            if (WallCollided == false)
+                            if (WallCollided == false && professorCollided == false)
                             {
                                 player.Y += PlayerSpeed;
                             }
@@ -818,21 +840,26 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                     break;
                                 }
                             }
-                            foreach (Rectangle professorTile in professorTileRectangles)
-                            {
-                                // If player intersects with a professor tile, show that 
-                                //		respective professor's dialogue.								
-                                if (playerTracker.Intersects(professorTile))
-                                {
-                                    didCollide = true;
-                                    player.State = PlayerStates.ProfessorCollisionUp;
-                                    Console.WriteLine("PROFESSOR COLLISION UP");
+							foreach (Rectangle professorTile in professorTileRectangles)
+							{
+								// If player intersects with a professor tile, show that 
+								//		respective professor's dialogue.								
+								if (playerTracker.Intersects(professorTile))
+								{
+									professorCollided = true;
+									player.State = PlayerStates.ProfessorCollisionUp;
+									player.Y = professorTile.Y + professorTile.Height + BounceFactor;          //Bounces player out of the wall collision
+									Console.WriteLine("PROFESSOR COLLISION UP");
+									currentProfessor = professorTileRectangles.IndexOf(professorTile);
+									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
 
-                                }
-                            }
+									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
+								}
+								professorCollided = false;
+							}
 
-                            //if not colliding then player can walk
-                            if (WallCollided == false)
+							//if not colliding then player can walk
+							if (WallCollided == false && professorCollided == false)
                             {
                                 player.Y -= PlayerSpeed;
                             }
@@ -861,24 +888,25 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
                                 }
                             }
-                            foreach (Rectangle professorTile in professorTileRectangles)
-                            {
-                                // If player intersects with a professor tile, show that 
-                                //		respective professor's dialogue.
-                                if (playerTracker.Intersects(professorTile))
-                                {
-                                    didCollide = true;
-                                    player.State = PlayerStates.ProfessorCollisionRight;
-                                    Console.WriteLine("PROFESSOR COLLISION RIGHT");
-                                    currentProfessor = professorTileRectangles.IndexOf(professorTile);
-                                    activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
-                                    // DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
-                                }
+							foreach (Rectangle professorTile in professorTileRectangles)
+							{
+								// If player intersects with a professor tile, show that 
+								//		respective professor's dialogue.
+								if (playerTracker.Intersects(professorTile))
+								{
+									professorCollided = true;
+									player.State = PlayerStates.ProfessorCollisionRight;
+									player.X = professorTile.X - player.PlayerWidth - BounceFactor;          //Bounces the player out of the collision
+									Console.WriteLine("PROFESSOR COLLISION RIGHT");
+									currentProfessor = professorTileRectangles.IndexOf(professorTile);
+									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
+									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
+								}
 
-                                didCollide = false;
-                            }
-                            //if not colliding then player can walk
-                            if (WallCollided == false)
+								professorCollided = false;
+							}
+							//if not colliding then player can walk
+							if (WallCollided == false && professorCollided == false)
                             {
                                 player.X += PlayerSpeed;
                             }
@@ -906,24 +934,25 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                     WallCollided = true;
                                 }
                             }
-                            foreach (Rectangle professorTile in professorTileRectangles)
-                            {
-                                // If player intersects with a professor tile, show that 
-                                //		respective professor's dialogue.
-                                if (playerTracker.Intersects(professorTile))
-                                {
-                                    didCollide = true;
-                                    player.State = PlayerStates.ProfessorCollisionLeft;
-                                    Console.WriteLine("PROFESSOR COLLISION LEFT");
-                                    currentProfessor = professorTileRectangles.IndexOf(professorTile);
-                                    activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
-                                    // DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
-                                }
+							foreach (Rectangle professorTile in professorTileRectangles)
+							{
+								// If player intersects with a professor tile, show that 
+								//		respective professor's dialogue.
+								if (playerTracker.Intersects(professorTile))
+								{
+									professorCollided = true;
+									player.State = PlayerStates.ProfessorCollisionLeft;
+									player.X = professorTile.X + professorTile.Width + BounceFactor;          //Bounces player out of collision
+									Console.WriteLine("PROFESSOR COLLISION LEFT");
+									currentProfessor = professorTileRectangles.IndexOf(professorTile);
+									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
+									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
+								}
 
-                                didCollide = false;
-                            }
-                            //if not colliding then player can walk
-                            if (WallCollided == false)
+								professorCollided = false;
+							}
+							//if not colliding then player can walk
+							if (WallCollided == false && professorCollided == false)
                             {
                                 player.X -= PlayerSpeed;
                             }
@@ -933,31 +962,31 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             }
             // Rectangle to track player's current position
             playerTracker = new Rectangle((int)player.X, (int)player.Y, player.PlayerWidth, player.PlayerHeight);
-            #endregion
+			#endregion
 
-            #region (Not working) Room FSM
-            //switch (currentRoom)
-            //{
-            //	case (Rooms.Hallway):
-            //		{
-            //			if (hallwayExit.TriggerExit(playerTracker))
-            //			{
-            //				currentRoom = Rooms.Office;
-            //			}
-            //			break;
-            //		}
-            //	case (Rooms.Office):
-            //		{
-            //			if (officeExit.TriggerExit(playerTracker))
-            //			{
-            //				currentRoom = Rooms.Hallway;
-            //			}
-            //			break;
-            //		}
-            //}
-            #endregion
+			#region (Not working) Room FSM
+			//switch (currentRoom)
+			//{
+			//	case (Rooms.Hallway):
+			//		{
+			//			if (hallwayExit.TriggerExit(playerTracker))
+			//			{
+			//				currentRoom = Rooms.Office;
+			//			}
+			//			break;
+			//		}
+			//	case (Rooms.Office):
+			//		{
+			//			if (officeExit.TriggerExit(playerTracker))
+			//			{
+			//				currentRoom = Rooms.Hallway;
+			//			}
+			//			break;
+			//		}
+			//}
+			#endregion
 
-            base.Update(gameTime);
+			base.Update(gameTime);
         }
 
         /// <summary>
@@ -969,112 +998,118 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
 
-            #region (Not working) Draw portion for Room FSM
-            //switch (currentRoom)
-            //{
-            //	case (Rooms.Hallway):
-            //		{
-            //			drawFrom = 22;
-            //			drawTo = mapWidth;
+			#region (Not working) Draw portion for Room FSM
+			//switch (currentRoom)
+			//{
+			//	case (Rooms.Hallway):
+			//		{
+			//			drawFrom = 22;
+			//			drawTo = mapWidth;
 
-            //			break;
-            //		}
-            //	case (Rooms.Office):
-            //		{
-            //			drawFrom = 0;
-            //			drawTo = 21;
+			//			break;
+			//		}
+			//	case (Rooms.Office):
+			//		{
+			//			drawFrom = 0;
+			//			drawTo = 21;
 
-            //			break;
-            //		}
-            //}
-            #endregion
+			//			break;
+			//		}
+			//}
+			#endregion
 
-            #region Draw portion for Game States FSM
-            switch (gameState)
-            {
-                case (GameStates.StartScreen):
-                    {
-                        spriteBatch.Draw(
-                            startScreen,
-                            new Rectangle(0, 0, windowWidth, windowHeight),
-                            Color.White);
-                        break;
-                    }
-                case (GameStates.Playing):
-                    {
-                        foreach (Map tile in worldMap)
-                        {
-                            tile.Draw(spriteBatch);
-                        }
+			#region Draw portion for Game States FSM
+			switch (gameState)
+			{
+				case (GameStates.StartScreen):
+					{
+						spriteBatch.Draw(
+							startScreen, 
+							new Rectangle(0, 0, windowWidth, windowHeight), 
+							Color.White);
+						break;
+					}
+				case (GameStates.Playing):
+					{
+						foreach (Map tile in worldMap)
+						{
+							tile.Draw(spriteBatch);
+						}
 
-                        player.Draw(spriteBatch);
+						player.Draw(spriteBatch);
 
-                        break;
-                    }
-                case (GameStates.FinalSelectionScreen):
-                    {
-                        // DRAW FINAL SELECTION SCREEN
-                        break;
-                    }
-                case (GameStates.EndScreen):
-                    {
-                        // DRAW END SCREEN
-                        break;
-                    }
-            }
-            #endregion
+						break;
+					}
+				case (GameStates.FinalSelectionScreen):
+					{
+						// DRAW FINAL SELECTION SCREEN
+						break;
+					}
+				case (GameStates.EndScreen):
+					{
+						// DRAW END SCREEN
+						break;
+					}
+			}
+			#endregion
 
-            switch (didCollide)
-            {
-                case (true):
-                    {
-                        // this part needs finished
-                        switch (activeProfessor)
-                        {
-                            // Draws interaction with Erika
-                            case Professors.Erika:
-                                spriteBatch.Draw(
-                                erikaDialouge,
-                                new Rectangle(0, 0, windowWidth, windowHeight / 3),
-                                Color.White);
-                                break;
+			switch (professorCollided)
+			{
+				case (true):
+					{
+						// this part is not working
+						switch(activeProfessor)
+						{
+							// trying to draw string
+							case Professors.Erika:
+								spriteBatch.DrawString(Arial,
+									"Testing for if this string will write",
+									new Vector2(0, 0),
+									Color.Black);
+								break;
+								// trying to draw a sprite
+							case Professors.Schwartz:
+								spriteBatch.Draw(
+									schwartzDialouge,
+									new Rectangle(0, 0, windowWidth / 3, windowHeight / 3),
+									Color.White);
+								break;
+							//Case for Erin's dialogue
+							case Professors.Erin:
+								spriteBatch.DrawString(Arial,
+									" Erin, Testing for if this string will write",
+									new Vector2(0, 0),
+									Color.Black);
+								break;
+							//Case for Luis's Dialogue
+							case Professors.Luis:
+								spriteBatch.DrawString(Arial,
+									"Luis, Testing for if this string will write",
+									new Vector2(0, 0),
+									Color.Black);
+								break;
+						}
+						break;
+					}
+			}
 
+			//spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
+			//wallTile.DrawWall(spriteBatch);
+			//floorTile.DrawFloor(spriteBatch);
+			//professorTile.DrawProfessor(spriteBatch);
 
-                            // Draws interaction with Schwartz
-                            case Professors.Schwartz:
-
-                                spriteBatch.Draw(
-                                schwartzDialouge,
-                                new Rectangle(0, 0, windowWidth, windowHeight / 3),
-                                Color.White);
-                                break;
-
-                            case Professors.Erin:
-                                break;
-
-                        }
-                        break;
-                    }
-
-            }
-
-            //spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
-            //wallTile.DrawWall(spriteBatch);
-            //floorTile.DrawFloor(spriteBatch);
-            //professorTile.DrawProfessor(spriteBatch);
-
-            //for (int i = 0; i < mapHeight; i++)
-            //{
-            //	for (int j = drawFrom; j < drawTo; j++)
-            //	{
-            //		Console.WriteLine(j + i * 44);
-            //		worldMap[j + i * 44].Draw(spriteBatch);
-            //	}
-            //}
+			//for (int i = 0; i < mapHeight; i++)
+			//{
+			//	for (int j = drawFrom; j < drawTo; j++)
+			//	{
+			//		Console.WriteLine(j + i * 44);
+			//		worldMap[j + i * 44].Draw(spriteBatch);
+			//	}
+			//}
 
             spriteBatch.End();
             base.Draw(gameTime);
         }
-        #endregion
-    }
+		#endregion
+	}
 }
