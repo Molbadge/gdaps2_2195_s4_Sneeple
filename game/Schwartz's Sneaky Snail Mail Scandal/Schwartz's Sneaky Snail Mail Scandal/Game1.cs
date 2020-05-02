@@ -66,8 +66,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         int windowWidth = 0;
         int windowHeight = 0;
 
-		// Bool for checking collision
-		bool didCollide = false;
+		// Bool for checking professor collision
+		bool professorCollided = false;
 
 		//Rectangle for player collision tracking
 		Rectangle playerTracker;
@@ -374,6 +374,28 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 					}
 			}
 			#endregion
+
+			//Fail safe for if the player ends up outside the window screen
+			if(playerTracker.X < 0)
+			{
+				player.X = 50;
+				player.Y = 50;
+			}
+			if(playerTracker.Y < 0)
+			{
+				player.X = 50;
+				player.Y = 50;
+			}
+			if(playerTracker.X > windowWidth)
+			{
+				player.X = 50;
+				player.Y = 50;
+			}
+			if(playerTracker.Y > windowHeight)
+			{
+				player.X = 50;
+				player.Y = 50;
+			}
 
 			#region Walk States FSM
 			//Switch statement for Walking states
@@ -740,6 +762,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			#region Collision FSM
 			//Logic for determining if hitting a wall in the list of walls
 			bool WallCollided = false;
+			
 
             //Switching on player.States to check for movement of walking and 
             //		collisions
@@ -774,8 +797,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
-									didCollide = true;
+									professorCollided = true;
 									player.State = PlayerStates.ProfessorCollisionDown;
+									player.Y = professorTile.Y - player.PlayerHeight - BounceFactor;
 									Console.WriteLine("PROFESSOR COLLISION DOWN");
 									currentProfessor = professorTileRectangles.IndexOf(professorTile);
 									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
@@ -783,11 +807,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
 
-								didCollide = false;
+								professorCollided = false;
 							}
 
                             //if not colliding then player can walk
-                            if (WallCollided == false)
+                            if (WallCollided == false && professorCollided == false)
                             {
                                 player.Y += PlayerSpeed;
                             }
@@ -822,15 +846,20 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								//		respective professor's dialogue.								
 								if (playerTracker.Intersects(professorTile))
 								{
-									didCollide = true;
+									professorCollided = true;
 									player.State = PlayerStates.ProfessorCollisionUp;
+									player.Y = professorTile.Y + professorTile.Height + BounceFactor;          //Bounces player out of the wall collision
 									Console.WriteLine("PROFESSOR COLLISION UP");
+									currentProfessor = professorTileRectangles.IndexOf(professorTile);
+									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
 
+									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
+								professorCollided = false;
 							}
 
 							//if not colliding then player can walk
-							if (WallCollided == false)
+							if (WallCollided == false && professorCollided == false)
                             {
                                 player.Y -= PlayerSpeed;
                             }
@@ -865,18 +894,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
-									didCollide = true;
+									professorCollided = true;
 									player.State = PlayerStates.ProfessorCollisionRight;
+									player.X = professorTile.X - player.PlayerWidth - BounceFactor;          //Bounces the player out of the collision
 									Console.WriteLine("PROFESSOR COLLISION RIGHT");
 									currentProfessor = professorTileRectangles.IndexOf(professorTile);
 									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
 
-								didCollide = false;
+								professorCollided = false;
 							}
 							//if not colliding then player can walk
-							if (WallCollided == false)
+							if (WallCollided == false && professorCollided == false)
                             {
                                 player.X += PlayerSpeed;
                             }
@@ -910,18 +940,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								//		respective professor's dialogue.
 								if (playerTracker.Intersects(professorTile))
 								{
-									didCollide = true;
+									professorCollided = true;
 									player.State = PlayerStates.ProfessorCollisionLeft;
+									player.X = professorTile.X + professorTile.Width + BounceFactor;          //Bounces player out of collision
 									Console.WriteLine("PROFESSOR COLLISION LEFT");
 									currentProfessor = professorTileRectangles.IndexOf(professorTile);
 									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
 									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
 								}
 
-								didCollide = false;
+								professorCollided = false;
 							}
 							//if not colliding then player can walk
-							if (WallCollided == false)
+							if (WallCollided == false && professorCollided == false)
                             {
                                 player.X -= PlayerSpeed;
                             }
@@ -1022,7 +1053,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			}
 			#endregion
 
-			switch (didCollide)
+			switch (professorCollided)
 			{
 				case (true):
 					{
@@ -1042,6 +1073,20 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 									schwartzDialouge,
 									new Rectangle(0, 0, windowWidth / 3, windowHeight / 3),
 									Color.White);
+								break;
+							//Case for Erin's dialogue
+							case Professors.Erin:
+								spriteBatch.DrawString(Arial,
+									" Erin, Testing for if this string will write",
+									new Vector2(0, 0),
+									Color.Black);
+								break;
+							//Case for Luis's Dialogue
+							case Professors.Luis:
+								spriteBatch.DrawString(Arial,
+									"Luis, Testing for if this string will write",
+									new Vector2(0, 0),
+									Color.Black);
 								break;
 						}
 						break;
