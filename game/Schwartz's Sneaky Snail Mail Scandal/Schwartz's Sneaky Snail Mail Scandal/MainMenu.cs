@@ -21,7 +21,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         // Fields
         // texture for the main menu image
         Texture2D menuScreen;
-        MenuStates state;        
+        //MenuStates state;        
         Rectangle rectangle;
         // Constructor
         public MainMenu(Texture2D menuScreen)
