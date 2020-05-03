@@ -10,11 +10,7 @@ using System.IO; // Needed for file IO
 
 namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 {
-	//   enum Rooms
-	//{
-	//	Hallway,
-	//	Office
-	//}
+	#region Enums
 	enum Professors
 	{
 		Erika,	
@@ -40,11 +36,12 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		Idle,
 		Active
 	}
-	
+	#endregion
+
 	/// <summary>
-    /// This is the main type for your game.
-    /// </summary>
-    public class Game1 : Game
+	/// This is the main type for your game.
+	/// </summary>
+	public class Game1 : Game
     {
 		#region Fields
 		GraphicsDeviceManager graphics;
@@ -82,16 +79,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         List<Rectangle> wallBoundaries = new List<Rectangle>();
         int mapWidth = 0;
         int mapHeight = 0;
-
-		//// Keep track of the room the player is currently in.
-		////Rooms currentRoom = Rooms.Hallway;
 		
 		// Variable to store directory location of game map
 		string mapDirectory = null;
-
-		//// Regions that, when entered, trigger the loading of the next room
-		//RoomMovement hallwayExit = null;
-		//RoomMovement officeExit = null;
 
 		// Variables to keep track of game assets
 		Texture2D spriteSheet;
@@ -131,12 +121,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 		// Variable to keep track of player starting position
 		Vector2 playerLoc = new Vector2(1225, 50);
-
-		// Variables to control the regions of the map that get drawn.
-		//int drawFrom;
-		//int drawTo;
 		#endregion
-
 
 		#region Constructor
 		public Game1()
@@ -163,19 +148,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             windowWidth = graphics.GraphicsDevice.Viewport.Width;
             windowHeight = graphics.GraphicsDevice.Viewport.Height;
 
-			//hallwayExit = new RoomMovement(
-			//	0, Map.tileHeight, Map.tileWidth, Map.tileHeight * 20);
-			//officeExit = new RoomMovement(
-			//	windowWidth - Map.tileWidth, Map.tileHeight * 14, Map.tileWidth, Map.tileHeight * 7);
-
 			// Making cursor visible in the window.
 			this.IsMouseVisible = true;
 
             base.Initialize();
         }
         ///<summary>
-        ///Helper method to assign tile enum to saved files
-        /// 
+        ///Helper method to assign tile enum to saved files.
         /// </summary>
         private TileStates AssignTile(string letter)
         {
@@ -349,11 +328,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			// Loads font
 			arial20 = Content.Load<SpriteFont>("Arial20");
 	
-
 			PopulateMap(mapDirectory, tileSheet);
 
 			// TODO: use this.Content to load your game content here
 
+			// Initialise Player object.
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
         }
 
@@ -387,6 +366,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			#region Current Game State FSM - also see corresponding FSM in Draw()
 			switch (gameState)
 			{
+				// Start screen
 				case (GameStates.StartScreen):
 					{
 						// If Enter is pressed (once), show Schwartz's dialogue intro.
@@ -397,6 +377,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 						break;
 					}
+				// Intro screen
 				case (GameStates.SchwartzIntroScreen):
 					{
 						// If Enter is pressed (once), start the game.
@@ -407,12 +388,14 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 						break;
 					}
+				// Game screen
 				case (GameStates.Playing):
 					{
 						// "Activate" the player FSM
 						playerActivity = PlayerActivity.Active;
 						break;
 					}
+				// First final selection screem
 				case (GameStates.FinalSelectionScreen1):
 					{
 						// "Dectivate" the player FSM
@@ -434,9 +417,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 						break;
 					}
+				// Second final selection screen
 				case (GameStates.FinalSelectionScreen2):
 					{
-
 						// If E is pressed (once), the player loses.
 						if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
 						{
@@ -460,6 +443,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 						break;
 					}
+				// Win screen
 				case (GameStates.WinScreen):
 					{
 						// If Enter is pressed (once), the game exits.
@@ -478,6 +462,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						}
 						break;
 					}
+				// Lose screen
 				case (GameStates.LoseScreen):
 					{
 						// If Enter is pressed (once), the game exits.
@@ -499,8 +484,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			}
 			#endregion
 
-			//Fail safe for if the player ends up outside the window screen
-			if(playerTracker.X < 0)
+			#region Fail safe for if the player ends up outside the window screen
+			if (playerTracker.X < 0)
 			{
 				player.X = 50;
 				player.Y = 50;
@@ -520,6 +505,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 				player.X = 50;
 				player.Y = 50;
 			}
+			#endregion
 
 			#region Walk States FSM
 			//Switch statement for Walking states
@@ -990,28 +976,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             playerTracker = new Rectangle((int)player.X, (int)player.Y, player.PlayerWidth, player.PlayerHeight);
 			#endregion
 
-			#region (Not working) Room FSM
-			//switch (currentRoom)
-			//{
-			//	case (Rooms.Hallway):
-			//		{
-			//			if (hallwayExit.TriggerExit(playerTracker))
-			//			{
-			//				currentRoom = Rooms.Office;
-			//			}
-			//			break;
-			//		}
-			//	case (Rooms.Office):
-			//		{
-			//			if (officeExit.TriggerExit(playerTracker))
-			//			{
-			//				currentRoom = Rooms.Hallway;
-			//			}
-			//			break;
-			//		}
-			//}
-			#endregion
-
+			#region Code to check for when professors are being interacted with
 			// This loops and checks to see if the player Rectangle contains a
 			//		professor Rectangle. If it does, the corresponding professor
 			//		is set as "active" and the Draw portion of the code will
@@ -1031,6 +996,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 					activeProfessor = (Professors)Enum.Parse(typeof(Professors), i.ToString());
 				}
 			}
+			#endregion
 
 			// Keyboard state at the end of this frame becomes the previous keyboard state for the next.
 			prevKBState = kbState;
@@ -1047,29 +1013,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
 
-			#region (Not working) Draw portion for Room FSM
-			//switch (currentRoom)
-			//{
-			//	case (Rooms.Hallway):
-			//		{
-			//			drawFrom = 22;
-			//			drawTo = mapWidth;
-
-			//			break;
-			//		}
-			//	case (Rooms.Office):
-			//		{
-			//			drawFrom = 0;
-			//			drawTo = 21;
-
-			//			break;
-			//		}
-			//}
-			#endregion
-
 			#region Draw portion for Game States FSM
 			switch (gameState)
 			{
+				// Start screen
 				case (GameStates.StartScreen):
 					{
 						spriteBatch.Draw(
@@ -1078,6 +1025,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 							Color.White);
 						break;
 					}
+				// Intro screen
 				case (GameStates.SchwartzIntroScreen):
 					{
 						spriteBatch.Draw(
@@ -1086,6 +1034,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 							Color.White);
 						break;
 					}
+				// Game screen
 				case (GameStates.Playing):
 					{
 						foreach (Map tile in worldMap)
@@ -1094,6 +1043,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						}
 
 						// Labels to distinguish professor tiles from each other
+						// Erika
 						spriteBatch.DrawString(
 							arial20, 
 							"Erika", 
@@ -1102,6 +1052,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								professorTileRectangles[(int)Professors.Erika].Y + 40), 
 							Color.Black);
 
+						// Erin
 						spriteBatch.DrawString(
 							arial20,
 							"Erin",
@@ -1110,6 +1061,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								professorTileRectangles[(int)Professors.Erin].Y + 10),
 							Color.Black);
 
+						// Schwartz
 						spriteBatch.DrawString(
 							arial20,
 							"Schwartz",
@@ -1118,6 +1070,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								professorTileRectangles[(int)Professors.Schwartz].Y - 20),
 							Color.Black);
 
+						// Luis
 						spriteBatch.DrawString(
 							arial20,
 							"Luis",
@@ -1126,10 +1079,12 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								professorTileRectangles[(int)Professors.Luis].Y - 20),
 							Color.Black);
 
+						// Draw the player after the labels so the player is "layered" over them
 						player.Draw(spriteBatch);
 
 						break;
 					}
+				// First final selection screen
 				case (GameStates.FinalSelectionScreen1):
 					{
 						spriteBatch.Draw(
@@ -1138,6 +1093,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 							Color.White);
 						break;
 					}
+				// Second final selection screen
 				case (GameStates.FinalSelectionScreen2):
 					{
 						spriteBatch.Draw(
@@ -1147,6 +1103,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						activeProfessor = Professors.None;
 						break;
 					}
+				// Win screen
 				case (GameStates.WinScreen):
 					{
 						spriteBatch.Draw(
@@ -1156,6 +1113,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						activeProfessor = Professors.None;
 						break;
 					}
+				// Lose screen
 				case (GameStates.LoseScreen):
 					{
 						spriteBatch.Draw(
@@ -1167,6 +1125,8 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 					}
 			}
 			#endregion
+
+			#region Active Professor Dialogue FSM
 			// When the player interacts with a professor...
 			switch (professorInteraction)
 			{
@@ -1223,22 +1183,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						break;
 					}
 			}
+			#endregion
 
-			//spriteBatch.Draw(woodenSquare, woodenSquareRectangle, Color.White);
-			//wallTile.DrawWall(spriteBatch);
-			//floorTile.DrawFloor(spriteBatch);
-			//professorTile.DrawProfessor(spriteBatch);
-
-			//for (int i = 0; i < mapHeight; i++)
-			//{
-			//	for (int j = drawFrom; j < drawTo; j++)
-			//	{
-			//		Console.WriteLine(j + i * 44);
-			//		worldMap[j + i * 44].Draw(spriteBatch);
-			//	}
-			//}
-
-            spriteBatch.End();
+			spriteBatch.End();
             base.Draw(gameTime);
         }
 		#endregion
