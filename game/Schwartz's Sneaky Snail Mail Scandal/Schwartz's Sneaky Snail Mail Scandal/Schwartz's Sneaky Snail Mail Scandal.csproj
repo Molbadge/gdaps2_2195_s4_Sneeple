@@ -41,20 +41,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Erika.cs" />
-    <Compile Include="Erin.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="HiddenImg.cs" />
-    <Compile Include="Luis.cs" />
-    <Compile Include="MainMenu.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Professor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoomMovement.cs" />
-    <Compile Include="Schwartz.cs" />
-    <Compile Include="Sten.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
