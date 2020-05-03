@@ -83,15 +83,17 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         int mapWidth = 0;
         int mapHeight = 0;
 
-		// Keep track of the room the player is currently in.
-		//Rooms currentRoom = Rooms.Hallway;
-		string currentRoomDirectory = null;
+		//// Keep track of the room the player is currently in.
+		////Rooms currentRoom = Rooms.Hallway;
+		
+		// Variable to store directory location of game map
+		string mapDirectory = null;
 
-		// Regions that, when entered, trigger the loading of the next room.
-		RoomMovement hallwayExit = null;
-		RoomMovement officeExit = null;
+		//// Regions that, when entered, trigger the loading of the next room
+		//RoomMovement hallwayExit = null;
+		//RoomMovement officeExit = null;
 
-		// Variables to keep track of game assets.
+		// Variables to keep track of game assets
 		Texture2D spriteSheet;
 		Texture2D tileSheet;
 		Texture2D startScreen;
@@ -104,25 +106,31 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		Texture2D erikaDialogue;
 		Texture2D erinDialogue;
 		Texture2D luisDialogue;
+		Texture2D erikaSnailshot;
+		Texture2D erinSnailshot;
+		Texture2D luisSnailshot;
 
-		// List to hold Rectangles surrounding all professor tiles.
+		// List to hold Rectangles surrounding all professor tiles
 		List<Rectangle> professorTileRectangles = new List<Rectangle>();
 
-		// Variables to track the current state of the game and player.
+		// Variables to track the current state of the game and player
 		GameStates gameState = GameStates.StartScreen;
 		PlayerActivity playerActivity = PlayerActivity.Idle;
 
 		// Variable for spritefont
-		SpriteFont Arial;
+		SpriteFont arial20;
 
-		// Enum variable to track professor tile player is interacting with.
+		// Enum variable to track professor tile player is interacting with
 		Professors activeProfessor;
 
 		// Bool for checking professor interaction
 		bool professorInteraction = false;
 
-		// Variable to keep track of previous keyboard state.
+		// Variable to keep track of previous keyboard state
 		KeyboardState prevKBState;
+
+		// Variable to keep track of player starting position
+		Vector2 playerLoc = new Vector2(1225, 50);
 
 		// Variables to control the regions of the map that get drawn.
 		//int drawFrom;
@@ -155,10 +163,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             windowWidth = graphics.GraphicsDevice.Viewport.Width;
             windowHeight = graphics.GraphicsDevice.Viewport.Height;
 
-			hallwayExit = new RoomMovement(
-				0, Map.tileHeight, Map.tileWidth, Map.tileHeight * 20);
-			officeExit = new RoomMovement(
-				windowWidth - Map.tileWidth, Map.tileHeight * 14, Map.tileWidth, Map.tileHeight * 7);
+			//hallwayExit = new RoomMovement(
+			//	0, Map.tileHeight, Map.tileWidth, Map.tileHeight * 20);
+			//officeExit = new RoomMovement(
+			//	windowWidth - Map.tileWidth, Map.tileHeight * 14, Map.tileWidth, Map.tileHeight * 7);
 
 			// Making cursor visible in the window.
 			this.IsMouseVisible = true;
@@ -186,7 +194,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						return TileStates.Professor;
 					}
                 default:
-                    throw new System.ArgumentException(letter + " was not a wall or floor. Please check file input.");
+                    throw new ArgumentException(letter + " was not a wall or floor. Please check file input.");
             }
         }
 
@@ -308,7 +316,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         protected override void LoadContent()
         {
 			// Initialising map using the file generated using the Map Editor
-			currentRoomDirectory = "../../../../Content/gameMap";
+			mapDirectory = "../../../../Content/gameMap";
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -333,14 +341,18 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			erinDialogue = Content.Load<Texture2D>("dialogueBoxes/ErinDialogue");
 			luisDialogue = Content.Load<Texture2D>("dialogueBoxes/LuisDialogue");
 
+			// "Snailshots" lol
+			erikaSnailshot = Content.Load<Texture2D>("snailShots/erikaSnailshot");
+			erinSnailshot = Content.Load<Texture2D>("snailShots/erinSnailshot");
+			luisSnailshot = Content.Load<Texture2D>("snailShots/luisSnailshot");
+
 			// Loads font
-			Arial = Content.Load<SpriteFont>("spriteFont");
+			arial20 = Content.Load<SpriteFont>("Arial20");
 	
 
-			PopulateMap(currentRoomDirectory, tileSheet);
+			PopulateMap(mapDirectory, tileSheet);
 
 			// TODO: use this.Content to load your game content here
-			Vector2 playerLoc = new Vector2(50, 50);
 
             player = new Player(spriteSheet, playerLoc, PlayerStates.FaceDown);
         }
@@ -455,6 +467,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						{
 							Exit();
 						}
+						// If R is pressed (once), return to the start screen
+						else if (kbState.IsKeyDown(Keys.R) && prevKBState.IsKeyUp(Keys.R))
+						{
+							// Move player into starting position. Useful if 
+							//		game is restarted from win/lose screens.
+							player.X = playerLoc.X;
+							player.Y = playerLoc.Y;
+							gameState = GameStates.StartScreen;
+						}
 						break;
 					}
 				case (GameStates.LoseScreen):
@@ -463,6 +484,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						if (kbState.IsKeyDown(Keys.Enter) && prevKBState.IsKeyUp(Keys.Enter))
 						{
 							Exit();
+						}
+						// If R is pressed (once), return to the start screen
+						else if (kbState.IsKeyDown(Keys.R) && prevKBState.IsKeyUp(Keys.R))
+						{
+							// Move player into starting position. Useful if 
+							//		game is restarted from win/lose screens.
+							player.X = playerLoc.X;
+							player.Y = playerLoc.Y;
+							gameState = GameStates.StartScreen;
 						}
 						break;
 					}
@@ -1063,6 +1093,39 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 							tile.Draw(spriteBatch);
 						}
 
+						// Labels to distinguish professor tiles from each other
+						spriteBatch.DrawString(
+							arial20, 
+							"Erika", 
+							new Vector2(
+								professorTileRectangles[(int)Professors.Erika].X - 5, 
+								professorTileRectangles[(int)Professors.Erika].Y + 40), 
+							Color.Black);
+
+						spriteBatch.DrawString(
+							arial20,
+							"Erin",
+							new Vector2(
+								professorTileRectangles[(int)Professors.Erin].X - 50,
+								professorTileRectangles[(int)Professors.Erin].Y + 10),
+							Color.Black);
+
+						spriteBatch.DrawString(
+							arial20,
+							"Schwartz",
+							new Vector2(
+								professorTileRectangles[(int)Professors.Schwartz].X - 30,
+								professorTileRectangles[(int)Professors.Schwartz].Y - 20),
+							Color.Black);
+
+						spriteBatch.DrawString(
+							arial20,
+							"Luis",
+							new Vector2(
+								professorTileRectangles[(int)Professors.Luis].X - 3,
+								professorTileRectangles[(int)Professors.Luis].Y - 20),
+							Color.Black);
+
 						player.Draw(spriteBatch);
 
 						break;
@@ -1113,10 +1176,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						//			to the screen.
 						switch (activeProfessor)
 						{
-							// Erika's dialogue
+							// Erika's dialogue + snailshot
 							case Professors.Erika:
 								spriteBatch.Draw(erikaDialogue,
-									new Rectangle(0, 0, windowWidth / 3, windowHeight / 7),
+									new Rectangle(windowHeight / 7, 0, windowWidth / 3, windowHeight / 7),
+									Color.White);
+								spriteBatch.Draw(erikaSnailshot,
+									new Rectangle(0, 0, windowHeight / 7, windowHeight / 7),
 									Color.White);
 								break;
 
@@ -1125,19 +1191,25 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								gameState = GameStates.FinalSelectionScreen1;
 								break;
 
-							// Erin's dialogue
+							// Erin's dialogue + snailshot
 							case Professors.Erin:
 								spriteBatch.Draw(
 									erinDialogue,
-									new Rectangle(0, 0, windowWidth / 3, windowHeight / 7),
+									new Rectangle(windowHeight / 7, 0, windowWidth / 3, windowHeight / 7),
+									Color.White);
+								spriteBatch.Draw(erinSnailshot,
+									new Rectangle(0, 0, windowHeight / 7, windowHeight / 7),
 									Color.White);
 								break;
 
-							// Luis's Dialogue
+							// Luis's Dialogue + snailshot
 							case Professors.Luis:
 								spriteBatch.Draw(
 									luisDialogue,
-									new Rectangle(0, 0, windowWidth / 3, windowHeight / 7),
+									new Rectangle(windowHeight / 7, 0, windowWidth / 3, windowHeight / 7),
+									Color.White);
+								spriteBatch.Draw(luisSnailshot,
+									new Rectangle(0, 0, windowHeight / 7, windowHeight / 7),
 									Color.White);
 								break;
 
