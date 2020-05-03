@@ -20,15 +20,19 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		Erika,	
 		Erin,
 		Schwartz,
-		Luis
+		Luis,
+		None // Represented by an extra enum because enums are non-nullable.
 	}
 
 	enum GameStates
 	{
 		StartScreen,
+		SchwartzIntroScreen,
 		Playing,
-		FinalSelectionScreen, // The screen where players pick the culprit out I can't think of names rn lol forgive me i have sinned
-		EndScreen
+		FinalSelectionScreen1, // The screens where players pick the culprit out I can't 
+		FinalSelectionScreen2, //		think of names rn lol forgive me i have sinned
+		WinScreen,
+		LoseScreen
 	}
 
 	enum PlayerActivity
@@ -91,6 +95,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		Texture2D spriteSheet;
 		Texture2D tileSheet;
 		Texture2D startScreen;
+		Texture2D introScreen;
+		Texture2D finalSelectionScreen1;
+		Texture2D finalSelectionScreen2;
+		Texture2D winScreen;
+		Texture2D loseScreen;
 		Texture2D schwartzDialogue;
 		Texture2D erikaDialogue;
 		Texture2D erinDialogue;
@@ -111,6 +120,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 		// Bool for checking professor interaction
 		bool professorInteraction = false;
+
+		// Variable to keep track of previous keyboard state.
+		KeyboardState prevKBState;
 
 		// Variables to control the regions of the map that get drawn.
 		//int drawFrom;
@@ -301,13 +313,25 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
-            tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
-			startScreen = Content.Load<Texture2D>("SSSMSMenu"); // Start screen image
-			schwartzDialogue = Content.Load<Texture2D>("SchwartzDialogue");
-			erikaDialogue = Content.Load<Texture2D>("ErikaDialogue");
-			erinDialogue = Content.Load<Texture2D>("ErinDialogue");
-			luisDialogue = Content.Load<Texture2D>("LuisDialogue");
+			//Spritesheet for ritchie
+			spriteSheet = Content.Load<Texture2D>("spriteSheets/Ritchie");
+
+			//Spritesheet for map
+			tileSheet = Content.Load<Texture2D>("spriteSheets/Dungeon_Crawler_Sheet");
+
+			// Menu screen images
+			startScreen = Content.Load<Texture2D>("menuScreens/SSSMSMenu");
+			introScreen = Content.Load<Texture2D>("menuScreens/SSSMSIntro");
+			finalSelectionScreen1 = Content.Load<Texture2D>("menuScreens/FinalSelectionScreen1");
+			finalSelectionScreen2 = Content.Load<Texture2D>("menuScreens/FinalSelectionScreen2");
+			winScreen = Content.Load<Texture2D>("menuScreens/winScreen");
+			loseScreen = Content.Load<Texture2D>("menuScreens/loseScreen");
+
+			// Dialogue boxes
+			schwartzDialogue = Content.Load<Texture2D>("dialogueBoxes/SchwartzDialogue");
+			erikaDialogue = Content.Load<Texture2D>("dialogueBoxes/ErikaDialogue");
+			erinDialogue = Content.Load<Texture2D>("dialogueBoxes/ErinDialogue");
+			luisDialogue = Content.Load<Texture2D>("dialogueBoxes/LuisDialogue");
 
 			// Loads font
 			Arial = Content.Load<SpriteFont>("spriteFont");
@@ -353,8 +377,18 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			{
 				case (GameStates.StartScreen):
 					{
-						// If Enter is pressed, start the game.
-						if (kbState.IsKeyDown(Keys.Enter))
+						// If Enter is pressed (once), show Schwartz's dialogue intro.
+						if (kbState.IsKeyDown(Keys.Enter) && prevKBState.IsKeyUp(Keys.Enter))
+						{
+							gameState = GameStates.SchwartzIntroScreen;
+						}
+
+						break;
+					}
+				case (GameStates.SchwartzIntroScreen):
+					{
+						// If Enter is pressed (once), start the game.
+						if (kbState.IsKeyDown(Keys.Enter) && prevKBState.IsKeyUp(Keys.Enter))
 						{
 							gameState = GameStates.Playing;
 						}
@@ -367,14 +401,69 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 						playerActivity = PlayerActivity.Active;
 						break;
 					}
-				case (GameStates.FinalSelectionScreen):
+				case (GameStates.FinalSelectionScreen1):
 					{
-						// Check for appropriate key/mouse inputs.
+						// "Dectivate" the player FSM
+						playerActivity = PlayerActivity.Idle;
+
+						// If Y is pressed (once), go to the second final selection screen.
+						if (kbState.IsKeyDown(Keys.Y) && prevKBState.IsKeyUp(Keys.Y))
+						{
+							gameState = GameStates.FinalSelectionScreen2;
+						}
+						// If N is pressed (once), return to the game.
+						else if (kbState.IsKeyDown(Keys.N) && prevKBState.IsKeyUp(Keys.N))
+						{
+							// Nudge the player away from Schwartz's tile so 
+							//		FinalSelectionScreen1 doesn't continuously trigger.
+							player.X += 50;
+							gameState = GameStates.Playing;
+						}
+
 						break;
 					}
-				case (GameStates.EndScreen):
+				case (GameStates.FinalSelectionScreen2):
 					{
-						// Check for appropriate key/mouse inputs.
+
+						// If E is pressed (once), the player loses.
+						if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
+						{
+							gameState = GameStates.LoseScreen;
+						}
+						// If B is pressed (once), the player wins.
+						else if (kbState.IsKeyDown(Keys.B) && prevKBState.IsKeyUp(Keys.B))
+						{
+							gameState = GameStates.WinScreen;
+						}
+						// If H is pressed (once), the player loses.
+						else if (kbState.IsKeyDown(Keys.H) && prevKBState.IsKeyUp(Keys.H))
+						{
+							gameState = GameStates.LoseScreen;
+						}
+						// If C is pressed (once), the player loses.
+						else if (kbState.IsKeyDown(Keys.C) && prevKBState.IsKeyUp(Keys.C))
+						{
+							gameState = GameStates.LoseScreen;
+						}
+
+						break;
+					}
+				case (GameStates.WinScreen):
+					{
+						// If Enter is pressed (once), the game exits.
+						if (kbState.IsKeyDown(Keys.Enter) && prevKBState.IsKeyUp(Keys.Enter))
+						{
+							Exit();
+						}
+						break;
+					}
+				case (GameStates.LoseScreen):
+					{
+						// If Enter is pressed (once), the game exits.
+						if (kbState.IsKeyDown(Keys.Enter) && prevKBState.IsKeyUp(Keys.Enter))
+						{
+							Exit();
+						}
 						break;
 					}
 			}
@@ -913,6 +1002,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 				}
 			}
 
+			// Keyboard state at the end of this frame becomes the previous keyboard state for the next.
+			prevKBState = kbState;
+
 			base.Update(gameTime);
         }
 
@@ -956,6 +1048,14 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 							Color.White);
 						break;
 					}
+				case (GameStates.SchwartzIntroScreen):
+					{
+						spriteBatch.Draw(
+							introScreen,
+							new Rectangle(0, 0, windowWidth, windowHeight),
+							Color.White);
+						break;
+					}
 				case (GameStates.Playing):
 					{
 						foreach (Map tile in worldMap)
@@ -967,14 +1067,39 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 						break;
 					}
-				case (GameStates.FinalSelectionScreen):
+				case (GameStates.FinalSelectionScreen1):
 					{
-						// DRAW FINAL SELECTION SCREEN
+						spriteBatch.Draw(
+							finalSelectionScreen1,
+							new Rectangle(0, 0, windowWidth, windowHeight),
+							Color.White);
 						break;
 					}
-				case (GameStates.EndScreen):
+				case (GameStates.FinalSelectionScreen2):
 					{
-						// DRAW END SCREEN
+						spriteBatch.Draw(
+							finalSelectionScreen2,
+							new Rectangle(0, 0, windowWidth, windowHeight),
+							Color.White);
+						activeProfessor = Professors.None;
+						break;
+					}
+				case (GameStates.WinScreen):
+					{
+						spriteBatch.Draw(
+							winScreen,
+							new Rectangle(0, 0, windowWidth, windowHeight),
+							Color.White);
+						activeProfessor = Professors.None;
+						break;
+					}
+				case (GameStates.LoseScreen):
+					{
+						spriteBatch.Draw(
+							loseScreen,
+							new Rectangle(0, 0, windowWidth, windowHeight),
+							Color.White);
+						activeProfessor = Professors.None;
 						break;
 					}
 			}
@@ -995,12 +1120,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 									Color.White);
 								break;
 
-							// Schwartz's dialogue
+							// Final selection screen triggered
 							case Professors.Schwartz:
-								spriteBatch.Draw(
-									schwartzDialogue,
-									new Rectangle(0, 0, windowWidth / 3, windowHeight / 7),
-									Color.White);
+								gameState = GameStates.FinalSelectionScreen1;
 								break;
 
 							// Erin's dialogue
@@ -1017,6 +1139,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 									luisDialogue,
 									new Rectangle(0, 0, windowWidth / 3, windowHeight / 7),
 									Color.White);
+								break;
+
+							// Do nothing; the only time this will be possible 
+							//		if the player is in the final selection 
+							//		screen, where they are not allowed to return
+							//		to the game anymore.
+							case Professors.None:
 								break;
 						}
 						break;
