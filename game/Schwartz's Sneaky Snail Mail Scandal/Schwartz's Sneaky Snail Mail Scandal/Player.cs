@@ -30,11 +30,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		WallCollisionRight = 13,
 		WallCollisionLeft = 14,
 		WallCollisionUp = 15,
-
-		ProfessorCollisionDown = 16,
-		ProfessorCollisionRight = 17,
-		ProfessorCollisionLeft = 18,
-		ProfessorCollisionUp = 19,
 	}
 
     class Player
@@ -202,26 +197,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 				case (PlayerStates.WallCollisionRight):
 					{
 						DrawStanding(spriteBatch);
-						break;
-					}
-				case (PlayerStates.ProfessorCollisionDown):
-					{
-						DrawWalking(spriteBatch);
-						break;
-					}
-				case (PlayerStates.ProfessorCollisionUp):
-					{
-						DrawWalking(spriteBatch);
-						break;
-					}
-				case (PlayerStates.ProfessorCollisionLeft):
-					{
-						DrawWalking(spriteBatch);
-						break;
-					}
-				case (PlayerStates.ProfessorCollisionRight):
-					{
-						DrawWalking(spriteBatch);
 						break;
 					}
 			}

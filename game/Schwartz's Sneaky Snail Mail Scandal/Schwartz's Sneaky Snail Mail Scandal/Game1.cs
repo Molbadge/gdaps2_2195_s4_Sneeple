@@ -17,9 +17,9 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 	//}
 	enum Professors
 	{
-		Erika,
-		Schwartz,		
+		Erika,	
 		Erin,
+		Schwartz,
 		Luis
 	}
 
@@ -66,9 +66,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         int windowWidth = 0;
         int windowHeight = 0;
 
-		// Bool for checking professor collision
-		bool professorCollided = false;
-
 		//Rectangle for player collision tracking
 		Rectangle playerTracker;
 
@@ -94,10 +91,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		Texture2D spriteSheet;
 		Texture2D tileSheet;
 		Texture2D startScreen;
-		Texture2D schwartzDialouge;
-		Texture2D erikaDialouge;
-		Texture2D erinDialouge;
-		Texture2D luisDialouge;
+		Texture2D schwartzDialogue;
+		Texture2D erikaDialogue;
+		Texture2D erinDialogue;
+		Texture2D luisDialogue;
 
 		// List to hold Rectangles surrounding all professor tiles.
 		List<Rectangle> professorTileRectangles = new List<Rectangle>();
@@ -109,10 +106,11 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		// Variable for spritefont
 		SpriteFont Arial;
 
-		// int and enum variables to track professor tile player is colliding with.
-		int currentProfessor;
+		// Enum variable to track professor tile player is interacting with.
 		Professors activeProfessor;
 
+		// Bool for checking professor interaction
+		bool professorInteraction = false;
 
 		// Variables to control the regions of the map that get drawn.
 		//int drawFrom;
@@ -306,10 +304,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
             spriteSheet = Content.Load<Texture2D>("Ritchie");     //Spritesheet for ritchie
             tileSheet = Content.Load<Texture2D>("Dungeon_Crawler_Sheet"); //Spritesheet for map
 			startScreen = Content.Load<Texture2D>("SSSMSMenu"); // Start screen image
-			schwartzDialouge = Content.Load<Texture2D>("SchwartzDialouge");
-			erikaDialouge = Content.Load<Texture2D>("ErikaDialouge");
-			erinDialouge = Content.Load<Texture2D>("ErinDialouge");
-			luisDialouge = Content.Load<Texture2D>("LuisDialouge");
+			schwartzDialogue = Content.Load<Texture2D>("SchwartzDialogue");
+			erikaDialogue = Content.Load<Texture2D>("ErikaDialogue");
+			erinDialogue = Content.Load<Texture2D>("ErinDialogue");
+			luisDialogue = Content.Load<Texture2D>("LuisDialogue");
 
 			// Loads font
 			Arial = Content.Load<SpriteFont>("spriteFont");
@@ -726,38 +724,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 
 									break;
 								}
-
-							// Implement fall-through cases since all directions will be treated the same way.
-							case (PlayerStates.ProfessorCollisionDown):
-
-							case (PlayerStates.ProfessorCollisionUp):
-
-							case (PlayerStates.ProfessorCollisionLeft):
-
-							case (PlayerStates.ProfessorCollisionRight):
-								{
-									if (kbState.IsKeyDown(Keys.W))
-									{
-										player.State = PlayerStates.FaceUp;
-									}
-
-									if (kbState.IsKeyDown(Keys.A))
-									{
-										player.State = PlayerStates.FaceLeft;
-									}
-
-									if (kbState.IsKeyDown(Keys.S))
-									{
-										player.State = PlayerStates.FaceDown;
-									}
-
-									if (kbState.IsKeyDown(Keys.D))
-									{
-										player.State = PlayerStates.FaceRight;
-									}
-
-									break;
-								}
 						}
 						break;
 					}
@@ -769,11 +735,15 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			#region Collision FSM
 			//Logic for determining if hitting a wall in the list of walls
 			bool WallCollided = false;
-			
 
-            //Switching on player.States to check for movement of walking and 
-            //		collisions
-            switch (player.State)
+			// Refresh this variable each time so previous frames do not 
+			//		interfere with the current.
+			professorInteraction = false;
+
+
+			//Switching on player.States to check for movement of walking and 
+			//		collisions
+			switch (player.State)
             {
                 //Walking down = moving in the positive direction of the y-axis.
                 case (PlayerStates.WalkDown):
@@ -792,33 +762,14 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                 if (playerTracker.Intersects(wall))
                                 {
                                     player.State = PlayerStates.WallCollisionDown;
-                                    player.Y = wall.Y - player.PlayerHeight - BounceFactor;     //Bounces player out of the wall collision
+                                    player.Y = wall.Y - player.PlayerHeight - BounceFactor; //Bounces player out of the wall collision
                                     WallCollided = true;
                                     break;
                                 }
                             }
 
-							foreach (Rectangle professorTile in professorTileRectangles)
-							{
-								// If player intersects with a professor tile, show that 
-								//		respective professor's dialogue.
-								if (playerTracker.Intersects(professorTile))
-								{
-									professorCollided = true;
-									player.State = PlayerStates.ProfessorCollisionDown;
-									player.Y = professorTile.Y - player.PlayerHeight - BounceFactor;
-									Console.WriteLine("PROFESSOR COLLISION DOWN");
-									currentProfessor = professorTileRectangles.IndexOf(professorTile);
-									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
-										
-									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
-								}
-
-								professorCollided = false;
-							}
-
                             //if not colliding then player can walk
-                            if (WallCollided == false && professorCollided == false)
+                            if (WallCollided == false)
                             {
                                 player.Y += PlayerSpeed;
                             }
@@ -842,31 +793,14 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                 if (playerTracker.Intersects(wall))
                                 {
                                     player.State = PlayerStates.WallCollisionUp;
-                                    player.Y = wall.Y + wall.Height + BounceFactor;          //Bounces player out of the wall collision
+									player.Y = wall.Y + wall.Height + BounceFactor; //Bounces player out of the wall collision
                                     WallCollided = true;
                                     break;
                                 }
                             }
-							foreach (Rectangle professorTile in professorTileRectangles)
-							{
-								// If player intersects with a professor tile, show that 
-								//		respective professor's dialogue.								
-								if (playerTracker.Intersects(professorTile))
-								{
-									professorCollided = true;
-									player.State = PlayerStates.ProfessorCollisionUp;
-									player.Y = professorTile.Y + professorTile.Height + BounceFactor;          //Bounces player out of the wall collision
-									Console.WriteLine("PROFESSOR COLLISION UP");
-									currentProfessor = professorTileRectangles.IndexOf(professorTile);
-									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
-
-									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
-								}
-								professorCollided = false;
-							}
 
 							//if not colliding then player can walk
-							if (WallCollided == false && professorCollided == false)
+							if (WallCollided == false)
                             {
                                 player.Y -= PlayerSpeed;
                             }
@@ -890,30 +824,13 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                 if (playerTracker.Intersects(wall))
                                 {
                                     player.State = PlayerStates.WallCollisionRight;
-                                    player.X = wall.X - player.PlayerWidth - BounceFactor;          //Bounces the player out of the collision
+                                    player.X = wall.X - player.PlayerWidth - BounceFactor; //Bounces the player out of the collision
                                     WallCollided = true;
 
                                 }
                             }
-							foreach (Rectangle professorTile in professorTileRectangles)
-							{
-								// If player intersects with a professor tile, show that 
-								//		respective professor's dialogue.
-								if (playerTracker.Intersects(professorTile))
-								{
-									professorCollided = true;
-									player.State = PlayerStates.ProfessorCollisionRight;
-									player.X = professorTile.X - player.PlayerWidth - BounceFactor;          //Bounces the player out of the collision
-									Console.WriteLine("PROFESSOR COLLISION RIGHT");
-									currentProfessor = professorTileRectangles.IndexOf(professorTile);
-									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
-									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
-								}
 
-								professorCollided = false;
-							}
-							//if not colliding then player can walk
-							if (WallCollided == false && professorCollided == false)
+							if (WallCollided == false)
                             {
                                 player.X += PlayerSpeed;
                             }
@@ -937,29 +854,12 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                                 if (playerTracker.Intersects(wall))
                                 {
                                     player.State = PlayerStates.WallCollisionLeft;
-                                    player.X = wall.X + wall.Width + BounceFactor;          //Bounces player out of collision
+                                    player.X = wall.X + wall.Width + BounceFactor; //Bounces player out of collision
                                     WallCollided = true;
                                 }
                             }
-							foreach (Rectangle professorTile in professorTileRectangles)
-							{
-								// If player intersects with a professor tile, show that 
-								//		respective professor's dialogue.
-								if (playerTracker.Intersects(professorTile))
-								{
-									professorCollided = true;
-									player.State = PlayerStates.ProfessorCollisionLeft;
-									player.X = professorTile.X + professorTile.Width + BounceFactor;          //Bounces player out of collision
-									Console.WriteLine("PROFESSOR COLLISION LEFT");
-									currentProfessor = professorTileRectangles.IndexOf(professorTile);
-									activeProfessor = (Professors)Enum.Parse(typeof(Professors), currentProfessor.ToString());
-									// DELETE THE C.WL THEN PUT THE RESPECTIVE PROFESSOR CLASS'S DIALOGUE HERE
-								}
 
-								professorCollided = false;
-							}
-							//if not colliding then player can walk
-							if (WallCollided == false && professorCollided == false)
+							if (WallCollided == false)
                             {
                                 player.X -= PlayerSpeed;
                             }
@@ -992,6 +892,26 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			//		}
 			//}
 			#endregion
+
+			// This loops and checks to see if the player Rectangle contains a
+			//		professor Rectangle. If it does, the corresponding professor
+			//		is set as "active" and the Draw portion of the code will
+			//		draw the corresponding dialogue box to the screen.
+			for (int i = 0; i < professorTileRectangles.Count; i++)
+			{
+				// If player Rectangle contains a professor tile...
+				if (playerTracker.Contains(professorTileRectangles[i].Location))
+				{
+					// Set professorInteraction to true to acknowledge the interaction.
+					// This triggers Draw() to draw the dialogue to the screen.
+					professorInteraction = true;
+
+					// Because the indices of entries in professorTileRectangles
+					//		correspond to those in enum Professors, parse the respective
+					//		Professor's name from the index using Enum.TryParse.
+					activeProfessor = (Professors)Enum.Parse(typeof(Professors), i.ToString());
+				}
+			}
 
 			base.Update(gameTime);
         }
@@ -1059,42 +979,43 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 					}
 			}
 			#endregion
-			// this is drawing inconsistantly
-			switch (professorCollided)
+			// When the player interacts with a professor...
+			switch (professorInteraction)
 			{
 				case (true):
 					{
-						// this part is not working
-						switch(activeProfessor)
+						// ...draw the corresponding professor's dialogue box
+						//			to the screen.
+						switch (activeProfessor)
 						{
-							// Erkia dialouge
+							// Erika's dialogue
 							case Professors.Erika:
-								spriteBatch.Draw(erikaDialouge,
-									new Rectangle(0, 0, windowWidth, windowHeight / 3),
+								spriteBatch.Draw(erikaDialogue,
+									new Rectangle(0, 0, windowWidth / 3, windowHeight / 7),
 									Color.White);
 								break;
 
-							// schwartz dialouge
+							// Schwartz's dialogue
 							case Professors.Schwartz:
 								spriteBatch.Draw(
-									schwartzDialouge,
-									new Rectangle(0, 0, windowWidth, windowHeight / 3),
+									schwartzDialogue,
+									new Rectangle(0, 0, windowWidth / 3, windowHeight / 7),
 									Color.White);
 								break;
 
-							//Case for Erin's dialogue
+							// Erin's dialogue
 							case Professors.Erin:
 								spriteBatch.Draw(
-									erinDialouge,
-									new Rectangle(0, 0, windowWidth, windowHeight / 3),
+									erinDialogue,
+									new Rectangle(0, 0, windowWidth / 3, windowHeight / 7),
 									Color.White);
 								break;
 
-							//Case for Luis's Dialogue
+							// Luis's Dialogue
 							case Professors.Luis:
 								spriteBatch.Draw(
-									luisDialouge,
-									new Rectangle(0, 0, windowWidth, windowHeight / 3),
+									luisDialogue,
+									new Rectangle(0, 0, windowWidth / 3, windowHeight / 7),
 									Color.White);
 								break;
 						}
