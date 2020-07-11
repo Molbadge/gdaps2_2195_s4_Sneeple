@@ -38,12 +38,14 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         public float X
         {
             get { return this.tileLoc.X; }
+			set { tileLoc.X = value; }
         }
 
         public float Y
         {
             get { return this.tileLoc.Y; }
-        }
+			set { tileLoc.Y = value; }
+		}
 
         //Get/Set property to return and set tile state for types of tiles to place
         public TileStates TilePlaced

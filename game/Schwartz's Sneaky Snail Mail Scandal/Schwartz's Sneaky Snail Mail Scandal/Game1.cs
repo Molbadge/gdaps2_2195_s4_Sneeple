@@ -120,7 +120,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		KeyboardState prevKBState;
 
 		// Variable to keep track of player starting position
-		Vector2 playerLoc = new Vector2(1225, 50);
+		Vector2 playerLoc = new Vector2(50, 50);
 		#endregion
 
 		#region Constructor
@@ -141,7 +141,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 		protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            graphics.PreferredBackBufferWidth = Map.tileWidth * 44;
+            graphics.PreferredBackBufferWidth = Map.tileWidth * 22;
             graphics.PreferredBackBufferHeight = Map.tileHeight * 22;
             graphics.ApplyChanges();
 
@@ -484,26 +484,87 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 			}
 			#endregion
 
-			#region Fail safe for if the player ends up outside the window screen
-			if (playerTracker.X < 0)
+			//#region Fail safe for if the player ends up outside the window screen
+			//if (playerTracker.X < 0)
+			//{
+			//	player.X = 50;
+			//	player.Y = 50;
+			//}
+			//if (playerTracker.Y < 0)
+			//{
+			//	player.X = 50;
+			//	player.Y = 50;
+			//}
+			//if (playerTracker.X > windowWidth)
+			//{
+			//	player.X = 50;
+			//	player.Y = 50;
+			//}
+			//if (playerTracker.Y > windowHeight)
+			//{
+			//	player.X = 50;
+			//	player.Y = 50;
+			//}
+			//#endregion
+
+			#region Scrolling code
+			if (playerTracker.X > windowWidth)
 			{
-				player.X = 50;
-				player.Y = 50;
+				foreach (Map tile in worldMap)
+				{
+					tile.X -= windowWidth;
+				}
+
+				for (int i = 0; i < wallBoundaries.Count; i++)
+				{
+					wallBoundaries[i] = new Rectangle(
+						wallBoundaries[i].X - windowWidth,
+						wallBoundaries[i].Y,
+						32,
+						32);
+				}
+
+				for (int i = 0; i < professorTileRectangles.Count; i++)
+				{
+					professorTileRectangles[i] = new Rectangle(
+						professorTileRectangles[i].X - windowWidth,
+						professorTileRectangles[i].Y,
+						32,
+						32);
+				}
+
+				player.X -= windowWidth;
 			}
-			if(playerTracker.Y < 0)
+
+			// Player must be between leftmost and rightmost "column" on map.
+			// When scrolling takes place, the walls shift. If player happens to be within said
+			//		columns, a collision might be registered, causing a glitch in player position.
+			if (playerTracker.X < -playerTracker.Width)
 			{
-				player.X = 50;
-				player.Y = 50;
-			}
-			if(playerTracker.X > windowWidth)
-			{
-				player.X = 50;
-				player.Y = 50;
-			}
-			if(playerTracker.Y > windowHeight)
-			{
-				player.X = 50;
-				player.Y = 50;
+				player.X += windowWidth;
+
+				foreach (Map tile in worldMap)
+				{
+					tile.X += windowWidth;
+				}
+
+				for (int i = 0; i < wallBoundaries.Count; i++)
+				{
+					wallBoundaries[i] = new Rectangle(
+						wallBoundaries[i].X + windowWidth,
+						wallBoundaries[i].Y,
+						32,
+						32);
+				}
+
+				for (int i = 0; i < professorTileRectangles.Count; i++)
+				{
+					professorTileRectangles[i] = new Rectangle(
+						professorTileRectangles[i].X + windowWidth,
+						professorTileRectangles[i].Y,
+						32,
+						32);
+				}
 			}
 			#endregion
 
@@ -661,91 +722,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 								break;
 
 							// Collision cases are similar to standing cases, but the 
-							//		player cannot walk in direction of the boundary.
-							// Case for downwards border collision
-							case (PlayerStates.BorderCollisionDown):
-								{
-									if (kbState.IsKeyDown(Keys.W))
-									{
-										player.State = PlayerStates.FaceUp;
-									}
-
-									if (kbState.IsKeyDown(Keys.A))
-									{
-										player.State = PlayerStates.FaceLeft;
-									}
-
-									if (kbState.IsKeyDown(Keys.D))
-									{
-										player.State = PlayerStates.FaceRight;
-									}
-
-									break;
-								}
-
-							// Case for upwards border collision
-							case (PlayerStates.BorderCollisionUp):
-								{
-									if (kbState.IsKeyDown(Keys.S))
-									{
-										player.State = PlayerStates.FaceDown;
-									}
-
-									if (kbState.IsKeyDown(Keys.A))
-									{
-										player.State = PlayerStates.FaceLeft;
-									}
-
-									if (kbState.IsKeyDown(Keys.D))
-									{
-										player.State = PlayerStates.FaceRight;
-									}
-
-									break;
-								}
-
-							// Case for left border collision
-							case (PlayerStates.BorderCollisionLeft):
-								{
-									if (kbState.IsKeyDown(Keys.W))
-									{
-										player.State = PlayerStates.FaceUp;
-									}
-
-									if (kbState.IsKeyDown(Keys.S))
-									{
-										player.State = PlayerStates.FaceDown;
-									}
-
-									if (kbState.IsKeyDown(Keys.D))
-									{
-										player.State = PlayerStates.FaceRight;
-									}
-
-									break;
-								}
-
-							// Case for right border collision
-							case (PlayerStates.BorderCollisionRight):
-								{
-									if (kbState.IsKeyDown(Keys.W))
-									{
-										player.State = PlayerStates.FaceUp;
-									}
-
-									if (kbState.IsKeyDown(Keys.A))
-									{
-										player.State = PlayerStates.FaceLeft;
-									}
-
-									if (kbState.IsKeyDown(Keys.S))
-									{
-										player.State = PlayerStates.FaceDown;
-									}
-
-									break;
-								}
-
+							//		player cannot walk in direction of the wall.
 							// Case for downwards wall collision
 							case (PlayerStates.WallCollisionDown):
 								{
@@ -853,31 +830,23 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 //Walking down = moving in the positive direction of the y-axis.
                 case (PlayerStates.WalkDown):
                     {
-                        //Checks for player collision with window boundary
-                        if (player.Y >= windowHeight - player.PlayerHeight)
+						//Checks for player collision with wall boundaries and professor tiles
+						foreach (Rectangle wall in wallBoundaries)
                         {
-                            player.State = PlayerStates.BorderCollisionDown;
+                            //If player is intersecting with wall, set to wall collision state so player can't move
+                            if (playerTracker.Intersects(wall))
+                            {
+                                player.State = PlayerStates.WallCollisionDown;
+                                player.Y = wall.Y - player.PlayerHeight - BounceFactor; //Bounces player out of the wall collision
+                                WallCollided = true;
+                                break;
+                            }
                         }
-                        //Checks for player collision with wall boundaries and professor tiles
-                        else
-                        {
-                            foreach (Rectangle wall in wallBoundaries)
-                            {
-                                //If player is intersecting with wall, set to wall collision state so player can't move
-                                if (playerTracker.Intersects(wall))
-                                {
-                                    player.State = PlayerStates.WallCollisionDown;
-                                    player.Y = wall.Y - player.PlayerHeight - BounceFactor; //Bounces player out of the wall collision
-                                    WallCollided = true;
-                                    break;
-                                }
-                            }
 
-                            //if not colliding then player can walk
-                            if (WallCollided == false)
-                            {
-                                player.Y += PlayerSpeed;
-                            }
+                        //if not colliding then player can walk
+                        if (WallCollided == false)
+                        {
+                            player.Y += PlayerSpeed;
                         }
                         break;
                     }
@@ -885,89 +854,65 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                 case (PlayerStates.WalkUp):
                     {
                         //Checks for player collision with wall boundaries and professor tiles
-                        if (player.Y <= 0)
+                        foreach (Rectangle wall in wallBoundaries)
                         {
-                            player.State = PlayerStates.BorderCollisionUp;
+                            //If player is intersecting with wall, set to wall collision state so player can't move
+                            if (playerTracker.Intersects(wall))
+                            {
+                                player.State = PlayerStates.WallCollisionUp;
+								player.Y = wall.Y + wall.Height + BounceFactor; //Bounces player out of the wall collision
+                                WallCollided = true;
+                                break;
+                            }
                         }
-                        //Checks for player collision with window boundary
-                        else
-                        {
-                            foreach (Rectangle wall in wallBoundaries)
-                            {
-                                //If player is intersecting with wall, set to wall collision state so player can't move
-                                if (playerTracker.Intersects(wall))
-                                {
-                                    player.State = PlayerStates.WallCollisionUp;
-									player.Y = wall.Y + wall.Height + BounceFactor; //Bounces player out of the wall collision
-                                    WallCollided = true;
-                                    break;
-                                }
-                            }
 
-							//if not colliding then player can walk
-							if (WallCollided == false)
-                            {
-                                player.Y -= PlayerSpeed;
-                            }
+						//if not colliding then player can walk
+						if (WallCollided == false)
+                        {
+                            player.Y -= PlayerSpeed;
                         }
                         break;
                     }
                 //Positive X integer for walking right
                 case (PlayerStates.WalkRight):
                     {
-                        //Checks for player collision with window boundary
-                        if (player.X >= windowWidth - player.PlayerWidth)
-                        {
-                            player.State = PlayerStates.BorderCollisionRight;
-                        }
                         //Checks for player collision with wall boundaries and professor tiles
-                        else
+                        foreach (Rectangle wall in wallBoundaries)
                         {
-                            foreach (Rectangle wall in wallBoundaries)
+                            //If player is intersecting with wall, set to wall collision state so player can't move
+                            if (playerTracker.Intersects(wall))
                             {
-                                //If player is intersecting with wall, set to wall collision state so player can't move
-                                if (playerTracker.Intersects(wall))
-                                {
-                                    player.State = PlayerStates.WallCollisionRight;
-                                    player.X = wall.X - player.PlayerWidth - BounceFactor; //Bounces the player out of the collision
-                                    WallCollided = true;
+                                player.State = PlayerStates.WallCollisionRight;
+                                player.X = wall.X - player.PlayerWidth - BounceFactor; //Bounces the player out of the collision
+                                WallCollided = true;
 
-                                }
                             }
+                        }
 
-							if (WallCollided == false)
-                            {
-                                player.X += PlayerSpeed;
-                            }
+						if (WallCollided == false)
+                        {
+                            player.X += PlayerSpeed;
                         }
                         break;
                     }
                 //Negative X integer for walking left
                 case (PlayerStates.WalkLeft):
                     {
-                        //Checks for player collision with window boundary
-                        if (player.X <= 0)
-                        {
-                            player.State = PlayerStates.BorderCollisionLeft;
-                        }
                         //Checks for player collision with wall boundaries and professor tiles
-                        else
+                        foreach (Rectangle wall in wallBoundaries)
                         {
-                            foreach (Rectangle wall in wallBoundaries)
+                            //If player is intersecting with wall, set to wall collision state so player can't move
+                            if (playerTracker.Intersects(wall))
                             {
-                                //If player is intersecting with wall, set to wall collision state so player can't move
-                                if (playerTracker.Intersects(wall))
-                                {
-                                    player.State = PlayerStates.WallCollisionLeft;
-                                    player.X = wall.X + wall.Width + BounceFactor; //Bounces player out of collision
-                                    WallCollided = true;
-                                }
+                                player.State = PlayerStates.WallCollisionLeft;
+                                player.X = wall.X + wall.Width + BounceFactor; //Bounces player out of collision
+                                WallCollided = true;
                             }
+                        }
 
-							if (WallCollided == false)
-                            {
-                                player.X -= PlayerSpeed;
-                            }
+						if (WallCollided == false)
+                        {
+                            player.X -= PlayerSpeed;
                         }
                         break;
                     }
@@ -989,7 +934,7 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
 					// Set professorInteraction to true to acknowledge the interaction.
 					// This triggers Draw() to draw the dialogue to the screen.
 					professorInteraction = true;
-
+					
 					// Because the indices of entries in professorTileRectangles
 					//		correspond to those in enum Professors, parse the respective
 					//		Professor's name from the index using Enum.TryParse.

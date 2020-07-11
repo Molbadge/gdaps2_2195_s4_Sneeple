@@ -21,15 +21,10 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
         WalkLeft = 6,
         WalkUp = 7,
 
-		BorderCollisionDown = 8,
-		BorderCollisionRight = 9,
-		BorderCollisionLeft = 10,
-		BorderCollisionUp = 11,
-
-		WallCollisionDown = 12,
-		WallCollisionRight = 13,
-		WallCollisionLeft = 14,
-		WallCollisionUp = 15,
+		WallCollisionDown = 8,
+		WallCollisionRight = 9,
+		WallCollisionLeft = 10,
+		WallCollisionUp = 11,
 	}
 
     class Player
@@ -159,26 +154,6 @@ namespace Schwartz_s_Sneaky_Snail_Mail_Scandal
                         DrawWalking(spriteBatch);
                         break;
                     }
-				case (PlayerStates.BorderCollisionDown):
-					{
-						DrawStanding(spriteBatch);
-						break;
-					}
-				case (PlayerStates.BorderCollisionUp):
-					{
-						DrawStanding(spriteBatch);
-						break;
-					}
-				case (PlayerStates.BorderCollisionLeft):
-					{
-						DrawStanding(spriteBatch);
-						break;
-					}
-				case (PlayerStates.BorderCollisionRight):
-					{
-						DrawStanding(spriteBatch);
-						break;
-					}
 				case (PlayerStates.WallCollisionDown):
 					{
 						DrawStanding(spriteBatch);
